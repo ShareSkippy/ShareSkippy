@@ -1,40 +1,46 @@
-# ShipFast — Javascript
+# ShareSkippy 🐕
 
-Hey maker 👋 it's Marc from [ShipFast](https://shipfa.st/docs). Let's get your startup off the ground, FAST ⚡️
+A community-based dog sharing platform that connects dog lovers with dog owners for free, collaborative dog care experiences.
 
-<sub>**Watch/Star the repo to be notified when updates are pushed**</sub>
+## About
 
-## Get Started
+ShareSkippy makes it easy for dog owners to find trusted community members who can help with dog walking, sitting, and care. Whether you need help when you're busy, traveling, or just want your dog to have more social time, ShareSkippy connects you with caring neighbors in your area.
 
-1. Follow the [Get Started Tutorial](https://shipfa.st/docs) to clone the repo and run your local server 💻
+## Features
 
-<sub>**Looking for the /pages router version?** Use this [documentation](https://shipfa.st/docs-old) instead</sub>
+- 🐾 **Community Matching** - Find dog lovers in your neighborhood
+- 📍 **Location-Based** - Connect with people nearby
+- 🔒 **Trust & Safety** - Verified profiles and community ratings
+- 💚 **Free & Community-Driven** - No fees, just neighbors helping neighbors
+- 📱 **Easy to Use** - Simple interface for finding and offering help
 
-2. Follow the [Ship In 5 Minutes Tutorial](https://shipfa.st/docs/tutorials/ship-in-5-minutes) to learn the foundation and ship your app quickly ⚡️
+## Tech Stack
 
-## Links
+- **Frontend**: Next.js 14, React, Tailwind CSS
+- **Backend**: Supabase (PostgreSQL, Auth, Storage)
+- **Deployment**: Vercel
+- **Styling**: DaisyUI, Tailwind CSS
 
--   [📚 Documentation](https://shipfa.st/docs)
--   [📣 Updates](https://shipfast.beehiiv.com/)
--   [🧑‍💻 Discord](https://shipfa.st/dashboard)
--   [🥇 Leaderboard](https://shipfa.st/leaderboard)
+## Getting Started
 
-## Support
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Set up environment variables (see `.env.example`)
+4. Run the development server: `npm run dev`
+5. Open [http://localhost:3000](http://localhost:3000)
 
-Reach out at hello@shipfa.st
+## Environment Variables
 
-Let's ship it, FAST ⚡️
+Create a `.env.local` file with:
+```
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
 
-\_
+## Contributing
 
-**📈 Grow your startup with [DataFast](https://datafa.st?ref=shipfast_readme)**
+This is a community-driven project. We welcome contributions!
 
--   Analyze your traffic
--   Get insights on your customers
--   Make data-driven decisions
+## License
 
-ShipFast members get 30% OFF on all plans! 🎁
-
-![datafast](https://github.com/user-attachments/assets/a6e78034-701a-49f1-a297-d33590f963be)
-
-# nextjs_template
+MIT License
