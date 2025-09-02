@@ -122,7 +122,7 @@ export default function CommunitySupportSection({
                       value={formData.help_reason_other_text}
                       onChange={handleInputChange}
                       placeholder="Please describe your situation..."
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                       maxLength={100}
                     />
                   </div>
@@ -137,7 +137,7 @@ export default function CommunitySupportSection({
                     value={formData.help_context}
                     onChange={handleInputChange}
                     placeholder="Tell us more about your situation so we can better connect you with supportive community members..."
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                    className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
                     rows={3}
                     maxLength={300}
                   />

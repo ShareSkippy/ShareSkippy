@@ -65,20 +65,34 @@ export default function CommunityPage() {
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
+      // Always fetch availability data, regardless of login status
+      fetchAvailabilityData(user);
+      
+      // If user is logged in, default to "My Availability" tab
       if (user) {
-        fetchAvailabilityData();
+        setActiveTab('my-availability');
       }
     };
     
     getUser();
   }, []);
 
-  const fetchAvailabilityData = async () => {
+  const fetchAvailabilityData = async (currentUser) => {
     try {
       const supabase = createClient();
       
-      // Fetch dog availability posts
-      const { data: dogPosts, error: dogError } = await supabase
+      console.log('Fetching availability data for user:', currentUser?.id || 'not logged in');
+      
+      // First, let's test if we can fetch any availability posts at all
+      const { data: allPosts, error: allPostsError } = await supabase
+        .from('availability')
+        .select('id, title, post_type, status, owner_id')
+        .limit(5);
+      
+      console.log('All availability posts test:', allPosts?.length || 0, 'Error:', allPostsError);
+      
+      // Fetch dog availability posts (excluding current user's posts if logged in)
+      let dogQuery = supabase
         .from('availability')
         .select(`
           *,
@@ -99,8 +113,15 @@ export default function CommunityPage() {
           )
         `)
         .eq('post_type', 'dog_available')
-        .eq('status', 'active')
-        .order('created_at', { ascending: false });
+        .eq('status', 'active');
+      
+      // Only exclude current user's posts if they're logged in
+      if (currentUser) {
+        dogQuery = dogQuery.neq('owner_id', currentUser.id);
+        console.log('Excluding posts from user:', currentUser.id);
+      }
+      
+      const { data: dogPosts, error: dogError } = await dogQuery.order('created_at', { ascending: false });
 
       // Fetch additional dogs for posts with multiple dogs
       if (dogPosts) {
@@ -124,11 +145,12 @@ export default function CommunityPage() {
         console.error('Error fetching dog posts:', dogError);
         throw dogError;
       }
+      console.log('Dog posts fetched:', dogPosts?.length || 0);
       setDogAvailabilityPosts(dogPosts || []);
       
 
-      // Fetch petpal availability posts
-      const { data: petpalPosts, error: petpalError } = await supabase
+      // Fetch petpal availability posts (excluding current user's posts if logged in)
+      let petpalQuery = supabase
         .from('availability')
         .select(`
           *,
@@ -142,18 +164,25 @@ export default function CommunityPage() {
           )
         `)
         .eq('post_type', 'petpal_available')
-        .eq('status', 'active')
-        .order('created_at', { ascending: false });
+        .eq('status', 'active');
+      
+      // Only exclude current user's posts if they're logged in
+      if (currentUser) {
+        petpalQuery = petpalQuery.neq('owner_id', currentUser.id);
+      }
+      
+      const { data: petpalPosts, error: petpalError } = await petpalQuery.order('created_at', { ascending: false });
 
       if (petpalError) {
         console.error('Error fetching petpal posts:', petpalError);
         throw petpalError;
       }
+      console.log('Petpal posts fetched:', petpalPosts?.length || 0);
       setPetpalAvailabilityPosts(petpalPosts || []);
       
 
               // Fetch user's own availability posts
-        if (user) {
+        if (currentUser) {
   
           const { data: myPosts, error: myError } = await supabase
             .from('availability')
@@ -167,7 +196,7 @@ export default function CommunityPage() {
                 size
               )
             `)
-            .eq('owner_id', user.id)
+            .eq('owner_id', currentUser.id)
             .order('created_at', { ascending: false });
 
           // Fetch additional dogs for posts with multiple dogs
@@ -192,6 +221,7 @@ export default function CommunityPage() {
           console.error('Error fetching user posts:', myError);
           throw myError;
         }
+        console.log('My posts fetched:', myPosts?.length || 0);
         setMyAvailabilityPosts(myPosts || []);
 
       }
@@ -199,6 +229,7 @@ export default function CommunityPage() {
     } catch (error) {
       console.error('Error fetching availability data:', error);
     } finally {
+      console.log('Setting loading to false');
       setLoading(false);
     }
   };
@@ -278,6 +309,66 @@ export default function CommunityPage() {
 
   const closeMessageModal = () => {
     setMessageModal({ isOpen: false, recipient: null, availabilityPost: null });
+  };
+
+  const deletePost = async (postId) => {
+    if (!user || !confirm('Are you sure you want to delete this post? This action cannot be undone.')) return;
+
+    try {
+      const supabase = createClient();
+      const { error } = await supabase
+        .from('availability')
+        .delete()
+        .eq('id', postId)
+        .eq('owner_id', user.id);
+
+      if (error) {
+        console.error('Error deleting post:', error);
+        alert('Failed to delete post');
+        return;
+      }
+
+      // Remove from local state
+      setMyAvailabilityPosts(myAvailabilityPosts.filter(post => post.id !== postId));
+      alert('Post deleted successfully');
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      alert('Failed to delete post');
+    }
+  };
+
+  const togglePostStatus = async (postId, currentStatus) => {
+    if (!user) return;
+
+    try {
+      const supabase = createClient();
+      const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+      
+      const { error } = await supabase
+        .from('availability')
+        .update({ status: newStatus })
+        .eq('id', postId)
+        .eq('owner_id', user.id);
+
+      if (error) {
+        console.error('Error updating post status:', error);
+        alert('Failed to update post status');
+        return;
+      }
+
+      // Update local state
+      setMyAvailabilityPosts(myAvailabilityPosts.map(post => 
+        post.id === postId ? { ...post, status: newStatus } : post
+      ));
+    } catch (error) {
+      console.error('Error updating post status:', error);
+      alert('Failed to update post status');
+    }
+  };
+
+  const editPost = (postId) => {
+    // Navigate to edit page
+    window.location.href = `/share-availability?edit=${postId}`;
   };
 
   if (loading) {
@@ -782,9 +873,6 @@ export default function CommunityPage() {
                         <div className="flex space-x-2">
                           <button className="bg-gray-600 text-white px-3 py-1 rounded text-sm hover:bg-gray-700 transition-colors">
                             Edit
-                          </button>
-                          <button className="bg-gray-600 text-white px-3 py-1 rounded text-sm hover:bg-gray-700 transition-colors">
-                            {post.status === 'active' ? 'Deactivate' : 'Activate'}
                           </button>
                           <button className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700 transition-colors">
                             Delete
