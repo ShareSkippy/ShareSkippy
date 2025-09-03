@@ -1,10 +1,14 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { useSupabaseAuth } from '@/libs/supabase/hooks';
-import { supabase } from '@/libs/supabase';
+import { createClient } from '@/libs/supabase/client';
 
 export default function MessageModal({ isOpen, onClose, recipient, availabilityPost }) {
   const { user } = useSupabaseAuth();
+  const supabase = createClient();
+  
+  // Debug logging
+  console.log('MessageModal props:', { isOpen, recipient, availabilityPost });
   const [message, setMessage] = useState('');
   const [subject, setSubject] = useState('');
   const [sending, setSending] = useState(false);
@@ -21,6 +25,7 @@ export default function MessageModal({ isOpen, onClose, recipient, availabilityP
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('handleSubmit called with:', { user, recipient, message: message.trim(), availabilityPost });
     if (!user || !recipient || !message.trim()) return;
 
     setSending(true);
@@ -28,11 +33,15 @@ export default function MessageModal({ isOpen, onClose, recipient, availabilityP
 
     try {
       // First, check if a conversation already exists
+      console.log('Checking for existing conversation...');
       const { data: existingConversation, error: convError } = await supabase
         .from('conversations')
         .select('*')
-        .or(`and(participant1_id.eq.${user.id},participant2_id.eq.${recipient.id},availability_id.eq.${availabilityPost.id}),and(participant1_id.eq.${recipient.id},participant2_id.eq.${user.id},availability_id.eq.${availabilityPost.id})`)
-        .single();
+        .or(`participant1_id.eq.${user.id},participant2_id.eq.${user.id}`)
+        .eq('availability_id', availabilityPost.id)
+        .maybeSingle();
+      
+      console.log('Conversation check result:', { existingConversation, convError });
 
       let conversationId;
 
@@ -111,23 +120,23 @@ export default function MessageModal({ isOpen, onClose, recipient, availabilityP
           {/* Recipient Info */}
           <div className="mb-6 p-4 bg-gray-50 rounded-lg">
             <div className="flex items-center space-x-3">
-              {recipient.profile_photo_url ? (
+              {recipient?.profile_photo_url ? (
                 <img
                   src={recipient.profile_photo_url}
-                  alt={`${recipient.first_name} ${recipient.last_name}`}
+                  alt={`${recipient.first_name || 'User'} ${recipient.last_name || ''}`}
                   className="w-12 h-12 rounded-full object-cover"
                 />
               ) : (
                 <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center text-xl">
-                  {recipient.first_name?.[0] || '👤'}
+                  {recipient?.first_name?.[0] || '👤'}
                 </div>
               )}
               <div>
                 <h3 className="font-medium text-gray-900">
-                  {recipient.first_name} {recipient.last_name}
+                  {recipient?.first_name || 'Unknown'} {recipient?.last_name || 'User'}
                 </h3>
                 <p className="text-sm text-gray-600">
-                  {availabilityPost.post_type === 'dog_available' ? 'Dog Owner' : 'PetPal'}
+                  {availabilityPost?.post_type === 'dog_available' ? 'Dog Owner' : 'PetPal'}
                 </p>
               </div>
             </div>
@@ -154,7 +163,7 @@ export default function MessageModal({ isOpen, onClose, recipient, availabilityP
                 type="text"
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                 placeholder="Message subject..."
                 required
               />
@@ -168,7 +177,7 @@ export default function MessageModal({ isOpen, onClose, recipient, availabilityP
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 rows={4}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                 placeholder="Write your message here..."
                 required
               />

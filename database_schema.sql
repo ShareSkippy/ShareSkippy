@@ -172,6 +172,9 @@ CREATE INDEX IF NOT EXISTS idx_conversations_last_message_at ON conversations(la
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE reviews ENABLE ROW LEVEL SECURITY;
 ALTER TABLE dogs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE availability ENABLE ROW LEVEL SECURITY;
+ALTER TABLE conversations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
 
 -- Drop existing policies if they exist
 DROP POLICY IF EXISTS "Users can view their own profile" ON profiles;
@@ -230,6 +233,26 @@ CREATE POLICY "Users can update their own availability posts" ON availability
 
 CREATE POLICY "Users can delete their own availability posts" ON availability
   FOR DELETE USING (auth.uid() = owner_id);
+
+-- Create policies for conversations table
+CREATE POLICY "Users can view conversations they participate in" ON conversations
+  FOR SELECT USING (auth.uid() = participant1_id OR auth.uid() = participant2_id);
+
+CREATE POLICY "Users can create conversations" ON conversations
+  FOR INSERT WITH CHECK (auth.uid() = participant1_id OR auth.uid() = participant2_id);
+
+CREATE POLICY "Users can update conversations they participate in" ON conversations
+  FOR UPDATE USING (auth.uid() = participant1_id OR auth.uid() = participant2_id);
+
+-- Create policies for messages table
+CREATE POLICY "Users can view messages they sent or received" ON messages
+  FOR SELECT USING (auth.uid() = sender_id OR auth.uid() = recipient_id);
+
+CREATE POLICY "Users can create messages" ON messages
+  FOR INSERT WITH CHECK (auth.uid() = sender_id);
+
+CREATE POLICY "Users can update messages they sent" ON messages
+  FOR UPDATE USING (auth.uid() = sender_id);
 
 -- Create function to handle user creation
 CREATE OR REPLACE FUNCTION handle_new_user()

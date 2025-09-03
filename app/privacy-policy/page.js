@@ -57,9 +57,9 @@ const PrivacyPolicy = () => {
           className="leading-relaxed whitespace-pre-wrap"
           style={{ fontFamily: "sans-serif" }}
         >
-          {`Last Updated: 2023-08-25
+          {`Last Updated: December 19, 2024
 
-Thank you for visiting ShipFast ("we," "us," or "our"). This Privacy Policy outlines how we collect, use, and protect your personal and non-personal information when you use our website located at https://shipfa.st (the "Website").
+Thank you for visiting ShareSkippy ("we," "us," or "our"). This Privacy Policy outlines how we collect, use, and protect your personal and non-personal information when you use our website located at https://shareskippy.com (the "Website").
 
 By accessing or using the Website, you agree to the terms of this Privacy Policy. If you do not agree with the practices described in this policy, please do not use the Website.
 
@@ -69,39 +69,81 @@ By accessing or using the Website, you agree to the terms of this Privacy Policy
 
 We collect the following personal information from you:
 
-Name: We collect your name to personalize your experience and communicate with you effectively.
-Email: We collect your email address to send you important information regarding your orders, updates, and communication.
-Payment Information: We collect payment details to process your orders securely. However, we do not store your payment information on our servers. Payments are processed by trusted third-party payment processors.
+Name: We collect your name to personalize your experience and facilitate community connections.
+Email: We collect your email address to send you important updates, notifications about meetups, and community communications.
+Location: We collect your general location to help you connect with nearby dog owners and find local meetup opportunities.
+Phone Number: We may collect your phone number for emergency contact purposes during meetups.
+Profile Photos: We collect photos of you and your dogs to help community members recognize each other and build trust.
 
-1.2 Non-Personal Data
+1.2 Dog Information
 
-We may use web cookies and similar technologies to collect non-personal information such as your IP address, browser type, device information, and browsing patterns. This information helps us to enhance your browsing experience, analyze trends, and improve our services.
+We collect information about your dogs including:
+- Breed, age, and size
+- Temperament and behavior characteristics
+- Vaccination status and health information
+- Photos and descriptions
+
+1.3 Non-Personal Data
+
+We may use web cookies, analytics, and similar technologies to collect non-personal information such as your IP address, browser type, device information, browsing patterns, and app usage statistics. This information helps us to enhance your experience, analyze trends, and improve our services.
 
 2. Purpose of Data Collection
 
-We collect and use your personal data for the sole purpose of order processing. This includes processing your orders, sending order confirmations, providing customer support, and keeping you updated about the status of your orders.
+We collect and use your personal data for the following purposes:
+- Facilitating connections between dog owners and dog lovers
+- Organizing and managing community meetups and events
+- Providing a safe and trusted community platform
+- Sending important updates and notifications
+- Improving our services and user experience
+- Ensuring community safety and compliance with our terms
 
 3. Data Sharing
 
-We do not share your personal data with any third parties except as required for order processing (e.g., sharing your information with payment processors). We do not sell, trade, or rent your personal information to others.
+3.1 Community Sharing: Your profile information (name, dog photos, general location) is shared with other community members to facilitate connections and meetups.
 
-4. Children's Privacy
+3.2 Limited Third-Party Sharing: We do not sell, trade, or rent your personal information to third parties. We may share information only as required for:
+- Legal compliance and law enforcement
+- Service providers who assist in operating our platform (with strict confidentiality agreements)
+- Emergency situations where safety is at risk
 
-ShipFast is not intended for children under the age of 13. We do not knowingly collect personal information from children. If you are a parent or guardian and believe that your child has provided us with personal information, please contact us at the email address provided below.
+4. Data Security
 
-5. Updates to the Privacy Policy
+We implement appropriate security measures to protect your personal information, including:
+- Encryption of sensitive data
+- Secure authentication systems
+- Regular security audits and updates
+- Limited access to personal information by our team
+
+5. Children's Privacy
+
+ShareSkippy is not intended for children under the age of 18. We do not knowingly collect personal information from children. If you are a parent or guardian and believe that your child has provided us with personal information, please contact us immediately.
+
+6. Data Retention
+
+We retain your personal information for as long as your account is active or as needed to provide services. You may request deletion of your account and associated data at any time.
+
+7. Your Rights
+
+You have the right to:
+- Access and review your personal information
+- Update or correct your information
+- Request deletion of your account and data
+- Opt out of certain communications
+- Export your data
+
+8. Updates to the Privacy Policy
 
 We may update this Privacy Policy from time to time to reflect changes in our practices or for other operational, legal, or regulatory reasons. Any updates will be posted on this page, and we may notify you via email about significant changes.
 
-6. Contact Information
+9. Contact Information
 
 If you have any questions, concerns, or requests related to this Privacy Policy, you can contact us at:
 
-Email: marc@shipfa.st
+Email: kcolban@gmail.com
 
 For all other inquiries, please visit our Contact Us page on the Website.
 
-By using ShipFast, you consent to the terms of this Privacy Policy.`}
+By using ShareSkippy, you consent to the terms of this Privacy Policy.`}
         </pre>
       </div>
     </main>

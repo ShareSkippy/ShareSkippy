@@ -15,5 +15,17 @@ export async function GET(req) {
   }
 
   // URL to redirect to after sign in process completes
-  return NextResponse.redirect(requestUrl.origin + config.auth.callbackUrl);
+  // Automatically detect environment and use appropriate domain
+  const host = requestUrl.host;
+  let origin;
+  
+  if (host.includes('localhost') || host.includes('127.0.0.1')) {
+    // Development environment - use current origin
+    origin = requestUrl.origin;
+  } else {
+    // Production environment - use config domain
+    origin = `https://${config.domainName}`;
+  }
+  
+  return NextResponse.redirect(origin + config.auth.callbackUrl);
 }

@@ -312,7 +312,7 @@ export default function ProfileEditPage() {
 
   if (loading || userLoading) {
     return (
-      <div className="max-w-md mx-auto p-6 text-center">
+      <div className="min-h-screen w-full bg-white max-w-md mx-auto p-6 text-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
         <p>Loading...</p>
       </div>
@@ -320,8 +320,8 @@ export default function ProfileEditPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">Create Your Profile</h1>
+    <div className="min-h-screen w-full bg-white max-w-2xl mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-6 text-black">Create Your Profile</h1>
       
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Basic Information */}
@@ -378,7 +378,7 @@ export default function ProfileEditPage() {
                 name="email"
                 value={profile.email || user?.email || ''}
                 disabled
-                className="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-gray-500"
+                className="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-gray-900"
               />
             </div>
 

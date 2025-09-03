@@ -37,7 +37,7 @@ export default function CommunitySupportSection({
                   name="need_extra_help"
                   checked={formData.need_extra_help}
                   onChange={handleInputChange}
-                  className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                  className="rounded border-gray-300 text-purple-600 focus:ring-purple-500 bg-white"
                 />
                 <span className="font-medium text-gray-800">I could use some extra support</span>
               </div>
@@ -50,7 +50,7 @@ export default function CommunitySupportSection({
                       name="help_reason_elderly"
                       checked={formData.help_reason_elderly}
                       onChange={handleInputChange}
-                      className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                      className="rounded border-gray-300 text-purple-600 focus:ring-purple-500 bg-white"
                     />
                     <span className="text-sm">Elderly</span>
                   </label>
@@ -122,7 +122,7 @@ export default function CommunitySupportSection({
                       value={formData.help_reason_other_text}
                       onChange={handleInputChange}
                       placeholder="Please describe your situation..."
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                       maxLength={100}
                     />
                   </div>
@@ -137,7 +137,7 @@ export default function CommunitySupportSection({
                     value={formData.help_context}
                     onChange={handleInputChange}
                     placeholder="Tell us more about your situation so we can better connect you with supportive community members..."
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                    className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
                     rows={3}
                     maxLength={300}
                   />
@@ -233,7 +233,7 @@ export default function CommunitySupportSection({
                   value={formData.helping_others_context}
                   onChange={handleInputChange}
                   placeholder="Tell us more about how you can help others..."
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                  className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
                   rows={3}
                   maxLength={300}
                 />

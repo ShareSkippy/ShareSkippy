@@ -20,7 +20,7 @@ const carouselMessages = [
 // Community stories
 const communityStories = [
   {
-    quote: "I can&apos;t have a dog in my apartment, but now I hike with Max every week.",
+    quote: "I cant have a dog in my apartment, but now I hike with Max every week.",
     author: "Sarah, Dog Lover"
   },
   {
@@ -179,9 +179,9 @@ export default function Home() {
               <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <span className="text-4xl">👤</span>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Step 1</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Sniff Around</h3>
               <p className="text-xl text-gray-700">
-                Create your profile — dog owner, dog lover, or both
+                Tell us if you're a pup parent, a petpal, or both
               </p>
             </div>
 
@@ -189,9 +189,9 @@ export default function Home() {
               <div className="w-24 h-24 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <span className="text-4xl">🤝</span>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Step 2</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Find Your Pack</h3>
               <p className="text-xl text-gray-700">
-                Connect locally with trusted neighbors
+                Build trusted connections with nearby pup parents and pet pals
               </p>
             </div>
 
@@ -199,9 +199,9 @@ export default function Home() {
               <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <span className="text-4xl">🐾</span>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Step 3</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Tail Wags for All</h3>
               <p className="text-xl text-gray-700">
-                Walk, play, and adventure together
+                Happy pups, happy people, happier neighborhoods
               </p>
             </div>
           </div>

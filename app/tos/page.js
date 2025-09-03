@@ -57,39 +57,66 @@ const TOS = () => {
           className="leading-relaxed whitespace-pre-wrap"
           style={{ fontFamily: "sans-serif" }}
         >
-          {`Last Updated: September 26, 2023
+          {`Last Updated: December 19, 2024
 
-Welcome to ShipFast!
+Welcome to ShareSkippy!
 
-These Terms of Service ("Terms") govern your use of the ShipFast website at https://shipfa.st ("Website") and the services provided by ShipFast. By using our Website and services, you agree to these Terms.
+These Terms of Service ("Terms") govern your use of the ShareSkippy website at https://shareskippy.com ("Website") and the services provided by ShareSkippy. By using our Website and services, you agree to these Terms.
 
-1. Description of ShipFast
+1. Description of ShareSkippy
 
-ShipFast is a platform that offers a JavaScript code boilerplate to assist entrepreneurs in launching their startups more efficiently.
+ShareSkippy is a community platform that connects dog owners and dog lovers for playdates, walks, and shared care. Our service facilitates safe and responsible dog interactions within local communities.
 
-2. Ownership and Usage Rights
+2. User Responsibilities and Safety
 
-When you purchase a package from ShipFast, you gain the right to download and use the code provided for creating applications. You own the code you create but do not have the right to resell it. We offer a full refund within 7 days of purchase, as specified in our refund policy.
+2.1 Dog Safety: Users are responsible for the safety and behavior of their dogs. All dogs must be properly vaccinated, licensed, and under control at all times.
 
-3. User Data and Privacy
+2.2 Meetup Safety: Users agree to meet in safe, public locations and to exercise reasonable caution when meeting other users and their dogs.
 
-We collect and store user data, including name, email, and payment information, as necessary to provide our services. For details on how we handle your data, please refer to our Privacy Policy at https://shipfa.st/privacy-policy.
+2.3 Liability: ShareSkippy is not responsible for any injuries, damages, or incidents that occur during meetups or interactions arranged through our platform.
 
-4. Non-Personal Data Collection
+3. User Conduct and Community Guidelines
 
-We use web cookies to collect non-personal data for the purpose of improving our services and user experience.
+3.1 Respectful Behavior: Users must treat all community members with respect and kindness. Harassment, discrimination, or inappropriate behavior will not be tolerated.
 
-5. Governing Law
+3.2 Accurate Information: Users must provide accurate information about themselves and their dogs, including photos, descriptions, and behavioral characteristics.
 
-These Terms are governed by the laws of France.
+3.3 No Commercial Use: The platform is for personal, non-commercial use only. Professional dog walking or boarding services are not permitted.
 
-6. Updates to the Terms
+4. User Data and Privacy
+
+We collect and store user data, including name, email, location, and dog information, as necessary to provide our services. For details on how we handle your data, please refer to our Privacy Policy at https://shareskippy.com/privacy-policy.
+
+5. Non-Personal Data Collection
+
+We use web cookies and analytics to collect non-personal data for the purpose of improving our services and user experience.
+
+6. Prohibited Activities
+
+Users may not:
+- Use the platform for any illegal activities
+- Share inappropriate or offensive content
+- Attempt to access other users' accounts
+- Use automated systems to interact with the platform
+- Violate any applicable laws or regulations
+
+7. Account Termination
+
+We reserve the right to suspend or terminate accounts that violate these Terms or engage in inappropriate behavior.
+
+8. Governing Law
+
+These Terms are governed by the laws of the United States.
+
+9. Updates to the Terms
 
 We may update these Terms from time to time. Users will be notified of any changes via email.
 
-For any questions or concerns regarding these Terms of Service, please contact us at marc@shipfa.st.
+10. Contact Information
 
-Thank you for using ShipFast!`}
+For any questions or concerns regarding these Terms of Service, please contact us at kcolban@gmail.com.
+
+Thank you for being part of the ShareSkippy community!`}
         </pre>
       </div>
     </main>

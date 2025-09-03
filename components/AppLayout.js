@@ -33,34 +33,25 @@ const AppLayout = ({ children }) => {
 
   // Don't show header/footer on auth pages
   const isAuthPage = pathname === "/signin" || pathname.startsWith("/signin");
-  
-  // Don't show footer on dashboard/profile pages (logged-in pages)
-  const isLoggedInPage = pathname.startsWith("/dashboard") || 
-                        pathname.startsWith("/community") ||
-                        pathname.startsWith("/profile") || 
-                        pathname.startsWith("/share-availability") ||
-                        pathname.startsWith("/messages") ||
-                        pathname.startsWith("/meetings") ||
-                        pathname.startsWith("/my-dogs");
 
   if (loading) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    return <div className="min-h-screen w-full bg-white flex items-center justify-center">Loading...</div>;
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen w-full bg-white flex flex-col">
       {/* Show appropriate header based on authentication status */}
       {!isAuthPage && (
         user ? <LoggedInNav /> : <Header />
       )}
       
       {/* Main content */}
-      <main className="flex-1">
+      <main className="flex-1 w-full bg-white">
         {children}
       </main>
       
-      {/* Show footer only on public pages */}
-      {!isAuthPage && !isLoggedInPage && <Footer />}
+      {/* Show footer on all pages except auth pages */}
+      {!isAuthPage && <Footer />}
     </div>
   );
 };

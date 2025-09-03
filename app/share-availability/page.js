@@ -671,7 +671,7 @@ export default function ShareAvailability() {
                     <div
                       key={dog.id}
                       className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
-                        selectedDogs.includes(dog.id) ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
+                        selectedDogs.includes(dog.id) ? 'border-blue-500 bg-blue-50' : 'border-gray-200 bg-white hover:border-gray-300'
                       }`}
                       onClick={() => handleDogSelection(dog.id)}
                     >
@@ -680,7 +680,7 @@ export default function ShareAvailability() {
                           type="checkbox"
                           checked={selectedDogs.includes(dog.id)}
                           onChange={() => handleDogSelection(dog.id)}
-                          className="w-4 h-4 text-blue-600"
+                          className="w-4 h-4 text-blue-600 bg-white border-gray-300 rounded"
                         />
                         <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
                           {dog.photo_url ? (
@@ -711,7 +711,7 @@ export default function ShareAvailability() {
                   required
                   value={formData.title}
                   onChange={(e) => handleInputChange('title', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder={postType === 'dog_available' ? 'e.g., Need dog walking help this week' : 'e.g., Available for dog walking'}
                 />
               </div>
@@ -767,7 +767,7 @@ export default function ShareAvailability() {
                               type="time"
                               value={slot.start}
                               onChange={(e) => updateTimeSlot(day, index, 'start', e.target.value)}
-                              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              className="px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                               required
                             />
                             <span className="text-gray-500">to</span>
@@ -775,7 +775,7 @@ export default function ShareAvailability() {
                               type="time"
                               value={slot.end}
                               onChange={(e) => updateTimeSlot(day, index, 'end', e.target.value)}
-                              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              className="px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                               required
                             />
                             {daySchedules[day].timeSlots.length > 1 && (
@@ -805,7 +805,7 @@ export default function ShareAvailability() {
                 value={formData.description}
                 onChange={(e) => handleInputChange('description', e.target.value)}
                 rows={4}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Provide more details about your availability or needs..."
               />
             </div>
@@ -819,7 +819,7 @@ export default function ShareAvailability() {
                 value={formData.special_instructions}
                 onChange={(e) => handleInputChange('special_instructions', e.target.value)}
                 rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Any special requirements or instructions..."
               />
             </div>
@@ -832,7 +832,7 @@ export default function ShareAvailability() {
                   id="is_urgent"
                   checked={formData.is_urgent}
                   onChange={(e) => handleCheckboxChange('is_urgent', e.target.checked)}
-                  className="w-4 h-4 text-red-600 mr-2"
+                  className="w-4 h-4 text-red-600 mr-2 bg-white border-gray-300 rounded"
                 />
                 <label htmlFor="is_urgent" className="text-sm font-medium text-gray-700">
                   This is urgent
@@ -848,7 +848,7 @@ export default function ShareAvailability() {
                     value={formData.urgency_notes}
                     onChange={(e) => handleInputChange('urgency_notes', e.target.value)}
                     rows={2}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Explain why this is urgent..."
                   />
                 </div>
@@ -932,7 +932,7 @@ export default function ShareAvailability() {
                         type="text"
                         value={formData.custom_location_address}
                         onChange={(e) => handleInputChange('custom_location_address', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="123 Main St"
                       />
                     </div>
@@ -945,7 +945,7 @@ export default function ShareAvailability() {
                         type="text"
                         value={formData.custom_location_city}
                         onChange={(e) => handleInputChange('custom_location_city', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="City"
                       />
                     </div>
@@ -958,7 +958,7 @@ export default function ShareAvailability() {
                         type="text"
                         value={formData.custom_location_state}
                         onChange={(e) => handleInputChange('custom_location_state', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="State"
                       />
                     </div>
@@ -971,7 +971,7 @@ export default function ShareAvailability() {
                         type="text"
                         value={formData.custom_location_zip_code}
                         onChange={(e) => handleInputChange('custom_location_zip_code', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="12345"
                       />
                     </div>
@@ -1012,7 +1012,7 @@ export default function ShareAvailability() {
                     id="can_pick_up_drop_off"
                     checked={formData.can_pick_up_drop_off}
                     onChange={(e) => handleCheckboxChange('can_pick_up_drop_off', e.target.checked)}
-                    className="w-4 h-4 text-blue-600 mr-2"
+                    className="w-4 h-4 text-blue-600 mr-2 bg-white border-gray-300 rounded"
                   />
                   <label htmlFor="can_pick_up_drop_off" className="text-sm font-medium text-gray-700">
                     Can pick up/drop off
@@ -1028,7 +1028,7 @@ export default function ShareAvailability() {
                   type="text"
                   value={formData.preferred_meeting_location}
                   onChange={(e) => handleInputChange('preferred_meeting_location', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="e.g., Local park, my home, etc."
                 />
               </div>
@@ -1048,7 +1048,7 @@ export default function ShareAvailability() {
               <button
                 type="button"
                 onClick={() => setCurrentStep(1)}
-                className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+                className="px-6 py-2 border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-100 transition-colors"
               >
                 Back
               </button>

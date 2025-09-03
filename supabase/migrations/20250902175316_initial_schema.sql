@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS profiles (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+<<<<<<< HEAD
 -- Create reviews table (for the ratings feature)
 CREATE TABLE IF NOT EXISTS reviews (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -456,6 +457,10 @@ CREATE TRIGGER update_messages_updated_at BEFORE UPDATE ON messages
 
 CREATE TRIGGER update_user_preferences_updated_at BEFORE UPDATE ON user_preferences
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+=======
+-- Enable RLS for profiles table
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+>>>>>>> 9281e04509cd454d61586d07b26918dc23c26abd
 
 -- Create function to handle user creation
 CREATE OR REPLACE FUNCTION handle_new_user()
@@ -471,3 +476,20 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE OR REPLACE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION handle_new_user();
+<<<<<<< HEAD
+=======
+
+-- Create policies for profiles table
+CREATE POLICY "Users can view their own profile" ON profiles
+  FOR SELECT USING (auth.uid() = id);
+
+CREATE POLICY "Users can update their own profile" ON profiles
+  FOR UPDATE USING (auth.uid() = id);
+
+CREATE POLICY "Users can insert their own profile" ON profiles
+  FOR INSERT WITH CHECK (auth.uid() = id);
+
+-- Add a more permissive policy for upsert operations
+CREATE POLICY "Users can upsert their own profile" ON profiles
+  FOR ALL USING (auth.uid() = id);
+>>>>>>> 9281e04509cd454d61586d07b26918dc23c26abd

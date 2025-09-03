@@ -48,7 +48,7 @@ export default function ProfilePage() {
 
   if (loading || userLoading) {
     return (
-      <div className="max-w-md mx-auto p-6 text-center">
+      <div className="min-h-screen w-full bg-white max-w-md mx-auto p-6 text-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
         <p>Loading your profile...</p>
       </div>
@@ -57,7 +57,7 @@ export default function ProfilePage() {
   
   if (error) {
     return (
-      <div className="max-w-md mx-auto p-6 text-center space-y-4">
+      <div className="min-h-screen w-full bg-white max-w-md mx-auto p-6 text-center space-y-4">
         <h2 className="text-xl font-semibold text-red-600">Error Loading Profile</h2>
         <p className="text-gray-600">{error}</p>
         <button 
@@ -72,8 +72,8 @@ export default function ProfilePage() {
   
   if (!profile) {
     return (
-      <div className="max-w-md mx-auto p-6 text-center space-y-4">
-        <h2 className="text-xl font-semibold">Welcome!</h2>
+      <div className="min-h-screen w-full bg-white max-w-md mx-auto p-6 text-center space-y-4">
+        <h2 className="text-xl font-semibold text-black">Welcome!</h2>
         <p className="text-gray-600">You haven&apos;t set up your profile yet.</p>
         <Link href="/profile/edit" className="inline-block bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">
           Create Your Profile
@@ -83,9 +83,9 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="max-w-md mx-auto space-y-6">
+    <div className="min-h-screen w-full bg-white max-w-md mx-auto space-y-6 p-6">
       <div className="text-center">
-        <h1 className="text-2xl font-bold mb-4">My Profile</h1>
+        <h1 className="text-2xl font-bold mb-4 text-black">My Profile</h1>
         <p className="text-sm text-gray-600 mb-4">This information is visible to other community members</p>
         
         {/* Profile Photo */}
