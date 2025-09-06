@@ -135,6 +135,24 @@ export async function DELETE() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // First, check if there's a pending deletion request
+    const { data: existingRequest, error: checkError } = await supabase
+      .from('account_deletion_requests')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('status', 'pending')
+      .single();
+
+    if (checkError && checkError.code !== 'PGRST116') { // PGRST116 = no rows returned
+      throw checkError;
+    }
+
+    if (!existingRequest) {
+      return NextResponse.json({ 
+        error: 'No pending deletion request found to cancel' 
+      }, { status: 404 });
+    }
+
     // Cancel the pending deletion request
     const { error: updateError } = await supabase
       .from('account_deletion_requests')
@@ -146,6 +164,7 @@ export async function DELETE() {
       .eq('status', 'pending');
 
     if (updateError) {
+      console.error('Update error:', updateError);
       throw updateError;
     }
 
