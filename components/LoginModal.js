@@ -23,10 +23,15 @@ export default function LoginModal({ isOpen, onClose }) {
         : `https://shareskippy.com/api/auth/callback`;
 
       if (type === "oauth") {
+        // Use Supabase's built-in OAuth but with custom branding
         const { error } = await supabase.auth.signInWithOAuth({
           provider,
           options: {
             redirectTo: redirectURL,
+            queryParams: {
+              access_type: 'offline',
+              prompt: 'consent',
+            }
           },
         });
         
