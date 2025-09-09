@@ -2,6 +2,7 @@
 import { createClient } from "@/libs/supabase/client";
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 // Carousel messages for the hero section
 const carouselMessages = [
@@ -63,6 +64,7 @@ const communityStories = [
 
 export default function Home() {
   const supabase = createClient();
+  const router = useRouter();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
@@ -86,6 +88,13 @@ export default function Home() {
     return () => subscription.unsubscribe();
   }, [supabase.auth]);
 
+  // Redirect logged-in users to community page
+  useEffect(() => {
+    if (!loading && user) {
+      router.push('/community');
+    }
+  }, [user, loading, router]);
+
   // Auto-rotate carousel messages
   useEffect(() => {
     if (isPaused) return;
@@ -102,6 +111,30 @@ export default function Home() {
     e.preventDefault();
     window.location.href = "/signin";
   };
+
+  // Show loading state while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show loading state while redirecting logged-in users
+  if (user) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Redirecting to community...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
