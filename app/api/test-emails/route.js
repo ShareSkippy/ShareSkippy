@@ -7,6 +7,12 @@ import {
 } from '@/libs/emailTemplates';
 
 export async function GET() {
+  // DISABLED: This endpoint was sending unwanted test emails
+  return Response.json({
+    success: false,
+    message: 'Test email endpoint has been disabled to prevent unwanted emails'
+  }, { status: 403 });
+
   try {
     const testEmail = 'kaia@kaia.dev'; // Replace with your email
     const appUrl = 'shareskippy.com';

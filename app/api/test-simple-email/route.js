@@ -1,6 +1,14 @@
 import { sendEmail } from '@/libs/resend';
 
 export async function GET() {
+  // DISABLED: This endpoint was sending unwanted test emails
+  return Response.json({
+    success: false,
+    message: 'Test email endpoint has been disabled to prevent unwanted emails'
+  }, { status: 403 });
+
+  // Original code below (disabled):
+  /*
   try {
     const testEmail = 'kaia@kaia.dev';
     

@@ -1,4 +1,10 @@
 export async function GET() {
+  // DISABLED: This endpoint was accessible publicly
+  return Response.json({
+    success: false,
+    message: 'Test endpoint has been disabled'
+  }, { status: 403 });
+
   try {
     console.log('🧪 Testing Resend configuration...');
     
