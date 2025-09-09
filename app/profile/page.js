@@ -83,11 +83,18 @@ export default function ProfilePage() {
     );
   }
 
+
   return (
     <div className="min-h-screen w-full bg-white max-w-md mx-auto space-y-6 p-6">
       <div className="text-center">
-        <h1 className="text-2xl font-bold mb-4 text-black">My Profile</h1>
+        <h1 className="text-2xl font-bold mb-2 text-black">
+          {profile.first_name && profile.last_name 
+            ? `${profile.first_name} ${profile.last_name}'s Profile`
+            : 'My Profile'
+          }
+        </h1>
         <p className="text-sm text-gray-600 mb-4">This information is visible to other community members</p>
+        
         
         {/* Profile Photo */}
         {profile.profile_photo_url && (
@@ -97,6 +104,20 @@ export default function ProfilePage() {
               alt="Profile" 
               className="w-24 h-24 rounded-full mx-auto object-cover"
             />
+          </div>
+        )}
+        
+        {/* User Name Display */}
+        {profile.first_name && profile.last_name && (
+          <div className="mb-4">
+            <h2 className="text-xl font-semibold text-gray-900">
+              {profile.first_name} {profile.last_name}
+            </h2>
+            {profile.role && (
+              <p className="text-sm text-gray-600 capitalize">
+                {profile.role.replace('_', ' ')}
+              </p>
+            )}
           </div>
         )}
         
