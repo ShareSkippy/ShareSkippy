@@ -193,7 +193,7 @@ export default function ProfileEditPage() {
 
       console.log('Profile saved successfully:', data);
       toast.success('Profile saved successfully!');
-      router.push('/profile');
+      router.push('/share-availability');
     } catch (err) {
       console.error('Error saving profile:', err);
       
