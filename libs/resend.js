@@ -45,6 +45,25 @@ const validateEmailContent = (subject, text, html) => {
   return warnings;
 };
 
+// Rate limiting for Resend API (2 requests per second limit)
+let lastEmailTime = 0;
+const MIN_EMAIL_INTERVAL = 500; // 500ms = 2 requests per second
+
+/**
+ * Waits to respect Resend's rate limit of 2 requests per second
+ */
+const waitForRateLimit = async () => {
+  const now = Date.now();
+  const timeSinceLastEmail = now - lastEmailTime;
+  
+  if (timeSinceLastEmail < MIN_EMAIL_INTERVAL) {
+    const waitTime = MIN_EMAIL_INTERVAL - timeSinceLastEmail;
+    await new Promise(resolve => setTimeout(resolve, waitTime));
+  }
+  
+  lastEmailTime = Date.now();
+};
+
 /**
  * Sends an email using the provided parameters with deliverability best practices.
  *
@@ -58,6 +77,8 @@ const validateEmailContent = (subject, text, html) => {
  * @returns {Promise<Object>} A Promise that resolves with the email sending result data.
  */
 export const sendEmail = async ({ to, subject, text, html, replyTo }) => {
+  // Wait to respect rate limit
+  await waitForRateLimit();
   // Validate content for deliverability
   validateEmailContent(subject, text, html);
   
