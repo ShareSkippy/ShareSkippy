@@ -53,6 +53,7 @@ export async function GET() {
           meetingNotes: meeting.notes || '',
           meetingUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://shareskippy.com'}/meetings/${meeting.id}`,
           messageUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://shareskippy.com'}/messages`,
+          unsubscribeUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://shareskippy.com'}/profile`,
         });
 
         // Send to recipient
@@ -71,6 +72,7 @@ export async function GET() {
           meetingNotes: meeting.notes || '',
           meetingUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://shareskippy.com'}/meetings/${meeting.id}`,
           messageUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://shareskippy.com'}/messages`,
+          unsubscribeUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://shareskippy.com'}/profile`,
         });
 
         emailsSent += 2;

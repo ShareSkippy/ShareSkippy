@@ -38,9 +38,9 @@ const config = {
     cdn: "https://cdn-id.cloudfront.net/",
   },
   resend: {
-    // REQUIRED — Email 'From' field to be used when sending magic login links
+    // REQUIRED — Email 'From' field to be used when sending magic login links (no replies expected)
     fromNoReply: `ShareSkippy <noreply@send.shareskippy.com>`,
-    // REQUIRED — Email 'From' field to be used when sending other emails, like abandoned carts, updates etc..
+    // REQUIRED — Email 'From' field for emails that might get replies (forwarded to Gmail)
     fromAdmin: `ShareSkippy <admin@send.shareskippy.com>`,
     // Email shown to customer if need support. Leave empty if not needed => if empty, set up Crisp above, otherwise you won't be able to offer customer support."
     supportEmail: "support@shareskippy.com",

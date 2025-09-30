@@ -158,8 +158,8 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎉 Meeting Confirmed!</h1>
-            <p>Your dog playdate is scheduled!</p>
+            <h1>Meeting Confirmed</h1>
+            <p>Your dog playdate has been scheduled successfully</p>
         </div>
         
         <div class="content">
@@ -190,13 +190,11 @@
                     <span class="detail-label">Location:</span>
                     <span class="detail-value">{{meetingLocation}}</span>
                 </div>
-                {{#if meetingNotes}}
                 <div class="detail-row">
                     <span class="detail-icon">📝</span>
                     <span class="detail-label">Notes:</span>
                     <span class="detail-value">{{meetingNotes}}</span>
                 </div>
-                {{/if}}
             </div>
             
             <div style="text-align: center;">
@@ -224,7 +222,18 @@
             <p>Happy tails and wagging adventures,<br>The ShareSkippy Team 🐕</p>
             <p style="margin-top: 20px; font-size: 12px;">
                 <a href="{{appUrl}}/meetings">View all meetings</a> | 
-                <a href="{{appUrl}}/safety">Safety guidelines</a>
+                <a href="{{appUrl}}/safety">Safety guidelines</a> |
+                <a href="{{unsubscribeUrl}}">Unsubscribe</a>
+            </p>
+            <p style="margin-top: 15px; font-size: 11px; color: #9ca3af;">
+                ShareSkippy LLC<br>
+                San Francisco, CA 94102<br>
+                United States
+            </p>
+            <p style="margin-top: 10px; font-size: 11px; color: #9ca3af;">
+                You received this confirmation because you scheduled a meeting on ShareSkippy. 
+                If you no longer wish to receive meeting confirmations, you can 
+                <a href="{{unsubscribeUrl}}" style="color: #2563eb;">unsubscribe here</a>.
             </p>
         </div>
     </div>

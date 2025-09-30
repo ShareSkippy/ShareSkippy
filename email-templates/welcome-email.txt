@@ -1,0 +1,34 @@
+Welcome to ShareSkippy!
+
+Hi {{userName}},
+
+Welcome to ShareSkippy! We're thrilled to have you join our community of dog lovers! ShareSkippy is all about connecting dog owners and dog enthusiasts to create amazing experiences together.
+
+Ready to get started?
+Consider sharing your availability to help schedule your first meeting!
+
+Here's what you can do on ShareSkippy:
+• Schedule Playdates: Connect with other dog owners for fun meetups
+• Chat & Connect: Message fellow dog lovers in your area  
+• Share Reviews: Rate experiences and help others find great connections
+• Share Availability: Let others know when you're available for dog activities
+
+Start Exploring ShareSkippy: {{appUrl}}
+
+Pro tip: Complete your profile with photos of your furry friend to get more connection requests! The more details you share, the better matches you'll find.
+
+If you have any questions or need help getting started, don't hesitate to reach out to our support team. We're here to help make your ShareSkippy experience amazing!
+
+Happy tails and wagging adventures,
+The ShareSkippy Team 🐕
+
+FAQ page: {{appUrl}}/faq
+Safety guidelines: {{appUrl}}/safety
+Unsubscribe: {{unsubscribeUrl}}
+
+ShareSkippy LLC
+123 Main Street, Suite 100
+San Francisco, CA 94102
+United States
+
+You received this welcome email as a new member of ShareSkippy. We're excited to have you join our community! If you no longer wish to receive emails from us, you can unsubscribe here: {{unsubscribeUrl}}

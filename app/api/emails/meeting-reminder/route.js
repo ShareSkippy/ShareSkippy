@@ -67,6 +67,7 @@ export async function POST(request) {
       meetingNotes: meeting.notes || '',
       meetingUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://shareskippy.com'}/meetings/${meetingId}`,
       messageUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://shareskippy.com'}/messages`,
+      unsubscribeUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://shareskippy.com'}/profile`,
     });
 
     return Response.json({ 

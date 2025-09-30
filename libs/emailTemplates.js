@@ -213,6 +213,7 @@ The ShareSkippy Team 🐕`;
  * @param {string} params.meetingUrl - URL to view meeting details
  * @param {string} params.messageUrl - URL to message the other user
  * @param {string} params.appUrl - App URL
+ * @param {string} params.unsubscribeUrl - URL for unsubscribe link
  */
 export async function sendMeetingReminder({
   to,
@@ -227,6 +228,7 @@ export async function sendMeetingReminder({
   meetingUrl,
   messageUrl,
   appUrl = config.domainName,
+  unsubscribeUrl,
 }) {
   const html = loadTemplate(TEMPLATE_PATHS.meetingReminder, {
     userName,
@@ -240,6 +242,7 @@ export async function sendMeetingReminder({
     meetingUrl,
     messageUrl,
     appUrl: `https://${appUrl}`,
+    unsubscribeUrl: unsubscribeUrl || `${appUrl}/profile`,
   });
 
   const text = `Reminder: Your dog playdate is tomorrow!
@@ -369,7 +372,7 @@ The ShareSkippy Team 🐕`;
     subject: `How's ShareSkippy going? - 1 Week Check-in 📅`,
     html,
     text,
-    replyTo: 'support@kaia.dev',
+    replyTo: 'support@shareskippy.com',
   });
 }
 
