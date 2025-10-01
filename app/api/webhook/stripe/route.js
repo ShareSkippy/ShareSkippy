@@ -8,7 +8,7 @@ import { findCheckoutSession } from "@/libs/stripe";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2023-10-16",
 });
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+// const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
 // This is where we receive Stripe webhook events
 // It used to update the user data, send emails, etc...

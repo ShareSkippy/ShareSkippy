@@ -100,7 +100,7 @@ export default function HowToUsePage() {
                     <div className="flex items-start space-x-4">
                       <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">2</div>
                       <div>
-                        <h3 className="text-xl font-semibold text-gray-900 mb-2">Add Your Dogs (If You're a Dog Owner)</h3>
+                        <h3 className="text-xl font-semibold text-gray-900 mb-2">Add Your Dogs (If You&apos;re a Dog Owner)</h3>
                         <p className="text-gray-700 mb-2">Create detailed profiles for each of your dogs to help others understand their needs.</p>
                         <ul className="list-disc list-inside text-gray-600 space-y-1">
                           <li>Upload photos of your dogs</li>
@@ -116,7 +116,7 @@ export default function HowToUsePage() {
                       <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">3</div>
                       <div>
                         <h3 className="text-xl font-semibold text-gray-900 mb-2">Explore the Community</h3>
-                        <p className="text-gray-700 mb-2">Visit the Community page to see what's available in your area.</p>
+                        <p className="text-gray-700 mb-2">Visit the Community page to see what&apos;s available in your area.</p>
                         <ul className="list-disc list-inside text-gray-600 space-y-1">
                           <li>Browse dog availability posts</li>
                           <li>Check out PetPal availability posts</li>
@@ -145,9 +145,9 @@ export default function HowToUsePage() {
                     </Callout>
                     
                     <Callout tone="green" title="🤝 PetPal Availability Posts">
-                      <p className="mb-3">These are posts made by dog lovers when they're available to help with other people's dogs.</p>
+                      <p className="mb-3">These are posts made by dog lovers when they&apos;re available to help with other people&apos;s dogs.</p>
                       <ul className="list-disc list-inside space-y-1">
-                        <li>Show when you're available to help</li>
+                        <li>Show when you&apos;re available to help</li>
                         <li>Specify what activities you can do (walking, sitting, etc.)</li>
                         <li>Set your location and transportation capabilities</li>
                         <li>Add your experience level and preferences</li>
@@ -174,11 +174,11 @@ export default function HowToUsePage() {
                   <SectionHeading id="creating-posts">✏️ Creating Availability Posts</SectionHeading>
                   <div className="space-y-6 mt-6">
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-4">For Dog Owners: Sharing Your Dog's Availability</h3>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-4">For Dog Owners: Sharing Your Dog&apos;s Availability</h3>
                       <Callout tone="blue">
                         <ol className="list-decimal list-inside space-y-3">
-                          <li>Go to the Community page and click "Share Availability"</li>
-                          <li>Select "Dog Available" as your post type</li>
+                          <li>Go to the Community page and click &quot;Share Availability&quot;</li>
+                          <li>Select &quot;Dog Available&quot; as your post type</li>
                           <li>Choose which of your dogs are available</li>
                           <li>Set your availability schedule (days and times)</li>
                           <li>Add a title and description for your post</li>
@@ -195,8 +195,8 @@ export default function HowToUsePage() {
                       <h3 className="text-xl font-semibold text-gray-900 mb-4">For PetPals: Offering Your Help</h3>
                       <Callout tone="green">
                         <ol className="list-decimal list-inside space-y-3">
-                          <li>Go to the Community page and click "Share Availability"</li>
-                          <li>Select "PetPal Available" as your post type</li>
+                          <li>Go to the Community page and click &quot;Share Availability&quot;</li>
+                          <li>Select &quot;PetPal Available&quot; as your post type</li>
                           <li>Set your availability schedule (days and times)</li>
                           <li>Add a title describing what help you can offer</li>
                           <li>Write a description of your experience and preferences</li>
@@ -232,7 +232,7 @@ export default function HowToUsePage() {
                       <Callout tone="blue" title="What you'll see:">
                         <ul className="list-disc list-inside space-y-1">
                           <li>Dog photos and basic information (name, breed, size)</li>
-                          <li>Owner's name and location</li>
+                          <li>Owner&apos;s name and location</li>
                           <li>Available schedule (days and times)</li>
                           <li>Activity preferences and special instructions</li>
                           <li>Transportation options (pick up/drop off available)</li>
@@ -247,7 +247,7 @@ export default function HowToUsePage() {
                       <p className="text-gray-700 mb-4">Find people in your area who are available to help with your dogs.</p>
                       <Callout tone="green" title="What you'll see:">
                         <ul className="list-disc list-inside space-y-1">
-                          <li>PetPal's name and profile photo</li>
+                          <li>PetPal&apos;s name and profile photo</li>
                           <li>Their location and availability schedule</li>
                           <li>Services they can provide</li>
                           <li>Experience level and special skills</li>
@@ -287,10 +287,10 @@ export default function HowToUsePage() {
                       <Callout tone="blue">
                         <ol className="list-decimal list-inside space-y-3">
                           <li>Find an availability post that interests you</li>
-                          <li>Click the "Send Message" button</li>
-                          <li>A message modal will open with the post owner's information</li>
+                          <li>Click the &quot;Send Message&quot; button</li>
+                          <li>A message modal will open with the post owner&apos;s information</li>
                           <li>Write a friendly message introducing yourself</li>
-                          <li>Mention why you're interested in their post</li>
+                          <li>Mention why you&apos;re interested in their post</li>
                           <li>Ask any questions you have</li>
                           <li>Send your message!</li>
                         </ol>
@@ -314,7 +314,7 @@ export default function HowToUsePage() {
                     <Callout tone="yellow" title="💡 Tips for Great Messages:">
                       <ul className="list-disc list-inside space-y-1">
                         <li>Be friendly and introduce yourself</li>
-                        <li>Mention why you're interested in their post</li>
+                        <li>Mention why you&apos;re interested in their post</li>
                         <li>Ask relevant questions about their needs or preferences</li>
                         <li>Share a bit about your experience with dogs</li>
                         <li>Be respectful and patient in your communication</li>
@@ -333,10 +333,10 @@ export default function HowToUsePage() {
                       <h3 className="text-xl font-semibold text-gray-900 mb-4">Requesting a Meeting</h3>
                       <Callout tone="blue">
                         <ol className="list-decimal list-inside space-y-3">
-                          <li>In an active conversation, click "Schedule Meeting"</li>
+                          <li>In an active conversation, click &quot;Schedule Meeting&quot;</li>
                           <li>Fill out the meeting request form:</li>
                           <ul className="list-disc list-inside ml-4 mt-2 space-y-1">
-                            <li>Meeting title (e.g., "Dog Walking Meetup")</li>
+                            <li>Meeting title (e.g., &quot;Dog Walking Meetup&quot;)</li>
                             <li>Start date and time</li>
                             <li>End date and time</li>
                             <li>Meeting place (specific location)</li>
@@ -399,7 +399,7 @@ export default function HowToUsePage() {
                         <ol className="list-decimal list-inside space-y-3">
                           <li>Go to your Meetings page</li>
                           <li>Find a completed meeting</li>
-                          <li>Click "Leave Review"</li>
+                          <li>Click &quot;Leave Review&quot;</li>
                           <li>Rate the experience (1-5 stars)</li>
                           <li>Write a comment (minimum 5 words)</li>
                           <li>Submit your review</li>
@@ -411,7 +411,7 @@ export default function HowToUsePage() {
                       <h3 className="text-xl font-semibold text-gray-900 mb-4">Understanding Reviews</h3>
                       <Callout tone="green" title="Reviews help you:">
                         <ul className="list-disc list-inside space-y-1">
-                          <li>Learn about other users' experiences</li>
+                          <li>Learn about other users&apos; experiences</li>
                           <li>Make informed decisions about who to work with</li>
                           <li>Build your own reputation in the community</li>
                           <li>Help others find reliable dog care partners</li>
@@ -424,7 +424,7 @@ export default function HowToUsePage() {
                         <li>Be honest and constructive</li>
                         <li>Focus on the experience and communication</li>
                         <li>Mention specific positive aspects</li>
-                        <li>Be respectful even if the experience wasn't perfect</li>
+                        <li>Be respectful even if the experience wasn&apos;t perfect</li>
                         <li>Help others understand what to expect</li>
                       </ul>
                     </Callout>
@@ -442,9 +442,9 @@ export default function HowToUsePage() {
                       <Callout tone="blue">
                         <ol className="list-decimal list-inside space-y-3">
                           <li>Go to the Community page</li>
-                          <li>Click on the "My Availability" tab</li>
+                          <li>Click on the &quot;My Availability&quot; tab</li>
                           <li>Find the post you want to edit</li>
-                          <li>Click the "Edit" button</li>
+                          <li>Click the &quot;Edit&quot; button</li>
                           <li>Make your changes</li>
                           <li>Save your updates</li>
                         </ol>
@@ -456,13 +456,13 @@ export default function HowToUsePage() {
                       <Callout tone="green">
                         <p className="mb-3">When a post is no longer relevant, you can hide it instead of deleting it completely.</p>
                         <ol className="list-decimal list-inside space-y-2">
-                          <li>Go to "My Availability" tab</li>
+                          <li>Go to &quot;My Availability&quot; tab</li>
                           <li>Find the post you want to hide</li>
-                          <li>Click "Hide Post"</li>
+                          <li>Click &quot;Hide Post&quot;</li>
                           <li>Confirm that you want to hide it</li>
                         </ol>
                         <p className="text-sm text-gray-600 mt-3">
-                          <strong>Note:</strong> Hidden posts won't be visible to other users, but existing conversations will be preserved.
+                          <strong>Note:</strong> Hidden posts won&apos;t be visible to other users, but existing conversations will be preserved.
                         </p>
                       </Callout>
                     </div>
@@ -470,7 +470,7 @@ export default function HowToUsePage() {
                     <Callout tone="yellow" title="💡 Post Management Tips:">
                       <ul className="list-disc list-inside space-y-1">
                         <li>Update your posts regularly to keep them current</li>
-                        <li>Hide posts when you're no longer available</li>
+                        <li>Hide posts when you&apos;re no longer available</li>
                         <li>Edit posts to reflect schedule changes</li>
                         <li>Keep your descriptions clear and up-to-date</li>
                         <li>Respond to messages promptly to maintain good relationships</li>
@@ -579,7 +579,7 @@ export default function HowToUsePage() {
                     <div className="mt-8 p-6 bg-gray-50 rounded-lg">
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">Contact Support</h3>
                       <p className="text-gray-600">
-                        Need help or want to report an issue? We're here to help!{' '}
+                        Need help or want to report an issue? We&apos;re here to help!{' '}
                         <a 
                           href="mailto:support@shareskippy.com" 
                           className="text-purple-600 hover:text-purple-700 font-medium underline"

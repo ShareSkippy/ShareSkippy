@@ -114,6 +114,21 @@ export default function AddDogPage() {
       console.log('Session user ID:', session.user.id);
       console.log('Session access token exists:', !!session.access_token);
 
+      // Check if user has a profile first
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('id, email')
+        .eq('id', session.user.id)
+        .single();
+
+      if (profileError || !profile) {
+        console.error('Profile not found:', profileError);
+        setError('User profile not found. Please complete your profile setup first.');
+        return;
+      }
+
+      console.log('User profile found:', profile);
+
       // Ensure the owner_id matches the authenticated user
       const dogDataWithAuth = {
         ...dogData,
@@ -200,7 +215,7 @@ export default function AddDogPage() {
             
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                Dog's Name *
+                Dog&apos;s Name *
               </label>
               <input
                 type="text"

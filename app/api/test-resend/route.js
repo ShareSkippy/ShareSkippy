@@ -21,7 +21,7 @@ export async function GET() {
     
     // Try to import and use Resend
     const { Resend } = await import('resend');
-    const resend = new Resend(process.env.RESEND_API_KEY);
+    new Resend(process.env.RESEND_API_KEY);
     
     console.log('Resend instance created successfully');
     

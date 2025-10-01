@@ -18,7 +18,7 @@ export async function POST(request) {
     }
 
     // Check if a conversation already exists
-    const { data: existingConversation, error: convError } = await supabase
+    const { data: existingConversation } = await supabase
       .from('conversations')
       .select('*')
       .or(`and(participant1_id.eq.${user.id},participant2_id.eq.${recipient_id},availability_id.eq.${availability_id}),and(participant1_id.eq.${recipient_id},participant2_id.eq.${user.id},availability_id.eq.${availability_id})`)

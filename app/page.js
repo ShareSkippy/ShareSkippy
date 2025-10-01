@@ -214,7 +214,7 @@ export default function Home() {
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Sniff Around</h3>
               <p className="text-xl text-gray-700">
-                Tell us if you're a pup parent, a petpal, or both
+                Tell us if you&apos;re a pup parent, a petpal, or both
               </p>
             </div>
 
@@ -310,7 +310,7 @@ export default function Home() {
 
           <div className="max-w-4xl mx-auto text-center">
             <p className="text-xl text-gray-700 leading-relaxed mb-8">
-              Vets estimate that over <strong>70% of city dogs don't get enough exercise</strong>. Life happens — some owners are elderly, recovering from illness, juggling long work hours, caring for kids on their own, or managing tight budgets. Pups still need to run, play, and explore. That's where you come in: <strong>volunteer, make a dog's AND a human's day, and get the best reward ever: puppy love</strong>.
+              Vets estimate that over <strong>70% of city dogs don&apos;t get enough exercise</strong>. Life happens — some owners are elderly, recovering from illness, juggling long work hours, caring for kids on their own, or managing tight budgets. Pups still need to run, play, and explore. That&apos;s where you come in: <strong>volunteer, make a dog&apos;s AND a human&apos;s day, and get the best reward ever: puppy love</strong>.
             </p>
             
             <div className="text-center">

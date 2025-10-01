@@ -840,7 +840,7 @@ export default function AvailabilityDetailPage() {
               </h3>
               <ul className="space-y-2 text-sm text-yellow-700">
                 <li>• Always meet in public places first</li>
-                <li>• Bring your dog's vaccination records</li>
+                <li>• Bring your dog&apos;s vaccination records</li>
                 <li>• Use a secure leash and collar</li>
                 <li>• Supervise all interactions</li>
                 <li>• Trust your instincts</li>

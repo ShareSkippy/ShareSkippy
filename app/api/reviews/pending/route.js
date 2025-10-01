@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 export const dynamic = 'force-dynamic';
 
 // GET /api/reviews/pending - Get pending reviews for the current user
-export async function GET(request) {
+export async function GET() {
   try {
     const supabase = createClient();
     

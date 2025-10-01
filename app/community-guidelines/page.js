@@ -33,7 +33,7 @@ export default function CommunityGuidelines() {
             </h3>
             <ul className="space-y-2 text-gray-600">
               <li>• Always meet in public places first</li>
-              <li>• Bring your dog's vaccination records</li>
+              <li>• Bring your dog&apos;s vaccination records</li>
               <li>• Use a secure leash and collar</li>
               <li>• Supervise all interactions</li>
               <li>• Trust your instincts</li>
@@ -48,8 +48,8 @@ export default function CommunityGuidelines() {
             <ul className="space-y-2 text-gray-600">
               <li>• Keep dogs on leash unless in designated areas</li>
               <li>• Clean up after your dog</li>
-              <li>• Respect other dogs' space</li>
-              <li>• Monitor your dog's behavior</li>
+              <li>• Respect other dogs&apos; space</li>
+              <li>• Monitor your dog&apos;s behavior</li>
               <li>• Be mindful of noise levels</li>
             </ul>
           </div>
@@ -63,7 +63,7 @@ export default function CommunityGuidelines() {
               <li>• Be clear about expectations</li>
               <li>• Respond to messages promptly</li>
               <li>• Be honest about your experience</li>
-              <li>• Respect others' time</li>
+              <li>• Respect others&apos; time</li>
               <li>• Report any concerns</li>
             </ul>
           </div>

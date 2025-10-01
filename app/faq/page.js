@@ -237,7 +237,7 @@ export default function FAQPage() {
             Still Have Questions?
           </h2>
                       <p className="text-gray-600 mb-6">
-              Can't find what you're looking for? Our community team is here to help!
+              Can&apos;t find what you&apos;re looking for? Our community team is here to help!
             </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
@@ -264,7 +264,7 @@ export default function FAQPage() {
             <div className="text-3xl mb-3">🤝</div>
             <h3 className="font-semibold text-gray-900 mb-2">Browse Community</h3>
             <p className="text-gray-600 text-sm">
-              See what's happening in your local pet care community
+              See what&apos;s happening in your local pet care community
             </p>
           </Link>
           <Link

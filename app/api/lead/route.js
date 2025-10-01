@@ -1,4 +1,3 @@
-import { createClient } from "@/libs/supabase/server";
 import { NextResponse } from "next/server";
 
 // This route is used to store the leads that are generated from the landing page.

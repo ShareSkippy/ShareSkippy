@@ -118,7 +118,7 @@ export default function DogDetailsPage() {
         <div className="max-w-md mx-auto text-center">
           <div className="text-6xl mb-6">🐕</div>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Dog not found</h2>
-          <p className="text-gray-600 mb-8">The dog you're looking for doesn't exist or you don't have permission to view it.</p>
+          <p className="text-gray-600 mb-8">The dog you&apos;re looking for doesn&apos;t exist or you don&apos;t have permission to view it.</p>
           <Link 
             href="/my-dogs" 
             className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors inline-block font-medium"

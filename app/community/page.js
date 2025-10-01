@@ -625,7 +625,7 @@ export default function CommunityPage() {
                 <div className="col-span-full text-center py-12">
                   <div className="text-6xl mb-4">🐕</div>
                   <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">No dogs available right now</h3>
-                  <p className="text-sm sm:text-base text-gray-600 mb-4">Be the first to share your dog's availability!</p>
+                  <p className="text-sm sm:text-base text-gray-600 mb-4">Be the first to share your dog&apos;s availability!</p>
                   <Link
                     href="/share-availability"
                     className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 sm:px-6 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 text-sm sm:text-base"

@@ -3,7 +3,7 @@ import { createClient } from '@/libs/supabase/server';
 import { validateRequestBody, meetingValidationSchema } from '@/libs/validation';
 import { apiRateLimit } from '@/libs/rateLimit';
 
-export async function GET(request) {
+export async function GET() {
   try {
     const supabase = createClient();
     
