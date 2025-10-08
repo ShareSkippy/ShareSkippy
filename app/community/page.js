@@ -16,6 +16,7 @@ export default function CommunityPage() {
   const [joiningEvent, setJoiningEvent] = useState(null);
   const [messageModal, setMessageModal] = useState({ isOpen: false, recipient: null, availabilityPost: null });
   const [deletingPost, setDeletingPost] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
 
   const formatAvailabilitySchedule = (enabledDays, daySchedules) => {
     if (!enabledDays || !daySchedules) return [];
@@ -83,6 +84,9 @@ export default function CommunityPage() {
       
       console.log('Fetching availability data for user:', currentUser?.id || 'not logged in');
       
+      // Add cache-busting parameter to prevent stale data
+      const cacheBuster = Date.now();
+      
       // First, let's test if we can fetch any availability posts at all
       const { data: allPosts, error: allPostsError } = await supabase
         .from('availability')
@@ -90,6 +94,12 @@ export default function CommunityPage() {
         .limit(5);
       
       console.log('All availability posts test:', allPosts?.length || 0, 'Error:', allPostsError);
+      
+      // If we can't fetch any posts, there might be a database connection issue
+      if (allPostsError) {
+        console.error('Database connection error:', allPostsError);
+        throw new Error(`Database error: ${allPostsError.message}`);
+      }
       
       // Fetch dog availability posts (excluding current user's posts if logged in)
       let dogQuery = supabase
@@ -389,6 +399,19 @@ export default function CommunityPage() {
     }
   };
 
+  const refreshData = async () => {
+    setRefreshing(true);
+    try {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      await fetchAvailabilityData(user);
+    } catch (error) {
+      console.error('Error refreshing data:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
@@ -402,10 +425,22 @@ export default function CommunityPage() {
       <div className="max-w-7xl mx-auto py-4 sm:py-8 px-3 sm:px-4">
         {/* Header */}
         <div className="mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-            🏘️ Community
-          </h1>
-          <p className="text-sm sm:text-base text-gray-600">Connect with fellow dog lovers in your neighborhood</p>
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+            <div>
+              <h1 className="text-2xl sm:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                🏘️ Community
+              </h1>
+              <p className="text-sm sm:text-base text-gray-600">Connect with fellow dog lovers in your neighborhood</p>
+            </div>
+            <button
+              onClick={refreshData}
+              disabled={refreshing}
+              className="mt-4 sm:mt-0 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg transition-colors text-sm flex items-center space-x-2 disabled:opacity-50"
+            >
+              <span>{refreshing ? '🔄' : '↻'}</span>
+              <span>{refreshing ? 'Refreshing...' : 'Refresh'}</span>
+            </button>
+          </div>
         </div>
 
 

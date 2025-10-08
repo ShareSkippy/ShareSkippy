@@ -35,7 +35,7 @@ export async function POST(request) {
       to: user.email,
       emailType: 'welcome',
       payload: {
-        userName: user.first_name || 'there',
+        userName: user.first_name || '',
         appUrl: process.env.NEXT_PUBLIC_APP_URL || 'https://shareskippy.com'
       }
     });

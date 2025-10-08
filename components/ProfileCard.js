@@ -22,12 +22,18 @@ export default function ProfileCard({ profile, onMessage }) {
             src={photo_url}
             alt={first_name}
             className="w-12 h-12 rounded-full object-cover"
+            onError={(e) => {
+              console.error('Profile image failed to load:', photo_url);
+              e.target.style.display = 'none';
+              e.target.nextSibling.style.display = 'flex';
+            }}
           />
-        ) : (
-          <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center">
-            <span className="text-xl">{getRoleIcon(role)}</span>
-          </div>
-        )}
+        ) : null}
+        <div 
+          className={`w-12 h-12 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center ${photo_url ? 'hidden' : ''}`}
+        >
+          <span className="text-xl">{getRoleIcon(role)}</span>
+        </div>
         <div className="flex-1">
           <h4 className="font-medium text-gray-900">{first_name}</h4>
           <div className="flex items-center space-x-2 text-sm text-gray-500">

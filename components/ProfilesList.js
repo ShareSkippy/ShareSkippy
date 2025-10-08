@@ -49,10 +49,14 @@ export default function ProfilesList({ role, onMessage }) {
       const params = new URLSearchParams();
       if (cursor) params.append('cursor', cursor);
       params.append('limit', '24');
+      // Add cache-busting parameter
+      params.append('_t', Date.now());
 
       const response = await fetch(`/api/community/profiles?${params}`);
       
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error('API Error:', response.status, errorText);
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 

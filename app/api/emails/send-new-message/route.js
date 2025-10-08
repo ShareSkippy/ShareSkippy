@@ -55,7 +55,7 @@ export async function POST(request) {
       to: recipient.email,
       emailType: 'new_message',
       payload: {
-        recipientName: recipient.first_name || 'there',
+        recipientName: recipient.first_name || '',
         senderName: `${sender.first_name} ${sender.last_name}`.trim(),
         senderInitial: (sender.first_name || 'U')[0].toUpperCase(),
         messagePreview: messagePreview.substring(0, 100) + (messagePreview.length > 100 ? '...' : ''),

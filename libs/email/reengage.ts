@@ -73,7 +73,7 @@ export async function processReengageEmails(): Promise<ReengageResult> {
           to: user.email,
           emailType: 'reengage',
           payload: {
-            userName: user.first_name || 'there',
+            userName: user.first_name || '',
             userEmail: user.email
           }
         });
@@ -210,7 +210,7 @@ export async function scheduleReengageEmails(): Promise<{
           emailType: 'reengage',
           runAfter: new Date(),
           payload: {
-            userName: user.first_name || 'there',
+            userName: user.first_name || '',
             userEmail: user.email
           }
         });

@@ -7,16 +7,16 @@ export const QueryProvider = ({ children }) => {
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
       queries: {
-        // Cache data for 5 minutes by default
-        staleTime: 5 * 60 * 1000,
-        // Keep data in cache for 10 minutes
-        gcTime: 10 * 60 * 1000,
-        // Retry failed requests 2 times
-        retry: 2,
-        // Don't refetch on window focus by default
-        refetchOnWindowFocus: false,
-        // Don't refetch on reconnect by default
-        refetchOnReconnect: false,
+        // Cache data for 1 minute by default (reduced from 5 minutes)
+        staleTime: 1 * 60 * 1000,
+        // Keep data in cache for 5 minutes (reduced from 10 minutes)
+        gcTime: 5 * 60 * 1000,
+        // Retry failed requests 3 times (increased from 2)
+        retry: 3,
+        // Refetch on window focus for community data
+        refetchOnWindowFocus: true,
+        // Refetch on reconnect for community data
+        refetchOnReconnect: true,
       },
       mutations: {
         // Retry failed mutations once

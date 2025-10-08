@@ -50,7 +50,7 @@ export async function POST(request) {
       to: user.email,
       emailType: 'meeting_reminder',
       payload: {
-        userName: user.first_name || 'there',
+        userName: user.first_name || '',
         otherParticipantName: `${otherParticipant.first_name} ${otherParticipant.last_name}`.trim(),
         meetingTitle,
         meetingDate: new Date(meeting.starts_at).toLocaleDateString(),
