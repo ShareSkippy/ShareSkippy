@@ -29,8 +29,8 @@ export default function MessageModal({ isOpen, onClose, recipient, availabilityP
         },
         body: JSON.stringify({
           recipient_id: recipient.id,
-          availability_id: availabilityPost?.id || null,
-          subject: subject.trim() || (availabilityPost ? `Re: ${availabilityPost.title}` : 'New Message'),
+          availability_id: null, // Always null for new messages
+          subject: subject.trim() || 'New Message',
           content: message.trim()
         }),
       });

@@ -102,10 +102,8 @@ export default function MessagesPage() {
             (m.sender_id === participant1_id && m.recipient_id === participant2_id) ||
             (m.sender_id === participant2_id && m.recipient_id === participant1_id);
 
-          const matchesAvailability =
-            availability_id == null ? m.availability_id == null : m.availability_id === availability_id;
-
-          if (matchesParticipants && matchesAvailability) {
+          // Only check participants, ignore availability_id completely
+          if (matchesParticipants) {
             setMessages((prev) => {
               // avoid duplicates
               if (prev.some((x) => x.id === m.id)) return prev;
@@ -193,22 +191,8 @@ export default function MessagesPage() {
         conversationId
       });
       
-      // First, let's test if we can fetch ANY messages at all
-      const { data: testMessages, error: testError } = await supabase
-        .from('messages')
-        .select('id, sender_id, recipient_id, availability_id, content')
-        .limit(5);
-      
-      console.log('[fetchMessages] Test query - any messages:', testMessages?.length ?? 0);
-      if (testMessages && testMessages.length > 0) {
-        console.log('[fetchMessages] Sample test message:', testMessages[0]);
-      }
-      if (testError) {
-        console.error('[fetchMessages] Test query error:', testError);
-      }
-      
-      // Build the base query with participant filtering
-      let query = supabase
+      // Simplified query - only filter by participants, ignore availability_id completely
+      const { data, error } = await supabase
         .from('messages')
         .select(`
           *,
@@ -221,16 +205,6 @@ export default function MessagesPage() {
         `)
         .or(`and(sender_id.eq.${participant1_id},recipient_id.eq.${participant2_id}),and(sender_id.eq.${participant2_id},recipient_id.eq.${participant1_id})`)
         .order('created_at', { ascending: true });
-
-      // ONLY add availability filter when it exists and is non-empty
-      if (availability_id) {
-        console.log('[fetchMessages] Adding availability filter:', availability_id);
-        query = query.eq('availability_id', availability_id);
-      } else {
-        console.log('[fetchMessages] No availability filter - showing all messages');
-      }
-
-      const { data, error } = await query;
 
       // Log result size/errors
       console.log('[fetchMessages] Filtered rows', data?.length ?? 0);

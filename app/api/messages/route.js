@@ -17,25 +17,14 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // Check if a conversation already exists
-    let existingConversation;
-    if (availability_id) {
-      // Look for conversation with specific availability post
-      const { data } = await supabase
-        .from('conversations')
-        .select('*')
-        .or(`and(participant1_id.eq.${user.id},participant2_id.eq.${recipient_id},availability_id.eq.${availability_id}),and(participant1_id.eq.${recipient_id},participant2_id.eq.${user.id},availability_id.eq.${availability_id})`)
-        .single();
-      existingConversation = data;
-    } else {
-      // Look for general conversation between these two users (no availability post)
-      const { data } = await supabase
-        .from('conversations')
-        .select('*')
-        .or(`and(participant1_id.eq.${user.id},participant2_id.eq.${recipient_id},availability_id.is.null),and(participant1_id.eq.${recipient_id},participant2_id.eq.${user.id},availability_id.is.null)`)
-        .single();
-      existingConversation = data;
-    }
+    // availability_id is now optional - we'll ignore it for new messages
+
+    // Check if a conversation already exists between these two users (ignore availability_id)
+    const { data: existingConversation } = await supabase
+      .from('conversations')
+      .select('*')
+      .or(`and(participant1_id.eq.${user.id},participant2_id.eq.${recipient_id}),and(participant1_id.eq.${recipient_id},participant2_id.eq.${user.id})`)
+      .single();
 
     let conversationId;
 
@@ -48,13 +37,13 @@ export async function POST(request) {
         .update({ last_message_at: new Date().toISOString() })
         .eq('id', conversationId);
     } else {
-      // Create a new conversation
+      // Create a new conversation (profile-based only)
       const { data: newConversation, error: newConvError } = await supabase
         .from('conversations')
         .insert({
           participant1_id: user.id,
           participant2_id: recipient_id,
-          availability_id: availability_id || null
+          availability_id: null // Always null for new conversations
         })
         .select()
         .single();
@@ -63,13 +52,13 @@ export async function POST(request) {
       conversationId = newConversation.id;
     }
 
-    // Send the message
+    // Send the message (profile-based only)
     const { data: message, error: messageError } = await supabase
       .from('messages')
       .insert({
         sender_id: user.id,
         recipient_id: recipient_id,
-        availability_id: availability_id || null,
+        availability_id: null, // Always null for new messages
         subject: subject || 'New Message',
         content: content
       })

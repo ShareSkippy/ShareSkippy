@@ -32,6 +32,54 @@ body {
   max-width: 85%;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+/* Mobile-specific message constraints */
+@media (max-width: 640px) {
+  .message-bubble {
+    max-width: 90%;
+    min-width: 0;
+    width: fit-content;
+  }
+  
+  /* Ensure message container doesn't overflow */
+  .message-container {
+    max-width: 100%;
+    overflow: hidden;
+  }
+  
+  /* Prevent horizontal scrolling on mobile */
+  #message-scroll {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+  
+  /* Handle long words and URLs in messages */
+  .message-bubble p {
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    max-width: 100%;
+  }
+  
+  /* Ensure the main messages page doesn't overflow */
+  .messages-page {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+  
+  /* Mobile message input improvements */
+  .message-input {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  
+  .message-input textarea {
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
 }
 
 @media (min-width: 640px) {
