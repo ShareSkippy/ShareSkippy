@@ -384,7 +384,7 @@ export default function MessagesPage() {
                               : 'bg-white text-gray-900 border border-gray-200'
                           }`}
                         >
-                          <p className="text-sm leading-relaxed">{message.content}</p>
+                          <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
                           <p className={`text-xs mt-2 ${
                             message.sender_id === user.id ? 'text-blue-100' : 'text-gray-500'
                           }`}>
