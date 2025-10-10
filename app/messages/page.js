@@ -191,6 +191,20 @@ export default function MessagesPage() {
         conversationId
       });
       
+      // First, let's test if we can fetch ANY messages at all
+      const { data: testMessages, error: testError } = await supabase
+        .from('messages')
+        .select('id, sender_id, recipient_id, content')
+        .limit(3);
+      
+      console.log('[fetchMessages] Test - any messages in DB:', testMessages?.length ?? 0);
+      if (testMessages && testMessages.length > 0) {
+        console.log('[fetchMessages] Sample message:', testMessages[0]);
+      }
+      if (testError) {
+        console.error('[fetchMessages] Test error:', testError);
+      }
+
       // Simplified query - only filter by participants, ignore availability_id completely
       const { data, error } = await supabase
         .from('messages')
