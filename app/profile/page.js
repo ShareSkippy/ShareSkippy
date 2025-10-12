@@ -2,6 +2,7 @@
 import { useUser } from '@/libs/supabase/hooks';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import DeleteAccountModal from '../../components/DeleteAccountModal';
 import UserReviews from '../../components/UserReviews';
 import DeletionRequestStatus from '../../components/DeletionRequestStatus';
@@ -10,6 +11,7 @@ import { formatLocation } from '@/libs/utils';
 
 export default function ProfilePage() {
   const { user, loading: userLoading } = useUser();
+  const router = useRouter();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -71,14 +73,28 @@ export default function ProfilePage() {
     );
   }
   
-  if (!profile) {
+  // Check if profile exists and is complete
+  // Required fields: first_name, last_name, role, phone_number
+  const isProfileComplete = profile && 
+    profile.first_name?.trim() && 
+    profile.last_name?.trim() && 
+    profile.role?.trim() && 
+    profile.phone_number?.trim();
+
+  // Redirect to profile edit if profile doesn't exist or is incomplete
+  useEffect(() => {
+    if (!loading && !userLoading && !isProfileComplete) {
+      router.push('/profile/edit');
+    }
+  }, [loading, userLoading, isProfileComplete, router]);
+
+  // Show loading while redirecting incomplete profiles
+  if (!isProfileComplete) {
     return (
       <div className="min-h-screen w-full bg-white max-w-md mx-auto p-6 text-center space-y-4">
-        <h2 className="text-xl font-semibold text-black">Welcome!</h2>
-        <p className="text-gray-600">You haven't set up your profile yet.</p>
-        <Link href="/profile/edit" className="inline-block bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">
-          Create Your Profile
-        </Link>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+        <h2 className="text-xl font-semibold text-black">Welcome to ShareSkippy! 🎉</h2>
+        <p className="text-gray-600">Let's create your profile...</p>
       </div>
     );
   }
