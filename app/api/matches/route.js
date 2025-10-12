@@ -187,21 +187,39 @@ export async function GET(request) {
     console.log(`After filtering: ${filteredProfiles.length} matches`);
 
     // Calculate distances and sort
-    const matchesWithDistance = filteredProfiles.map((profile) => ({
-      ...profile,
-      distance: calculateDistance(
+    const matchesWithDistance = filteredProfiles.map((profile) => {
+      const distance = calculateDistance(
         currentProfile.display_lat,
         currentProfile.display_lng,
         profile.display_lat,
         profile.display_lng
-      ),
-    }));
+      );
+      
+      console.log(`Distance to ${profile.first_name} (${profile.city}):`, {
+        distance: distance.toFixed(2),
+        fromLat: currentProfile.display_lat,
+        fromLng: currentProfile.display_lng,
+        toLat: profile.display_lat,
+        toLng: profile.display_lng
+      });
+      
+      return {
+        ...profile,
+        distance
+      };
+    });
 
     // Sort by distance and limit
     const nearestMatches = matchesWithDistance
       .sort((a, b) => a.distance - b.distance)
       .slice(0, limit);
 
+    console.log(`Sorted matches by distance:`, nearestMatches.map(m => ({
+      name: m.first_name,
+      city: m.city,
+      distance: m.distance.toFixed(2)
+    })));
+    
     console.log(`Returning top ${nearestMatches.length} nearest matches`);
 
     // Fetch dogs for dog owners in the results
