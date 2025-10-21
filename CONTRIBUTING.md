@@ -19,7 +19,7 @@ Be kind, respectful, and constructive in all interactions. We're all here to lea
 
 ## 🚀 Getting Started
 
-1. **Read the [Local Development Guide](./LOCAL_DEVELOPMENT.md)** - Set up your environment first
+1. **Read the [README.md](./README.md)** - Set up your environment first
 2. **Check the [Issue Tracker](../../issues)** - Find something to work on
 3. **Ask questions** - Don't be shy! We're here to help
 
