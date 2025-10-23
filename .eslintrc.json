@@ -14,35 +14,41 @@
   },
   "plugins": ["@typescript-eslint", "jsx-a11y", "import"],
   "rules": {
-    // React rules
-    "react/react-in-jsx-scope": "off", // Not needed in Next.js 13+
-    "react/prop-types": "off", // Using TypeScript for type checking
-    "react/no-unescaped-entities": "warn", // Warning for now, fix incrementally
-    "react/jsx-no-target-blank": "error",
-    "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn",
+    // React rules - only keeping necessary 'off' overrides and stricter built-ins
+    "react/react-in-jsx-scope": "off", // Necessary for Next.js
+    "react/prop-types": "off", // Necessary for TypeScript
+    "react/jsx-no-target-blank": "error", // Good rule, keep as error
+    "react-hooks/rules-of-hooks": "error", // Good rule, keep as error
+    // REMOVED: "react-hooks/exhaustive-deps" - Reverts to inherited "error"
+    // REMOVED: "react/no-unescaped-entities" - Reverts to inherited "error"
 
-    // TypeScript rules
+    // TypeScript rules - elevating key type safety rules to "error"
+    "@typescript-eslint/no-explicit-any": "error", // ENFORCED: Elevate from default "warn"
+    "@typescript-eslint/no-non-null-assertion": "error", // ENFORCED: Elevate from default "warn"
     "@typescript-eslint/no-unused-vars": [
+      // KEEP: Customizing the stricter error/warn
       "warn",
       {
         "argsIgnorePattern": "^_",
         "varsIgnorePattern": "^_"
       }
     ],
-    "@typescript-eslint/no-explicit-any": "warn",
-    "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/no-non-null-assertion": "warn",
+    "@typescript-eslint/explicit-module-boundary-types": "off", // KEEP: Legacy override, but acceptable if preferred
 
     // General JavaScript rules
-    "no-console": "off", // Allow console for now, will clean up incrementally
-    "no-unused-vars": "off", // Use TypeScript version instead
-    "prefer-const": "warn", // Warning instead of error for existing code
-    "no-var": "error",
+    "no-console": [
+      "error",
+      {
+        "allow": ["warn", "error"]
+      }
+    ], // ENFORCED: Prevents debug logging leakage
+    "no-unused-vars": "off", // Necessary to allow @typescript-eslint version to run
+    "prefer-const": "warn", // Keep: Acceptable incremental fix rule
+    "no-var": "error", // Good rule, keep as error
 
     // Import rules
     "import/order": [
-      "warn",
+      "warn", // Keep: Acceptable incremental formatting rule
       {
         "groups": ["builtin", "external", "internal", ["parent", "sibling"], "index"],
         "newlines-between": "never",
@@ -51,19 +57,12 @@
           "caseInsensitive": true
         }
       }
-    ],
+    ]
 
-    // Accessibility rules - warnings for now, will improve incrementally
-    "jsx-a11y/anchor-is-valid": "warn",
-    "jsx-a11y/label-has-associated-control": "warn",
-    "jsx-a11y/click-events-have-key-events": "warn",
-    "jsx-a11y/interactive-supports-focus": "warn",
-    "jsx-a11y/aria-role": "warn",
-    "jsx-a11y/no-static-element-interactions": "warn",
-
-    // Next.js specific
-    "@next/next/no-img-element": "warn",
-    "@next/next/no-html-link-for-pages": "warn"
+    // REMOVED: All jsx-a11y rules - Revert to inherited "error"
+    // REMOVED: @next/next/no-img-element - Reverts to inherited "error"
+    // The other Next.js specific rule:
+    // "@next/next/no-html-link-for-pages" is covered by the inherited "next/core-web-vitals"
   },
   "settings": {
     "react": {
