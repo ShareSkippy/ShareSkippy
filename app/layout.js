@@ -20,6 +20,7 @@ export const viewport = {
 
 // This adds default SEO tags to all pages in our app.
 // You can override them in each page passing params to getSOTags() function.
+// Updated for deployment trigger
 export const metadata = getSEOTags();
 
 export default function RootLayout({ children }) {
@@ -28,16 +29,16 @@ export default function RootLayout({ children }) {
       <body>
         {/* Google Analytics */}
         <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"
-          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=G-TGM53SZZX1"
+          strategy="beforeInteractive"
         />
-        <Script id="google-analytics" strategy="afterInteractive">
+        <Script id="google-analytics" strategy="beforeInteractive">
           {`
-						window.dataLayer = window.dataLayer || [];
-						function gtag(){dataLayer.push(arguments);}
-						gtag('js', new Date());
-						gtag('config', 'G-XXXXXXXXXX');
-					`}
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-TGM53SZZX1');
+          `}
         </Script>
 
         {/* QueryProvider provides React Query for API caching */}
