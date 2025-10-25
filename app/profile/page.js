@@ -3,6 +3,10 @@ import { useUser } from '@/libs/supabase/hooks';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useState } from 'react';
+import { createClient } from '@/libs/supabase/client';
+import { useUser } from '@/libs/supabase/hooks';
+import { formatLocation } from '@/libs/utils';
 import DeleteAccountModal from '../../components/DeleteAccountModal';
 import UserReviews from '../../components/UserReviews';
 import DeletionRequestStatus from '../../components/DeletionRequestStatus';
@@ -17,13 +21,7 @@ export default function ProfilePage() {
   const [error, setError] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  useEffect(() => {
-    if (userLoading) return;
-
-    loadProfile();
-  }, [user, userLoading, loadProfile]);
-
-  const loadProfile = async () => {
+  const loadProfile = useCallback(async () => {
     if (!user) {
       setLoading(false);
       setError('No session');
@@ -47,7 +45,13 @@ export default function ProfilePage() {
     } finally {
       setLoading(false);
     }
-  };
+  });
+
+  useEffect(() => {
+    if (userLoading) return;
+
+    loadProfile();
+  }, [user, userLoading, loadProfile]);
 
   if (loading || userLoading) {
     return (
