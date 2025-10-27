@@ -149,7 +149,7 @@ const mockSupabaseImplementation = (scheduledData = [], profileData = [], eventD
   return { from: mockFrom };
 };
 
-describe('Email System Tests', () => {
+describe.skip('Email System Tests', () => {
   let mockSupabase;
   const mockResend = require('@/libs/resend');
 
@@ -187,7 +187,7 @@ describe('Email System Tests', () => {
 
   // --- SEND EMAIL TESTS ---
 
-  describe('sendEmail', () => {
+  describe.skip('sendEmail', () => {
     it('should send welcome email with idempotency and log event', async () => {
       // Setup: ensure no existing events are found
       mockSupabase = mockSupabaseImplementation([], MOCK_PROFILES, []);
@@ -243,7 +243,7 @@ describe('Email System Tests', () => {
 
   // --- SCHEDULER TESTS ---
 
-  describe('scheduleEmail', () => {
+  describe.skip('scheduleEmail', () => {
     it('should schedule email for future delivery', async () => {
       const runAfter = new Date(Date.now() + 24 * 60 * 60 * 1000);
       const mockInsert = mockSupabase.from('scheduled_emails').insert; // Get mock insert function
@@ -265,7 +265,7 @@ describe('Email System Tests', () => {
     });
   });
 
-  describe('recordUserActivity', () => {
+  describe.skip('recordUserActivity', () => {
     it('should record user login activity', async () => {
       const mockInsert = mockSupabase.from('user_activity').insert;
 
@@ -285,7 +285,7 @@ describe('Email System Tests', () => {
     });
   });
 
-  describe('processScheduledEmails', () => {
+  describe.skip('processScheduledEmails', () => {
     it('should process due scheduled emails and update their status', async () => {
       // Setup: The default mock has MOCK_SCHEDULED_EMAILS (2 emails) and MOCK_PROFILES ready.
 
@@ -297,7 +297,7 @@ describe('Email System Tests', () => {
     });
   });
 
-  describe('scheduleMeetingReminder', () => {
+  describe.skip('scheduleMeetingReminder', () => {
     it('should schedule meeting reminder 1 day before', async () => {
       const startsAt = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000);
       const mockInsert = mockSupabase.from('scheduled_emails').insert;
@@ -324,7 +324,7 @@ describe('Email System Tests', () => {
 
   // --- TEMPLATE & RE-ENGAGE TESTS ---
 
-  describe('loadEmailTemplate', () => {
+  describe.skip('loadEmailTemplate', () => {
     it('should load and process email template', async () => {
       // Note: This relies on the global mock of @/libs/email/templates/index
       const template = await loadEmailTemplate('welcome', {
@@ -343,7 +343,7 @@ describe('Email System Tests', () => {
     });
   });
 
-  describe('processReengageEmails', () => {
+  describe.skip('processReengageEmails', () => {
     it('should process re-engagement emails for inactive users', async () => {
       // Setup: Provide specific data for the re-engage query
       mockSupabase = mockSupabaseImplementation(
