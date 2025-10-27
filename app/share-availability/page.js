@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/contexts/UserContext';
 import { useUserProfile, useUserDogs } from '@/hooks/useProfile';
+import { useAvailabilityDraft } from '@/hooks/useAvailabilityDraft';
 import { createClient } from '@/libs/supabase/client';
 import AppLayout from '@/components/AppLayout';
 import { Button } from '@/components/ui/Button';
@@ -11,6 +12,7 @@ import { Section } from '@/components/ui/Section';
 import Map from '@/components/map/Map';
 import CommunitySupportSection from '@/components/CommunitySupportSection';
 import { formatLocation } from '@/libs/utils';
+import toast from 'react-hot-toast';
 
 export default function ShareAvailability() {
   const { user, loading: authLoading } = useUser();
@@ -52,8 +54,8 @@ export default function ShareAvailability() {
     sunday: { enabled: false, timeSlots: [{ start: '', end: '' }] }
   });
   
-  // Form data
-  const [formData, setFormData] = useState({
+  // Form data - initial state
+  const initialFormData = {
     title: '',
     description: '',
     availability_notes: '',
@@ -92,7 +94,17 @@ export default function ShareAvailability() {
     can_help_disability: false,
     can_help_single_parent: false,
     helping_others_context: ''
-  });
+  };
+
+  // Use the sessionStorage-based availability draft hook
+  const {
+    formData,
+    setFormData,
+    loadDraft,
+    clearDraft,
+    hasDraft,
+    draftSource
+  } = useAvailabilityDraft(initialFormData, 'availabilityDraft');
 
   // User profile data for location (now from React Query)
   const [verifyingCustomAddress, setVerifyingCustomAddress] = useState(false);
@@ -107,7 +119,17 @@ export default function ShareAvailability() {
       router.push('/signin');
       return;
     }
-  }, [user, authLoading, router]);
+
+    // Try to load draft first
+    const draft = loadDraft();
+    if (draft) {
+      // eslint-disable-next-line no-console
+      console.log('📂 Restoring availability draft from sessionStorage');
+      // Strip metadata fields and set the form data
+      const { timestamp, version, ...formData } = draft;
+      setFormData(formData);
+    }
+  }, [user, authLoading, router, loadDraft]);
 
   // Data is now fetched via React Query hooks
 
@@ -434,6 +456,12 @@ export default function ShareAvailability() {
         return;
       }
 
+      // Clear the draft since availability post is now saved
+      clearDraft();
+      
+      // Show success message
+      toast.success('Availability post created successfully!');
+      
       // Redirect to community page with success message
       router.push('/community?success=availability_created');
     } catch (error) {
@@ -605,6 +633,24 @@ export default function ShareAvailability() {
         {/* Step 2: Form Details */}
         {currentStep === 2 && (
           <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-4 sm:p-8">
+            {/* Draft indicator */}
+            {hasDraft && (
+              <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <svg className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="ml-3">
+                    <p className="text-sm text-blue-700">
+                      📂 Draft restored from {draftSource === 'session' ? 'this session' : 'storage'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+            
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-4 sm:space-y-0 mb-6">
               <h2 className="text-xl sm:text-2xl font-semibold">
                 {postType === 'dog_available' ? 'Dog Availability Details' : 'Pet Sitter Availability Details'}

@@ -67,6 +67,9 @@ export default function ProfileEditPage() {
     if (draft) {
       // eslint-disable-next-line no-console
       console.log('📂 Restoring profile draft from sessionStorage');
+      // Strip metadata fields and set the profile
+      const { timestamp, version, ...profileData } = draft;
+      setProfile(profileData);
       setLoading(false);
     } else {
       loadProfile();
