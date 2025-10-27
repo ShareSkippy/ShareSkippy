@@ -5,8 +5,6 @@ import { useState } from 'react';
 import { useUser } from '@/components/providers/SupabaseUserProvider';
 import ReviewModal from '@/components/ReviewModal';
 import { useMeetings, useUpdateMeetingStatus } from '@/hooks/useMeetings';
-import { useQueryClient } from '@tanstack/react-query';
-import ReviewModal from '@/components/ReviewModal';
 
 export default function MeetingsPage() {
   const { user, loading: authLoading } = useUser();
