@@ -1,12 +1,9 @@
 'use client';
 import { useState, useRef, useEffect, useCallback } from 'react';
 
-// Helper function to safely parse the YYYY-MM-DD string into a Date object
 const parseDateString = (dateString) => {
   if (!dateString) return null;
-  // Use map(Number) to get numbers, which avoids timezone issues with new Date(string)
   const [year, month, day] = dateString.split('-').map(Number);
-  // Month is 0-indexed, so we subtract 1
   return new Date(year, month - 1, day);
 };
 
@@ -19,11 +16,9 @@ export default function DatePicker({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  // Initialize state using the helper function
   const [selectedDay, setSelectedDay] = useState(() => parseDateString(selectedDate));
   const dropdownRef = useRef(null);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -35,18 +30,24 @@ export default function DatePicker({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Synchronize internal selectedDay state when the external selectedDate prop changes.
   useEffect(() => {
     const newDay = parseDateString(selectedDate);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSelectedDay((currentSelectedDay) => {
+      if (!newDay && currentSelectedDay) {
+        return null;
+      }
 
-    // Only update if the parsed date is genuinely different from the current state
-    if (
-      (newDay && (!selectedDay || newDay.toDateString() !== selectedDay.toDateString())) ||
-      (!newDay && selectedDay) // Case where selectedDate becomes null/empty
-    ) {
-      setSelectedDay(newDay);
-    }
-  }, [selectedDate, selectedDay]);
+      if (
+        newDay &&
+        (!currentSelectedDay || newDay.toDateString() !== currentSelectedDay.toDateString())
+      ) {
+        return newDay;
+      }
+
+      return currentSelectedDay;
+    });
+  }, [selectedDate]);
 
   const formatDate = useCallback((date) => {
     if (!date) return '';
@@ -67,12 +68,10 @@ export default function DatePicker({
 
     const days = [];
 
-    // Add empty cells for days before the first day of the month
     for (let i = 0; i < startingDayOfWeek; i++) {
       days.push(null);
     }
 
-    // Add days of the month
     for (let day = 1; day <= daysInMonth; day++) {
       days.push(new Date(year, month, day));
     }
@@ -85,13 +84,11 @@ export default function DatePicker({
       if (!date) return;
 
       const minDateObj = minDate ? parseDateString(minDate) : new Date();
-      // Ensure comparison is at the start of the day
       minDateObj.setHours(0, 0, 0, 0);
 
       if (date < minDateObj) return;
 
       setSelectedDay(date);
-      // Format the date back to YYYY-MM-DD string format
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1).padStart(2, '0');
       const day = String(date.getDate()).padStart(2, '0');
@@ -127,7 +124,6 @@ export default function DatePicker({
     (date) => {
       if (!date) return false;
 
-      // Parse minDate safely and compare
       let minDateObj;
       if (minDate) {
         minDateObj = parseDateString(minDate);
@@ -139,7 +135,6 @@ export default function DatePicker({
       if (date < minDateObj) return true;
 
       if (maxDate) {
-        // Parse maxDate safely and compare
         const maxDateObj = parseDateString(maxDate);
         maxDateObj.setHours(23, 59, 59, 999);
         return date > maxDateObj;
@@ -169,7 +164,6 @@ export default function DatePicker({
 
   return (
     <div className="relative" ref={dropdownRef}>
-      {/* Input Field */}
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
@@ -193,10 +187,8 @@ export default function DatePicker({
         </svg>
       </button>
 
-      {/* Calendar Dropdown */}
       {isOpen && (
         <div className="absolute top-full left-0 mt-1 bg-white border border-gray-300 rounded-lg shadow-xl z-50 p-4 min-w-[300px]">
-          {/* Calendar Header */}
           <div className="flex items-center justify-between mb-4">
             <button
               type="button"
@@ -233,7 +225,6 @@ export default function DatePicker({
             </button>
           </div>
 
-          {/* Day Names Header */}
           <div className="grid grid-cols-7 gap-1 mb-2">
             {dayNames.map((day) => (
               <div key={day} className="text-center text-sm font-medium text-gray-500 py-2">
@@ -242,7 +233,6 @@ export default function DatePicker({
             ))}
           </div>
 
-          {/* Calendar Grid */}
           <div className="grid grid-cols-7 gap-1">
             {days.map((date, index) => (
               <button
@@ -269,7 +259,6 @@ export default function DatePicker({
             ))}
           </div>
 
-          {/* Quick Actions */}
           <div className="mt-4 pt-3 border-t border-gray-200 space-y-2">
             <button
               type="button"
