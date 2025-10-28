@@ -12,6 +12,19 @@ export interface TemplateVariables {
   [key: string]: string | number | boolean | null | undefined;
 }
 
+export interface ResendSendResult {
+  id: string;
+}
+
+export interface EmailPayload {
+  [key: string]:
+    | string
+    | number
+    | boolean
+    | null
+    | undefined;
+}
+
 // Template registry mapping email types to template files
 const TEMPLATE_REGISTRY = {
   welcome: {

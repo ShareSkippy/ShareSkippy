@@ -1,10 +1,6 @@
 import { createServiceClient } from "@/libs/supabase/server";
 import { sendEmail as resendSendEmail } from "@/libs/resend";
-import { loadEmailTemplate } from "./templates";
-
-export interface EmailPayload {
-  [key: string]: any;
-}
+import { EmailPayload, loadEmailTemplate, ResendSendResult } from "./templates";
 
 export interface SendEmailParams {
   userId: string;
@@ -132,12 +128,15 @@ export async function sendEmail({
         text: finalText,
       });
 
+      const resendData = resendResult as ResendSendResult;
+      const externalMessageId = resendData.id;
+
       // Update event with success
       const { error: updateError } = await supabase
         .from("email_events")
         .update({
           status: "sent",
-          external_message_id: (resendResult as any).id,
+          external_message_id: externalMessageId,
         })
         .eq("id", emailEvent.id);
 
@@ -145,22 +144,10 @@ export async function sendEmail({
         console.error("Failed to update email event:", updateError);
       }
 
-      // Log success
-      console.log(
-        `Email ${emailType} sent successfully to ${to} (user: ${userId})`,
-        {
-          emailType,
-          userId,
-          to,
-          externalMessageId: (resendResult as any).id,
-          subject: finalSubject,
-        },
-      );
-
       return {
         ...emailEvent,
         status: "sent",
-        external_message_id: (resendResult as any).id,
+        external_message_id: externalMessageId,
       } as EmailEvent;
     } catch (sendError) {
       // Update event with failure
