@@ -25,7 +25,7 @@ export const UserProvider = ({ children }) => {
   // Memoize the supabase client to prevent recreation on every render
   const supabase = useMemo(() => createClient(), []);
 
-  const refreshUser = async () => {
+  const refreshUser = useMemo(async () => {
     try {
       const {
         data: { user },
@@ -39,9 +39,9 @@ export const UserProvider = ({ children }) => {
       setUser(null);
       return null;
     }
-  };
+  }, [supabase]);
 
-  const signOut = async () => {
+  const signOut = useMemo(async () => {
     try {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
@@ -51,7 +51,7 @@ export const UserProvider = ({ children }) => {
       console.error('Error signing out:', error);
       return { error };
     }
-  };
+  }, [supabase]);
 
   useEffect(() => {
     let mounted = true;
