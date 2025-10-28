@@ -1,4 +1,5 @@
 'use client';
+'use client';
 
 import Image from 'next/image';
 import Link from 'next/link';
@@ -42,6 +43,7 @@ const LoggedInNav = () => {
   const { signOut } = useUser();
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsOpen(false);
   }, [searchParams]);
 
