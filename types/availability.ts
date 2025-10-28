@@ -3,7 +3,7 @@ export interface AvailabilityPost {
   owner_id: string;
   dog_id?: string;
   dog_ids?: string[];
-  post_type: 'dog_available' | 'petpal_available';
+  post_type: "dog_available" | "petpal_available";
   title: string;
   description?: string;
   start_date: string;
@@ -25,13 +25,16 @@ export interface AvailabilityPost {
   can_pick_up?: boolean;
   can_drop_off?: boolean;
   preferred_meeting_location?: string;
-  status: 'active' | 'inactive' | 'completed' | 'cancelled';
+  status: "active" | "inactive" | "completed" | "cancelled";
   community_support_enabled?: boolean;
   support_preferences?: string[];
   flexible_scheduling_needed?: boolean;
   support_story?: string;
-  enabled_days?: any[];
-  day_schedules?: Record<string, { enabled: boolean; start_time: string; end_time: string }>;
+  enabled_days?: string[];
+  day_schedules?: Record<
+    string,
+    { enabled: boolean; start_time: string; end_time: string }
+  >;
   need_extra_help?: boolean;
   help_reason_elderly?: boolean;
   help_reason_sick?: boolean;
@@ -48,7 +51,7 @@ export interface AvailabilityPost {
   helping_others_context?: string;
   created_at?: string;
   updated_at?: string;
-  
+
   // Joined data
   owner?: {
     id: string;
