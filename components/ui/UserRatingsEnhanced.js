@@ -1,5 +1,5 @@
-"use client";
-import { useEffect, useState } from 'react';
+'use client';
+import { useCallback, useEffect, useState } from 'react';
 import { createClient } from '@/libs/supabase/client';
 
 export default function UserRatingsEnhanced({ userId, userRole }) {
@@ -10,16 +10,14 @@ export default function UserRatingsEnhanced({ userId, userRole }) {
   useEffect(() => {
     if (!userId) return;
     loadReviews();
-  }, [userId]);
+  }, [userId, loadReviews]);
 
-  const loadReviews = async () => {
+  const loadReviews = useCallback(async () => {
     try {
       const supabase = createClient();
-      
+
       // Load reviews based on user role
-      let query = supabase
-        .from('reviews')
-        .select(`
+      let query = supabase.from('reviews').select(`
           *,
           reviewer:profiles!reviews_reviewer_id_fkey(first_name, last_name, email, profile_photo_url),
           reviewee:profiles!reviews_reviewee_id_fkey(first_name, last_name, email, profile_photo_url)
@@ -39,7 +37,7 @@ export default function UserRatingsEnhanced({ userId, userRole }) {
       const { data, error } = await query.order('created_at', { ascending: false });
 
       if (error) throw error;
-      
+
       setReviews(data || []);
     } catch (err) {
       console.error('Error loading reviews:', err);
@@ -47,7 +45,7 @@ export default function UserRatingsEnhanced({ userId, userRole }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [userId, userRole]);
 
   const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, i) => (
@@ -70,10 +68,7 @@ export default function UserRatingsEnhanced({ userId, userRole }) {
     return (
       <div className="text-center py-4">
         <p className="text-sm text-red-600">{error}</p>
-        <button 
-          onClick={loadReviews}
-          className="mt-2 text-sm text-blue-600 hover:underline"
-        >
+        <button onClick={loadReviews} className="mt-2 text-sm text-blue-600 hover:underline">
           Try again
         </button>
       </div>
@@ -85,19 +80,19 @@ export default function UserRatingsEnhanced({ userId, userRole }) {
       <div className="text-center py-6 bg-gray-50 rounded-lg">
         <div className="text-gray-400 text-4xl mb-2">⭐</div>
         <p className="text-gray-600 text-sm">
-          {userRole === 'owner' || userRole === 'sitter' 
-            ? "No reviews yet. Start connecting with the community to receive reviews!"
-            : "No reviews yet."
-          }
+          {userRole === 'owner' || userRole === 'sitter'
+            ? 'No reviews yet. Start connecting with the community to receive reviews!'
+            : 'No reviews yet.'}
         </p>
       </div>
     );
   }
 
   // Calculate average rating
-  const averageRating = reviews.length > 0 
-    ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length 
-    : 0;
+  const averageRating =
+    reviews.length > 0
+      ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
+      : 0;
 
   return (
     <div className="space-y-4">
@@ -109,18 +104,12 @@ export default function UserRatingsEnhanced({ userId, userRole }) {
               {reviews.length} review{reviews.length !== 1 ? 's' : ''}
             </h4>
             <div className="flex items-center mt-1">
-              <div className="flex mr-2">
-                {renderStars(Math.round(averageRating))}
-              </div>
-              <span className="text-sm text-gray-600">
-                {averageRating.toFixed(1)} average
-              </span>
+              <div className="flex mr-2">{renderStars(Math.round(averageRating))}</div>
+              <span className="text-sm text-gray-600">{averageRating.toFixed(1)} average</span>
             </div>
           </div>
           <div className="text-right">
-            <div className="text-2xl font-bold text-blue-600">
-              {averageRating.toFixed(1)}
-            </div>
+            <div className="text-2xl font-bold text-blue-600">{averageRating.toFixed(1)}</div>
             <div className="text-xs text-gray-500">out of 5</div>
           </div>
         </div>
@@ -133,9 +122,9 @@ export default function UserRatingsEnhanced({ userId, userRole }) {
             <div className="flex items-start justify-between mb-2">
               <div className="flex items-center">
                 {review.reviewer?.profile_photo_url && (
-                  <img 
-                    src={review.reviewer.profile_photo_url} 
-                    alt="Reviewer" 
+                  <img
+                    src={review.reviewer.profile_photo_url}
+                    alt="Reviewer"
                     className="w-8 h-8 rounded-full mr-3 object-cover"
                   />
                 )}
@@ -148,17 +137,15 @@ export default function UserRatingsEnhanced({ userId, userRole }) {
                   </p>
                 </div>
               </div>
-              <div className="flex">
-                {renderStars(review.rating)}
-              </div>
+              <div className="flex">{renderStars(review.rating)}</div>
             </div>
-            
+
             {review.comment && (
               <p className="text-gray-700 text-sm leading-relaxed">
                 &ldquo;{review.comment}&rdquo;
               </p>
             )}
-            
+
             {review.review_type && (
               <div className="mt-2">
                 <span className="inline-block bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
