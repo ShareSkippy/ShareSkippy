@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import { useSupabaseAuth } from '@/libs/supabase/hooks';
@@ -33,20 +33,7 @@ export default function EditAvailability() {
     day_schedules: {},
   });
 
-  useEffect(() => {
-    if (authLoading) return;
-
-    if (!user) {
-      router.push('/signin');
-      return;
-    }
-
-    if (params.id) {
-      fetchAvailabilityDetails();
-    }
-  }, [user, authLoading, router, params.id]);
-
-  const fetchAvailabilityDetails = async () => {
+  const fetchAvailabilityDetails = useCallback(async () => {
     try {
       setLoading(true);
       const { data, error } = await supabase
@@ -139,7 +126,20 @@ export default function EditAvailability() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [params, supabase, user]);
+
+  useEffect(() => {
+    if (authLoading) return;
+
+    if (!user) {
+      router.push('/signin');
+      return;
+    }
+
+    if (params.id) {
+      fetchAvailabilityDetails();
+    }
+  }, [user, authLoading, router, params, fetchAvailabilityDetails]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
