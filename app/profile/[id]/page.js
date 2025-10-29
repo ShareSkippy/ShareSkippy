@@ -1,6 +1,7 @@
 'use client';
 import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
+import Image from 'next/image';
 import Link from 'next/link';
 import { createClient } from '@/libs/supabase/client';
 import { formatLocation } from '@/libs/utils';
@@ -182,7 +183,7 @@ export default function PublicProfilePage() {
           <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6 mb-6">
             {/* Profile Photo */}
             {profile.profile_photo_url ? (
-              <img
+              <Image
                 src={profile.profile_photo_url}
                 alt={`${profile.first_name}'s profile`}
                 className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-blue-100"
@@ -361,7 +362,7 @@ export default function PublicProfilePage() {
                 <div key={dog.id} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
                   <div className="flex items-center space-x-4">
                     {dog.photo_url ? (
-                      <img
+                      <Image
                         src={dog.photo_url}
                         alt={dog.name}
                         className="w-16 h-16 rounded-full object-cover"
