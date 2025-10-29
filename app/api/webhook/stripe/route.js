@@ -31,7 +31,7 @@ export async function POST(req) {
     return new Response('Webhook signature verification failed', { status: 400 });
   }
 
-  eventType = event.type;
+  const eventType = event.type;
 
   try {
     switch (eventType) {
