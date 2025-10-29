@@ -127,7 +127,7 @@
 
   html,
   body,
-  #__next {
+  #next {
     height: 100%;
   }
 
@@ -151,14 +151,13 @@
   /* Message spacing improvements */
   .message-bubble {
     max-width: 85%;
-    word-wrap: break-word;
     overflow-wrap: break-word;
-    word-break: break-word;
+    word-break: break-all;
     hyphens: auto;
   }
 
   /* Mobile-specific message constraints */
-  @media (max-width: 640px) {
+  @media (width <= 640px) {
     .message-bubble {
       max-width: 90%;
       min-width: 0;
@@ -179,7 +178,7 @@
 
     /* Handle long words and URLs in messages */
     .message-bubble p {
-      word-break: break-word;
+      word-break: break-all;
       overflow-wrap: break-word;
       hyphens: auto;
       max-width: 100%;
@@ -198,8 +197,9 @@
     }
 
     .message-input textarea {
-      word-break: break-word;
+      word-break: break-all;
       overflow-wrap: break-word;
+
       /* Ensure textarea doesn't get covered by mobile keyboard */
       transition: height 0.1s ease-out;
     }
@@ -223,26 +223,27 @@
     @supports (-webkit-touch-callout: none) {
       /* iOS Safari specific */
       .message-input textarea {
-        -webkit-appearance: none;
+        appearance: none;
         border-radius: 12px;
       }
     }
 
     /* Android Chrome specific */
-    @media screen and (-webkit-min-device-pixel-ratio: 0) {
+    /* stylelint-disable media-feature-name-no-vendor-prefix, media-feature-name-no-unknown */
+    @media screen and (min-device-pixel-ratio: 0) {
       .message-input textarea {
         border-radius: 12px;
       }
     }
   }
 
-  @media (min-width: 640px) {
+  @media (width >= 640px) {
     .message-bubble {
       max-width: 75%;
     }
   }
 
-  @media (min-width: 1024px) {
+  @media (width >= 1024px) {
     .message-bubble {
       max-width: 65%;
     }
@@ -261,161 +262,170 @@
   progress::-webkit-progress-value {
     transition: 0.6s width ease-out;
   }
-}
 
-@layer base {
-  .btn {
-    @apply capitalize!;
+  @layer base {
+    .btn-gradient {
+      @apply bg-gradient! bg-size[length:300%_300%]! hover:saturate-[1.2] shadow duration-100 border-0! border-transparent! bg-transparent! animate-shimmer disabled:bg-none! disabled:bg-gray-500/30!  text-white!;
+    }
+
+    .btn {
+      @apply capitalize!;
+    }
+
+    /* Ensure all headings are pure black */
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      @apply text-black;
+    }
+
+    /* Ensure all form elements have white backgrounds and black text */
+    input,
+    textarea,
+    select {
+      @apply bg-white text-black;
+    }
+
+    /* Override DaisyUI input styling to ensure white backgrounds */
+    .input,
+    .input-bordered {
+      @apply bg-white! text-black! border-gray-300!;
+    }
+
+    .input:focus,
+    .input-bordered:focus {
+      @apply bg-white! text-black! border-blue-500! ring-2! ring-blue-200!;
+    }
+
+    /* Override DaisyUI button styling for sign-in buttons */
+    .btn.btn-block {
+      @apply bg-white! text-black! border-gray-300! hover:bg-gray-50!;
+    }
+
+    /* Ensure input text is black when typing */
+    input::placeholder,
+    textarea::placeholder {
+      @apply text-gray-500;
+    }
+
+    /* Override any gray text classes on form inputs */
+    input.text-gray-900,
+    textarea.text-gray-900,
+    select.text-gray-900 {
+      @apply text-black!;
+    }
+
+    /* Ensure checkboxes have white backgrounds with specific styling */
+    input[type='checkbox'] {
+      @apply bg-white border-gray-300 text-blue-600 focus:ring-blue-500 focus:ring-2 focus:ring-offset-0;
+
+      background-color: white !important;
+      border-color: #d1d5db !important;
+    }
+
+    /* Override any browser default checkbox styling */
+    input[type='checkbox']:checked {
+      @apply bg-blue-600 border-blue-600;
+
+      background-color: #2563eb !important;
+      border-color: #2563eb !important;
+    }
+
+    /* Ensure unchecked state is white */
+    input[type='checkbox']:not(:checked) {
+      background-color: white !important;
+      border-color: #d1d5db !important;
+    }
+
+    /* Override any component-specific checkbox classes */
+    .checkbox,
+    input[type='checkbox'].checkbox,
+    input[type='checkbox'].form-checkbox {
+      background-color: white !important;
+      border-color: #d1d5db !important;
+    }
+
+    /* Override any Tailwind checkbox classes */
+    input[type='checkbox'].h-4,
+    input[type='checkbox'].w-4 {
+      background-color: white !important;
+      border-color: #d1d5db !important;
+    }
+
+    /* Ensure focus states maintain white background */
+    input[type='checkbox']:focus {
+      background-color: white !important;
+      border-color: #3b82f6 !important;
+    }
+
+    /* Override DaisyUI checkbox styling */
+    input[type='checkbox'].checkbox,
+    .checkbox input[type='checkbox'] {
+      background-color: white !important;
+      border-color: #d1d5db !important;
+    }
+
+    /* Override any form-control checkbox styling */
+    .form-control input[type='checkbox'] {
+      background-color: white !important;
+      border-color: #d1d5db !important;
+    }
+
+    /* Ensure all checkbox states maintain white background when unchecked */
+    input[type='checkbox']:indeterminate {
+      background-color: white !important;
+      border-color: #d1d5db !important;
+    }
+
+    /* Override any disabled state styling */
+    input[type='checkbox']:disabled:not(:checked) {
+      background-color: white !important;
+      border-color: #d1d5db !important;
+    }
+
+    /* Override any hover states */
+    input[type='checkbox']:hover:not(:checked) {
+      background-color: white !important;
+      border-color: #9ca3af !important;
+    }
+
+    /* Custom checkbox checked state */
+    input[type='checkbox']:checked::after {
+      content: '✓' !important;
+      position: absolute !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) !important;
+      color: white !important;
+      font-size: 0.75rem !important;
+      font-weight: bold !important;
+      line-height: 1 !important;
+    }
+
+    input[type='checkbox']:checked {
+      background-color: #2563eb !important;
+      border-color: #2563eb !important;
+    }
   }
 
-  /* Ensure all headings are pure black */
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    @apply text-black;
-  }
+  @layer components {
+    .clickable-card {
+      @apply cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+    }
 
-  /* Ensure all form elements have white backgrounds and black text */
-  input,
-  textarea,
-  select {
-    @apply bg-white text-black;
-  }
+    .clickable-card:hover {
+      @apply ring-2 ring-blue-200;
+    }
 
-  /* Override DaisyUI input styling to ensure white backgrounds */
-  .input,
-  .input-bordered {
-    @apply bg-white! text-black! border-gray-300!;
-  }
-
-  .input:focus,
-  .input-bordered:focus {
-    @apply bg-white! text-black! border-blue-500! ring-2! ring-blue-200!;
-  }
-
-  /* Override DaisyUI button styling for sign-in buttons */
-  .btn.btn-block {
-    @apply bg-white! text-black! border-gray-300! hover:bg-gray-50!;
-  }
-
-  /* Ensure input text is black when typing */
-  input::placeholder,
-  textarea::placeholder {
-    @apply text-gray-500;
-  }
-
-  /* Override any gray text classes on form inputs */
-  input.text-gray-900,
-  textarea.text-gray-900,
-  select.text-gray-900 {
-    @apply text-black!;
-  }
-
-  /* Ensure checkboxes have white backgrounds with specific styling */
-  input[type='checkbox'] {
-    @apply bg-white border-gray-300 text-blue-600 focus:ring-blue-500 focus:ring-2 focus:ring-offset-0;
-    background-color: white !important;
-    border-color: #d1d5db !important;
-  }
-
-  /* Override any browser default checkbox styling */
-  input[type='checkbox']:checked {
-    @apply bg-blue-600 border-blue-600;
-    background-color: #2563eb !important;
-    border-color: #2563eb !important;
-  }
-
-  /* Ensure unchecked state is white */
-  input[type='checkbox']:not(:checked) {
-    background-color: white !important;
-    border-color: #d1d5db !important;
-  }
-
-  /* Override any component-specific checkbox classes */
-  .checkbox,
-  input[type='checkbox'].checkbox,
-  input[type='checkbox'].form-checkbox {
-    background-color: white !important;
-    border-color: #d1d5db !important;
-  }
-
-  /* Override any Tailwind checkbox classes */
-  input[type='checkbox'].h-4,
-  input[type='checkbox'].w-4 {
-    background-color: white !important;
-    border-color: #d1d5db !important;
-  }
-
-  /* Ensure focus states maintain white background */
-  input[type='checkbox']:focus {
-    background-color: white !important;
-    border-color: #3b82f6 !important;
-  }
-
-  /* Override any hover states */
-  input[type='checkbox']:hover:not(:checked) {
-    background-color: white !important;
-    border-color: #9ca3af !important;
-  }
-
-  /* Override DaisyUI checkbox styling */
-  input[type='checkbox'].checkbox,
-  .checkbox input[type='checkbox'] {
-    background-color: white !important;
-    border-color: #d1d5db !important;
-  }
-
-  /* Override any form-control checkbox styling */
-  .form-control input[type='checkbox'] {
-    background-color: white !important;
-    border-color: #d1d5db !important;
-  }
-
-  /* Ensure all checkbox states maintain white background when unchecked */
-  input[type='checkbox']:indeterminate {
-    background-color: white !important;
-    border-color: #d1d5db !important;
-  }
-
-  /* Override any disabled state styling */
-  input[type='checkbox']:disabled:not(:checked) {
-    background-color: white !important;
-    border-color: #d1d5db !important;
-  }
-
-  /* Override browser default appearance */
-  input[type='checkbox'] {
-    -webkit-appearance: none !important;
-    -moz-appearance: none !important;
-    appearance: none !important;
-    display: inline-block !important;
-    width: 1rem !important;
-    height: 1rem !important;
-    border: 2px solid #d1d5db !important;
-    border-radius: 0.25rem !important;
-    background-color: white !important;
-    position: relative !important;
-    cursor: pointer !important;
-  }
-
-  /* Custom checkbox checked state */
-  input[type='checkbox']:checked::after {
-    content: '✓' !important;
-    position: absolute !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    color: white !important;
-    font-size: 0.75rem !important;
-    font-weight: bold !important;
-    line-height: 1 !important;
-  }
-
-  input[type='checkbox']:checked {
-    background-color: #2563eb !important;
-    border-color: #2563eb !important;
+    .line-clamp-3 {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      line-clamp: 3;
+    }
   }
 }
