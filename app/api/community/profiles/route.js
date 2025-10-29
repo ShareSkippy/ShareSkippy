@@ -10,14 +10,15 @@ export async function GET(request) {
     const limit = Math.min(parseInt(searchParams.get('limit') || '24'), 60);
 
     const supabase = createClient();
-    
+
     console.log('Profiles API called with params:', { cursor, limit });
 
     // Build the main query for eligible profiles
     // We'll use a different approach to exclude users with active availability
     let query = supabase
       .from('profiles')
-      .select(`
+      .select(
+        `
         id,
         first_name,
         profile_photo_url,
@@ -27,7 +28,8 @@ export async function GET(request) {
         bio,
         updated_at,
         user_activity(at)
-      `)
+      `
+      )
       .not('bio', 'is', null)
       .neq('bio', '')
       .in('role', ['dog_owner', 'petpal', 'both']);
@@ -39,7 +41,7 @@ export async function GET(request) {
       console.error('Error fetching profiles:', error);
       return NextResponse.json({ error: 'Failed to fetch profiles' }, { status: 500 });
     }
-    
+
     console.log('Raw profiles fetched:', profiles?.length || 0);
 
     // Now get users with active availability posts to exclude them
@@ -53,30 +55,34 @@ export async function GET(request) {
       return NextResponse.json({ error: 'Failed to fetch availability data' }, { status: 500 });
     }
 
-    const excludedUserIds = new Set(activeAvailabilityUsers?.map(item => item.owner_id) || []);
+    const excludedUserIds = new Set(activeAvailabilityUsers?.map((item) => item.owner_id) || []);
 
     // Filter out profiles with active availability
-    const filteredProfiles = profiles.filter(profile => !excludedUserIds.has(profile.id));
-    
-    console.log('Filtered profiles (after excluding active availability):', filteredProfiles.length);
+    const filteredProfiles = profiles.filter((profile) => !excludedUserIds.has(profile.id));
+
+    console.log(
+      'Filtered profiles (after excluding active availability):',
+      filteredProfiles.length
+    );
 
     // Process the data to match the required format
-    const processedProfiles = filteredProfiles.map(profile => {
+    const processedProfiles = filteredProfiles.map((profile) => {
       // Calculate last_online_at from user_activity or profiles.updated_at
       let lastOnlineAt = profile.updated_at;
-      
+
       if (profile.user_activity && profile.user_activity.length > 0) {
         // Get the most recent activity
-        const mostRecentActivity = profile.user_activity
-          .sort((a, b) => new Date(b.at) - new Date(a.at))[0];
+        const mostRecentActivity = profile.user_activity.sort(
+          (a, b) => new Date(b.at) - new Date(a.at)
+        )[0];
         if (mostRecentActivity && mostRecentActivity.at) {
           lastOnlineAt = mostRecentActivity.at;
         }
       }
 
       // Truncate bio to ~140 characters
-      const bioExcerpt = profile.bio 
-        ? profile.bio.length > 140 
+      const bioExcerpt = profile.bio
+        ? profile.bio.length > 140
           ? profile.bio.substring(0, 140) + '...'
           : profile.bio
         : '';
@@ -89,7 +95,7 @@ export async function GET(request) {
         neighborhood: profile.neighborhood,
         role: profile.role,
         bio_excerpt: bioExcerpt,
-        last_online_at: lastOnlineAt
+        last_online_at: lastOnlineAt,
       };
     });
 
@@ -97,11 +103,11 @@ export async function GET(request) {
     processedProfiles.sort((a, b) => {
       const dateA = new Date(a.last_online_at);
       const dateB = new Date(b.last_online_at);
-      
+
       if (dateA.getTime() !== dateB.getTime()) {
         return dateB.getTime() - dateA.getTime();
       }
-      
+
       return b.id.localeCompare(a.id);
     });
 
@@ -111,8 +117,8 @@ export async function GET(request) {
       try {
         const [lastOnlineAt, lastId] = cursor.split('|');
         const cursorDate = new Date(lastOnlineAt);
-        
-        paginatedProfiles = processedProfiles.filter(profile => {
+
+        paginatedProfiles = processedProfiles.filter((profile) => {
           const profileDate = new Date(profile.last_online_at);
           if (profileDate.getTime() !== cursorDate.getTime()) {
             return profileDate < cursorDate;
@@ -137,12 +143,11 @@ export async function GET(request) {
     }
 
     console.log('Returning profiles:', resultProfiles.length, 'nextCursor:', nextCursor);
-    
+
     return NextResponse.json({
       items: resultProfiles,
-      nextCursor
+      nextCursor,
     });
-
   } catch (error) {
     console.error('Error in profiles API:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

@@ -17,5 +17,3 @@ Status: Reviewed API error patterns and logging; no behavior changes.
 ## Manual QA note
 
 - No runtime edits were made; this documents recommended stabilization work to be done in-place without changing copy.
-
-

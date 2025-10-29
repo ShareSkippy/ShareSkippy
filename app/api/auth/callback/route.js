@@ -59,8 +59,11 @@ export async function GET(req) {
       const thirtySecondsAgo = new Date(Date.now() - 30 * 1000);
       const isNewUser = userCreatedAt > thirtySecondsAgo;
 
-      console.log(isNewUser ? '🆕 NEW USER DETECTED' : '👤 EXISTING USER');
+      console.log(
+        isNewUser ? '🆕 NEW USER DETECTED (created within last 30 seconds)' : '👤 EXISTING USER'
+      );
 
+      // Extract Google user metadata for name pre-filling
       const userMetadata = data.user?.user_metadata || {};
       const googleGivenName = userMetadata?.given_name || userMetadata?.first_name;
       const googleFamilyName = userMetadata?.family_name || userMetadata?.last_name;
@@ -101,7 +104,20 @@ export async function GET(req) {
         }
       }
 
-      // Check for minimum profile completeness required for community access.
+      // ==================================================================
+      // ROUTING LOGIC - Determine where to redirect after sign in
+      // ==================================================================
+
+      const origin = requestUrl.origin;
+
+      // NEW USERS → Always go to profile edit (they need to fill out bio, role, phone)
+      if (isNewUser) {
+        console.log('🆕 NEW USER → Redirecting to /profile/edit');
+        return NextResponse.redirect(origin + '/profile/edit');
+      }
+
+      // EXISTING USERS → Check if profile is complete
+      // Required: bio, role, phone_number must all be filled out
       const hasCompleteBio = updatedProfile?.bio && updatedProfile.bio.trim().length > 0;
       const hasRole = updatedProfile?.role && updatedProfile.role.trim().length > 0;
       const hasPhone =

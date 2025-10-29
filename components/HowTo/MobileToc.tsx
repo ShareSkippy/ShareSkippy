@@ -23,17 +23,16 @@ export default function MobileToc({ sections }: MobileTocProps) {
 
     // Dispatch analytics event
     if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('analytics', {
-        detail: { event: 'toc_click', id }
-      }));
+      window.dispatchEvent(
+        new CustomEvent('analytics', {
+          detail: { event: 'toc_click', id },
+        })
+      );
     }
   };
 
   return (
-    <details 
-      ref={detailsRef}
-      className="md:hidden mb-6 bg-white rounded-xl shadow-lg p-4"
-    >
+    <details ref={detailsRef} className="md:hidden mb-6 bg-white rounded-xl shadow-lg p-4">
       <summary className="cursor-pointer font-semibold text-gray-900 hover:text-blue-600 transition-colors">
         📋 Jump to Section
       </summary>

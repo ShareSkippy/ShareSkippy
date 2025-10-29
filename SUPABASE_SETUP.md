@@ -72,8 +72,8 @@ Make sure your remote Supabase database has the required tables and policies. Yo
 ## Troubleshooting
 
 If you encounter authentication issues:
+
 1. Check that your environment variables are correct
 2. Ensure your Supabase project is active
 3. Verify that Row Level Security policies are properly configured
 4. Check the browser console for any error messages
-

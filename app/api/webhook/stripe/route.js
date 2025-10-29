@@ -1,12 +1,12 @@
-import { NextResponse } from "next/server";
-import { headers } from "next/headers";
-import Stripe from "stripe";
-import configFile from "@/config";
-import { createClient } from "@/libs/supabase/server";
-import { findCheckoutSession } from "@/libs/stripe";
+import { NextResponse } from 'next/server';
+import { headers } from 'next/headers';
+import Stripe from 'stripe';
+import configFile from '@/config';
+import { createClient } from '@/libs/supabase/server';
+import { findCheckoutSession } from '@/libs/stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: "2023-10-16",
+  apiVersion: '2023-10-16',
 });
 // const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
@@ -16,7 +16,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 // See more: https://shipfa.st/docs/features/payments
 export async function POST(req) {
   const body = await req.text();
-  const signature = headers().get("stripe-signature");
+  const signature = headers().get('stripe-signature');
 
   let event;
 
@@ -35,7 +35,7 @@ export async function POST(req) {
 
   try {
     switch (eventType) {
-      case "checkout.session.completed": {
+      case 'checkout.session.completed': {
         // First payment is successful and a subscription is created (if mode was set to "subscription" in ButtonCheckout)
         // ✅ Grant access to the product
         const stripeObject = event.data.object;
@@ -55,9 +55,9 @@ export async function POST(req) {
         if (!userId) {
           // check if user already exists
           const { data: profile } = await supabase
-            .from("profiles")
-            .select("*")
-            .eq("email", customer.email)
+            .from('profiles')
+            .select('*')
+            .eq('email', customer.email)
             .single();
           if (profile) {
             user = profile;
@@ -72,22 +72,22 @@ export async function POST(req) {
         } else {
           // find user by ID
           const { data: profile } = await supabase
-            .from("profiles")
-            .select("*")
-            .eq("id", userId)
+            .from('profiles')
+            .select('*')
+            .eq('id', userId)
             .single();
 
           user = profile;
         }
 
         await supabase
-          .from("profiles")
+          .from('profiles')
           .update({
             customer_id: customerId,
             price_id: priceId,
             has_access: true,
           })
-          .eq("id", user?.id);
+          .eq('id', user?.id);
 
         // Extra: send email with user link, product page, etc...
         // try {
@@ -99,35 +99,33 @@ export async function POST(req) {
         break;
       }
 
-      case "checkout.session.expired": {
+      case 'checkout.session.expired': {
         // User didn't complete the transaction
         // You don't need to do anything here, by you can send an email to the user to remind him to complete the transaction, for instance
         break;
       }
 
-      case "customer.subscription.updated": {
+      case 'customer.subscription.updated': {
         // The customer might have changed the plan (higher or lower plan, cancel soon etc...)
         // You don't need to do anything here, because Stripe will let us know when the subscription is canceled for good (at the end of the billing cycle) in the "customer.subscription.deleted" event
         // You can update the user data to show a "Cancel soon" badge for instance
         break;
       }
 
-      case "customer.subscription.deleted": {
+      case 'customer.subscription.deleted': {
         // The customer subscription stopped
         // ❌ Revoke access to the product
         const stripeObject = event.data.object;
-        const subscription = await stripe.subscriptions.retrieve(
-          stripeObject.id
-        );
+        const subscription = await stripe.subscriptions.retrieve(stripeObject.id);
 
         await supabase
-          .from("profiles")
+          .from('profiles')
           .update({ has_access: false })
-          .eq("customer_id", subscription.customer);
+          .eq('customer_id', subscription.customer);
         break;
       }
 
-      case "invoice.paid": {
+      case 'invoice.paid': {
         // Customer just paid an invoice (for instance, a recurring payment for a subscription)
         // ✅ Grant access to the product
         const stripeObject = event.data.object;
@@ -136,24 +134,21 @@ export async function POST(req) {
 
         // Find profile where customer_id equals the customerId (in table called 'profiles')
         const { data: profile } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("customer_id", customerId)
+          .from('profiles')
+          .select('*')
+          .eq('customer_id', customerId)
           .single();
 
         // Make sure the invoice is for the same plan (priceId) the user subscribed to
         if (profile.price_id !== priceId) break;
 
         // Grant the profile access to your product. It's a boolean in the database, but could be a number of credits, etc...
-        await supabase
-          .from("profiles")
-          .update({ has_access: true })
-          .eq("customer_id", customerId);
+        await supabase.from('profiles').update({ has_access: true }).eq('customer_id', customerId);
 
         break;
       }
 
-      case "invoice.payment_failed":
+      case 'invoice.payment_failed':
         // A payment failed (for instance the customer does not have a valid payment method)
         // ❌ Revoke access to the product
         // ⏳ OR wait for the customer to pay (more friendly):
@@ -166,7 +161,7 @@ export async function POST(req) {
       // Unhandled event type
     }
   } catch (e) {
-    console.error("stripe error: ", e.message);
+    console.error('stripe error: ', e.message);
   }
 
   return NextResponse.json({});

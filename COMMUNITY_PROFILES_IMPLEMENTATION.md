@@ -1,11 +1,13 @@
 # Community Profiles Implementation
 
 ## Overview
+
 Enhanced the Community page to show profiles directly under each availability section, with proper filtering, pagination, and lazy loading.
 
 ## Implementation Details
 
 ### 1. API Endpoint (`/app/api/community/profiles/route.js`)
+
 - **Purpose**: Fetches eligible profiles with pagination
 - **Features**:
   - Excludes users with active availability posts
@@ -17,6 +19,7 @@ Enhanced the Community page to show profiles directly under each availability se
   - Sorts by most recent online, then ID descending
 
 ### 2. Profile Card Component (`/components/ProfileCard.js`)
+
 - **Purpose**: Displays individual profile information
 - **Features**:
   - Shows photo, name, role, location, bio excerpt
@@ -26,6 +29,7 @@ Enhanced the Community page to show profiles directly under each availability se
   - Responsive design
 
 ### 3. Profiles List Component (`/components/ProfilesList.js`)
+
 - **Purpose**: Manages profile loading and display
 - **Features**:
   - Lazy loading with intersection observer
@@ -36,6 +40,7 @@ Enhanced the Community page to show profiles directly under each availability se
   - Pagination support
 
 ### 4. Community Page Integration (`/app/community/page.js`)
+
 - **Purpose**: Integrates profiles under availability sections
 - **Features**:
   - Dog Owner profiles under "Dog Availability" tab
@@ -45,7 +50,7 @@ Enhanced the Community page to show profiles directly under each availability se
 
 ## Data Flow
 
-1. **Profile Fetching**: 
+1. **Profile Fetching**:
    - API fetches profiles excluding those with active availability
    - Filters by role and bio requirements
    - Returns paginated results with cursor
@@ -63,6 +68,7 @@ Enhanced the Community page to show profiles directly under each availability se
 ## Key Features Implemented
 
 ### ✅ Acceptance Criteria Met
+
 - [x] Profiles appear under each availability section
 - [x] Role-based filtering (dog_owner/both under Dog Availability, petpal/both under PetPal Availability)
 - [x] Excludes users with active availability posts
@@ -74,6 +80,7 @@ Enhanced the Community page to show profiles directly under each availability se
 - [x] Maintains existing availability functionality
 
 ### 🔧 Technical Implementation
+
 - **Pagination**: Keyset pagination with cursor-based navigation
 - **Performance**: Single API call with client-side role filtering
 - **Loading**: Intersection observer for lazy loading
@@ -83,17 +90,20 @@ Enhanced the Community page to show profiles directly under each availability se
 ## Files Created/Modified
 
 ### New Files
+
 - `/app/api/community/profiles/route.js` - API endpoint
 - `/components/ProfileCard.js` - Profile card component
 - `/components/ProfilesList.js` - Profiles list with lazy loading
 - `/test-profiles-api.js` - API testing script
 
 ### Modified Files
+
 - `/app/community/page.js` - Added profiles sections
 
 ## Testing
 
 ### Manual Testing Checklist
+
 - [ ] Navigate to Community page
 - [ ] Switch between Dog Availability and PetPal Availability tabs
 - [ ] Verify profiles appear under each section
@@ -104,6 +114,7 @@ Enhanced the Community page to show profiles directly under each availability se
 - [ ] Check responsive design
 
 ### API Testing
+
 Run `node test-profiles-api.js` to test the API endpoint directly.
 
 ## Performance Considerations
@@ -121,4 +132,3 @@ Run `node test-profiles-api.js` to test the API endpoint directly.
 - Profile recommendation algorithm
 - Real-time updates for online status
 - Enhanced profile analytics
-

@@ -17,5 +17,3 @@ Status: Reviewed `public/` assets; no changes made.
 ## Manual QA note
 
 - No assets modified in this step.
-
-

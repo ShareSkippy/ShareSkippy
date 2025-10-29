@@ -8,32 +8,33 @@ const testResendConfig = async () => {
   console.log('🧪 TESTING RESEND CONFIGURATION\n');
 
   const baseUrl = 'https://www.shareskippy.com';
-  
+
   console.log('=== TESTING EMAIL ENDPOINT WITH RESEND ===');
-  
+
   try {
     // Test with a more realistic scenario
     const testData = {
       recipientId: '00000000-0000-0000-0000-000000000001',
       senderId: '00000000-0000-0000-0000-000000000002',
-      messagePreview: 'Testing Resend email configuration - this should trigger an email if Resend is properly configured.',
+      messagePreview:
+        'Testing Resend email configuration - this should trigger an email if Resend is properly configured.',
       messageId: 'test-resend-config',
-      threadId: 'test-thread-resend'
+      threadId: 'test-thread-resend',
     };
 
     console.log('Sending test email to check Resend configuration...');
-    
+
     const response = await fetch(`${baseUrl}/api/emails/send-new-message`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(testData)
+      body: JSON.stringify(testData),
     });
 
     const result = await response.json();
-    
+
     console.log('Response Status:', response.status);
     console.log('Response Body:', JSON.stringify(result, null, 2));
-    
+
     if (response.status === 404 && result.error === 'Recipient not found') {
       console.log('✅ Email endpoint is working - recipient not found is expected');
       console.log('✅ Database connection is working');

@@ -11,13 +11,13 @@ export default function EditAvailability() {
   const params = useParams();
   const router = useRouter();
   const supabase = createClient();
-  
+
   // Data states
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
   const [availability, setAvailability] = useState(null);
-  
+
   // Form states
   const [formData, setFormData] = useState({
     title: '',
@@ -29,17 +29,17 @@ export default function EditAvailability() {
     can_pick_up_drop_off: false,
     preferred_meeting_location: '',
     enabled_days: [],
-    day_schedules: {}
+    day_schedules: {},
   });
 
   useEffect(() => {
     if (authLoading) return;
-    
+
     if (!user) {
       router.push('/signin');
       return;
     }
-    
+
     if (params.id) {
       fetchAvailabilityDetails();
     }
@@ -50,7 +50,8 @@ export default function EditAvailability() {
       setLoading(true);
       const { data, error } = await supabase
         .from('availability')
-        .select(`
+        .select(
+          `
           *,
           owner:profiles!availability_owner_id_fkey (
             id,
@@ -94,7 +95,8 @@ export default function EditAvailability() {
             activities,
             description
           )
-        `)
+        `
+        )
         .eq('id', params.id)
         .single();
 
@@ -116,7 +118,7 @@ export default function EditAvailability() {
       }
 
       setAvailability(data);
-      
+
       // Populate form data
       setFormData({
         title: data.title || '',
@@ -128,7 +130,7 @@ export default function EditAvailability() {
         can_pick_up_drop_off: data.can_pick_up_drop_off || false,
         preferred_meeting_location: data.preferred_meeting_location || '',
         enabled_days: data.enabled_days || [],
-        day_schedules: data.day_schedules || {}
+        day_schedules: data.day_schedules || {},
       });
     } catch (err) {
       console.error('Error:', err);
@@ -140,27 +142,27 @@ export default function EditAvailability() {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
   const handleDayToggle = (day) => {
-    setFormData(prev => {
+    setFormData((prev) => {
       const newEnabledDays = prev.enabled_days.includes(day)
-        ? prev.enabled_days.filter(d => d !== day)
+        ? prev.enabled_days.filter((d) => d !== day)
         : [...prev.enabled_days, day];
-      
+
       return {
         ...prev,
-        enabled_days: newEnabledDays
+        enabled_days: newEnabledDays,
       };
     });
   };
 
   const handleTimeSlotChange = (day, slotIndex, field, value) => {
-    setFormData(prev => {
+    setFormData((prev) => {
       const newDaySchedules = { ...prev.day_schedules };
       if (!newDaySchedules[day]) {
         newDaySchedules[day] = { enabled: true, timeSlots: [] };
@@ -169,46 +171,46 @@ export default function EditAvailability() {
         newDaySchedules[day].timeSlots[slotIndex] = { start: '', end: '' };
       }
       newDaySchedules[day].timeSlots[slotIndex][field] = value;
-      
+
       return {
         ...prev,
-        day_schedules: newDaySchedules
+        day_schedules: newDaySchedules,
       };
     });
   };
 
   const addTimeSlot = (day) => {
-    setFormData(prev => {
+    setFormData((prev) => {
       const newDaySchedules = { ...prev.day_schedules };
       if (!newDaySchedules[day]) {
         newDaySchedules[day] = { enabled: true, timeSlots: [] };
       }
       newDaySchedules[day].timeSlots.push({ start: '', end: '' });
-      
+
       return {
         ...prev,
-        day_schedules: newDaySchedules
+        day_schedules: newDaySchedules,
       };
     });
   };
 
   const removeTimeSlot = (day, slotIndex) => {
-    setFormData(prev => {
+    setFormData((prev) => {
       const newDaySchedules = { ...prev.day_schedules };
       if (newDaySchedules[day] && newDaySchedules[day].timeSlots) {
         newDaySchedules[day].timeSlots.splice(slotIndex, 1);
       }
-      
+
       return {
         ...prev,
-        day_schedules: newDaySchedules
+        day_schedules: newDaySchedules,
       };
     });
   };
 
   const handleSave = async (e) => {
     e.preventDefault();
-    
+
     if (!formData.title.trim()) {
       setError('Title is required');
       return;
@@ -231,7 +233,7 @@ export default function EditAvailability() {
           preferred_meeting_location: formData.preferred_meeting_location,
           enabled_days: formData.enabled_days,
           day_schedules: formData.day_schedules,
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         })
         .eq('id', params.id);
 
@@ -310,7 +312,7 @@ export default function EditAvailability() {
     thursday: 'Thursday',
     friday: 'Friday',
     saturday: 'Saturday',
-    sunday: 'Sunday'
+    sunday: 'Sunday',
   };
 
   return (
@@ -329,12 +331,16 @@ export default function EditAvailability() {
             Edit: {formData.title || availability?.title}
           </h1>
           <div className="flex items-center space-x-4 text-gray-600">
-            <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-              availability?.post_type === 'dog_available' 
-                ? 'bg-blue-100 text-blue-800' 
-                : 'bg-green-100 text-green-800'
-            }`}>
-              {availability?.post_type === 'dog_available' ? '🐕 Dog Available' : '🤝 PetPal Available'}
+            <span
+              className={`px-3 py-1 rounded-full text-sm font-medium ${
+                availability?.post_type === 'dog_available'
+                  ? 'bg-blue-100 text-blue-800'
+                  : 'bg-green-100 text-green-800'
+              }`}
+            >
+              {availability?.post_type === 'dog_available'
+                ? '🐕 Dog Available'
+                : '🤝 PetPal Available'}
             </span>
             {formData.is_urgent && (
               <span className="px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
@@ -354,7 +360,7 @@ export default function EditAvailability() {
                   <span className="mr-2">📅</span>
                   Availability Details
                 </h2>
-                
+
                 <div className="space-y-4">
                   <div>
                     <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
@@ -373,7 +379,10 @@ export default function EditAvailability() {
                   </div>
 
                   <div>
-                    <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label
+                      htmlFor="description"
+                      className="block text-sm font-medium text-gray-700 mb-2"
+                    >
                       Description
                     </label>
                     <textarea
@@ -388,7 +397,10 @@ export default function EditAvailability() {
                   </div>
 
                   <div>
-                    <label htmlFor="availability_notes" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label
+                      htmlFor="availability_notes"
+                      className="block text-sm font-medium text-gray-700 mb-2"
+                    >
                       Additional Notes
                     </label>
                     <textarea
@@ -403,7 +415,10 @@ export default function EditAvailability() {
                   </div>
 
                   <div>
-                    <label htmlFor="special_instructions" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label
+                      htmlFor="special_instructions"
+                      className="block text-sm font-medium text-gray-700 mb-2"
+                    >
                       Special Instructions
                     </label>
                     <textarea
@@ -418,7 +433,10 @@ export default function EditAvailability() {
                   </div>
 
                   <div>
-                    <label htmlFor="preferred_meeting_location" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label
+                      htmlFor="preferred_meeting_location"
+                      className="block text-sm font-medium text-gray-700 mb-2"
+                    >
                       Preferred Meeting Location
                     </label>
                     <input
@@ -441,7 +459,10 @@ export default function EditAvailability() {
                       onChange={handleInputChange}
                       className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded-sm"
                     />
-                    <label htmlFor="can_pick_up_drop_off" className="ml-2 block text-sm font-medium text-gray-700">
+                    <label
+                      htmlFor="can_pick_up_drop_off"
+                      className="ml-2 block text-sm font-medium text-gray-700"
+                    >
                       Can pick up and drop off
                     </label>
                   </div>
@@ -455,14 +476,20 @@ export default function EditAvailability() {
                       onChange={handleInputChange}
                       className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded-sm"
                     />
-                    <label htmlFor="is_urgent" className="ml-2 block text-sm font-medium text-gray-700">
+                    <label
+                      htmlFor="is_urgent"
+                      className="ml-2 block text-sm font-medium text-gray-700"
+                    >
                       Mark as urgent
                     </label>
                   </div>
 
                   {formData.is_urgent && (
                     <div>
-                      <label htmlFor="urgency_notes" className="block text-sm font-medium text-gray-700 mb-2">
+                      <label
+                        htmlFor="urgency_notes"
+                        className="block text-sm font-medium text-gray-700 mb-2"
+                      >
                         Urgency Notes
                       </label>
                       <textarea
@@ -484,7 +511,9 @@ export default function EditAvailability() {
                 <div className="bg-white rounded-xl p-6 shadow-md border border-gray-200">
                   <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
                     <span className="mr-2">🐕</span>
-                    {availability.allDogs.length === 1 ? `${availability.allDogs[0].name}'s Profile` : 'Dogs Available'}
+                    {availability.allDogs.length === 1
+                      ? `${availability.allDogs[0].name}'s Profile`
+                      : 'Dogs Available'}
                   </h2>
 
                   {availability.allDogs.length === 1 ? (
@@ -503,11 +532,17 @@ export default function EditAvailability() {
                           </div>
                         )}
                         <div className="flex-1">
-                          <h3 className="text-2xl font-bold text-gray-900 mb-2">{availability.allDogs[0].name}</h3>
+                          <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                            {availability.allDogs[0].name}
+                          </h3>
                           <p className="text-gray-600 mb-2">{availability.allDogs[0].breed}</p>
                           <div className="flex flex-wrap gap-2">
                             <span className="px-2 py-1 bg-gray-100 text-gray-800 rounded-sm text-sm">
-                              {availability.allDogs[0].size && availability.allDogs[0].size.includes('-') ? `${availability.allDogs[0].size} lbs` : availability.allDogs[0].size} size
+                              {availability.allDogs[0].size &&
+                              availability.allDogs[0].size.includes('-')
+                                ? `${availability.allDogs[0].size} lbs`
+                                : availability.allDogs[0].size}{' '}
+                              size
                             </span>
                             {availability.allDogs[0].gender && (
                               <span className="px-2 py-1 bg-gray-100 text-gray-800 rounded-sm text-sm">
@@ -525,8 +560,12 @@ export default function EditAvailability() {
 
                       {availability.allDogs[0].description && (
                         <div className="mb-6">
-                          <h4 className="font-medium text-gray-900 mb-2">About {availability.allDogs[0].name}</h4>
-                          <p className="text-gray-600 leading-relaxed">{availability.allDogs[0].description}</p>
+                          <h4 className="font-medium text-gray-900 mb-2">
+                            About {availability.allDogs[0].name}
+                          </h4>
+                          <p className="text-gray-600 leading-relaxed">
+                            {availability.allDogs[0].description}
+                          </p>
                         </div>
                       )}
 
@@ -537,11 +576,17 @@ export default function EditAvailability() {
                             {availability.allDogs[0].energy_level && (
                               <div className="flex justify-between">
                                 <span className="text-gray-600">Energy Level:</span>
-                                <span className={`font-medium ${
-                                  availability.allDogs[0].energy_level === 'low' ? 'text-green-600' :
-                                  availability.allDogs[0].energy_level === 'moderate' ? 'text-yellow-600' :
-                                  availability.allDogs[0].energy_level === 'high' ? 'text-red-600' : 'text-gray-600'
-                                }`}>
+                                <span
+                                  className={`font-medium ${
+                                    availability.allDogs[0].energy_level === 'low'
+                                      ? 'text-green-600'
+                                      : availability.allDogs[0].energy_level === 'moderate'
+                                        ? 'text-yellow-600'
+                                        : availability.allDogs[0].energy_level === 'high'
+                                          ? 'text-red-600'
+                                          : 'text-gray-600'
+                                  }`}
+                                >
                                   {availability.allDogs[0].energy_level}
                                 </span>
                               </div>
@@ -550,8 +595,10 @@ export default function EditAvailability() {
                               <div className="flex justify-between">
                                 <span className="text-gray-600">Age:</span>
                                 <span className="font-medium text-gray-900">
-                                  {availability.allDogs[0].age_years} year{availability.allDogs[0].age_years !== 1 ? 's' : ''}
-                                  {availability.allDogs[0].age_months > 0 && ` ${availability.allDogs[0].age_months} month${availability.allDogs[0].age_months !== 1 ? 's' : ''}`}
+                                  {availability.allDogs[0].age_years} year
+                                  {availability.allDogs[0].age_years !== 1 ? 's' : ''}
+                                  {availability.allDogs[0].age_months > 0 &&
+                                    ` ${availability.allDogs[0].age_months} month${availability.allDogs[0].age_months !== 1 ? 's' : ''}`}
                                 </span>
                               </div>
                             )}
@@ -563,19 +610,25 @@ export default function EditAvailability() {
                           <div className="space-y-2">
                             <div className="flex justify-between">
                               <span className="text-gray-600">Dog Friendly:</span>
-                              <span className={`font-medium ${availability.allDogs[0].dog_friendly ? 'text-green-600' : 'text-red-600'}`}>
+                              <span
+                                className={`font-medium ${availability.allDogs[0].dog_friendly ? 'text-green-600' : 'text-red-600'}`}
+                              >
                                 {availability.allDogs[0].dog_friendly ? 'Yes' : 'No'}
                               </span>
                             </div>
                             <div className="flex justify-between">
                               <span className="text-gray-600">Cat Friendly:</span>
-                              <span className={`font-medium ${availability.allDogs[0].cat_friendly ? 'text-green-600' : 'text-red-600'}`}>
+                              <span
+                                className={`font-medium ${availability.allDogs[0].cat_friendly ? 'text-green-600' : 'text-red-600'}`}
+                              >
                                 {availability.allDogs[0].cat_friendly ? 'Yes' : 'No'}
                               </span>
                             </div>
                             <div className="flex justify-between">
                               <span className="text-gray-600">Kid Friendly:</span>
-                              <span className={`font-medium ${availability.allDogs[0].kid_friendly ? 'text-green-600' : 'text-red-600'}`}>
+                              <span
+                                className={`font-medium ${availability.allDogs[0].kid_friendly ? 'text-green-600' : 'text-red-600'}`}
+                              >
                                 {availability.allDogs[0].kid_friendly ? 'Yes' : 'No'}
                               </span>
                             </div>
@@ -605,7 +658,10 @@ export default function EditAvailability() {
                               <p className="text-gray-600 mb-2">{dog.breed}</p>
                               <div className="flex flex-wrap gap-2">
                                 <span className="px-2 py-1 bg-gray-100 text-gray-800 rounded-sm text-sm">
-                                  {dog.size && dog.size.includes('-') ? `${dog.size} lbs` : dog.size} size
+                                  {dog.size && dog.size.includes('-')
+                                    ? `${dog.size} lbs`
+                                    : dog.size}{' '}
+                                  size
                                 </span>
                                 {dog.gender && (
                                   <span className="px-2 py-1 bg-gray-100 text-gray-800 rounded-sm text-sm">
@@ -640,14 +696,14 @@ export default function EditAvailability() {
                   <span className="mr-2">⏰</span>
                   Schedule
                 </h2>
-                
+
                 <div className="space-y-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-3">
                       Available Days
                     </label>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                      {days.map(day => (
+                      {days.map((day) => (
                         <div key={day} className="flex items-center">
                           <input
                             type="checkbox"
@@ -656,7 +712,10 @@ export default function EditAvailability() {
                             onChange={() => handleDayToggle(day)}
                             className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded-sm"
                           />
-                          <label htmlFor={`day-${day}`} className="ml-2 block text-sm font-medium text-gray-700">
+                          <label
+                            htmlFor={`day-${day}`}
+                            className="ml-2 block text-sm font-medium text-gray-700"
+                          >
                             {dayNames[day]}
                           </label>
                         </div>
@@ -664,23 +723,27 @@ export default function EditAvailability() {
                     </div>
                   </div>
 
-                  {formData.enabled_days.map(day => (
+                  {formData.enabled_days.map((day) => (
                     <div key={day} className="border border-gray-200 rounded-lg p-4">
                       <h3 className="font-medium text-gray-900 mb-3">{dayNames[day]} Time Slots</h3>
-                      
+
                       {(formData.day_schedules[day]?.timeSlots || []).map((slot, slotIndex) => (
                         <div key={slotIndex} className="flex items-center space-x-3 mb-3">
                           <input
                             type="time"
                             value={slot.start}
-                            onChange={(e) => handleTimeSlotChange(day, slotIndex, 'start', e.target.value)}
+                            onChange={(e) =>
+                              handleTimeSlotChange(day, slotIndex, 'start', e.target.value)
+                            }
                             className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
                           />
                           <span className="text-gray-500">to</span>
                           <input
                             type="time"
                             value={slot.end}
-                            onChange={(e) => handleTimeSlotChange(day, slotIndex, 'end', e.target.value)}
+                            onChange={(e) =>
+                              handleTimeSlotChange(day, slotIndex, 'end', e.target.value)
+                            }
                             className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
                           />
                           <button
@@ -692,7 +755,7 @@ export default function EditAvailability() {
                           </button>
                         </div>
                       ))}
-                      
+
                       <button
                         type="button"
                         onClick={() => addTimeSlot(day)}
@@ -702,7 +765,6 @@ export default function EditAvailability() {
                       </button>
                     </div>
                   ))}
-
                 </div>
               </div>
 
@@ -738,7 +800,9 @@ export default function EditAvailability() {
             <div className="bg-white rounded-xl p-6 shadow-md border border-gray-200">
               <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
                 <span className="mr-2">👤</span>
-                {availability?.post_type === 'dog_available' ? 'About the Owner' : 'About the PetPal'}
+                {availability?.post_type === 'dog_available'
+                  ? 'About the Owner'
+                  : 'About the PetPal'}
               </h2>
 
               <div className="text-center mb-6">
@@ -779,7 +843,9 @@ export default function EditAvailability() {
                   <div className="bg-linear-to-r from-green-50 to-blue-50 rounded-lg p-3 border border-green-200">
                     <div className="flex items-center mb-2">
                       <span className="text-green-600 mr-2">🏆</span>
-                      <span className="font-medium text-green-800">{availability.owner.community_support_badge}</span>
+                      <span className="font-medium text-green-800">
+                        {availability.owner.community_support_badge}
+                      </span>
                     </div>
                     {availability.owner.support_story && (
                       <p className="text-sm text-green-700">{availability.owner.support_story}</p>
@@ -788,22 +854,28 @@ export default function EditAvailability() {
                 </div>
               )}
 
-              {availability?.owner?.support_preferences && availability.owner.support_preferences.length > 0 && (
-                <div className="mb-6">
-                  <h4 className="font-medium text-gray-900 mb-2">Support Preferences</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {availability.owner.support_preferences.map((pref, index) => (
-                      <span key={index} className="px-2 py-1 bg-blue-100 text-blue-800 rounded-sm text-sm">
-                        {pref}
-                      </span>
-                    ))}
+              {availability?.owner?.support_preferences &&
+                availability.owner.support_preferences.length > 0 && (
+                  <div className="mb-6">
+                    <h4 className="font-medium text-gray-900 mb-2">Support Preferences</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {availability.owner.support_preferences.map((pref, index) => (
+                        <span
+                          key={index}
+                          className="px-2 py-1 bg-blue-100 text-blue-800 rounded-sm text-sm"
+                        >
+                          {pref}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
               {/* Social Links */}
-              {(availability?.owner?.facebook_url || availability?.owner?.instagram_url || 
-                availability?.owner?.linkedin_url || availability?.owner?.airbnb_url || 
+              {(availability?.owner?.facebook_url ||
+                availability?.owner?.instagram_url ||
+                availability?.owner?.linkedin_url ||
+                availability?.owner?.airbnb_url ||
                 availability?.owner?.other_social_url) && (
                 <div className="mb-6">
                   <h4 className="font-medium text-gray-900 mb-2">Social Links</h4>

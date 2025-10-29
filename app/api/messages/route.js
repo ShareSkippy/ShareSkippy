@@ -4,9 +4,12 @@ import { createClient } from '@/libs/supabase/server';
 export async function POST(request) {
   try {
     const supabase = createClient();
-    
+
     // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -23,14 +26,16 @@ export async function POST(request) {
     const { data: existingConversation } = await supabase
       .from('conversations')
       .select('*')
-      .or(`and(participant1_id.eq.${user.id},participant2_id.eq.${recipient_id}),and(participant1_id.eq.${recipient_id},participant2_id.eq.${user.id})`)
+      .or(
+        `and(participant1_id.eq.${user.id},participant2_id.eq.${recipient_id}),and(participant1_id.eq.${recipient_id},participant2_id.eq.${user.id})`
+      )
       .single();
 
     let conversationId;
 
     if (existingConversation) {
       conversationId = existingConversation.id;
-      
+
       // Update the last_message_at timestamp
       await supabase
         .from('conversations')
@@ -43,7 +48,7 @@ export async function POST(request) {
         .insert({
           participant1_id: user.id,
           participant2_id: recipient_id,
-          availability_id: null // Always null for new conversations
+          availability_id: null, // Always null for new conversations
         })
         .select()
         .single();
@@ -60,7 +65,7 @@ export async function POST(request) {
         recipient_id: recipient_id,
         availability_id: null, // Always null for new messages
         subject: null, // Subject is no longer used
-        content: content
+        content: content,
       })
       .select()
       .single();
@@ -69,28 +74,30 @@ export async function POST(request) {
 
     // Send email notification to recipient using centralized email system
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/emails/send-new-message`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          recipientId: recipient_id,
-          senderId: user.id,
-          messagePreview: content.substring(0, 100),
-          messageId: message.id,
-          threadId: conversationId
-        })
-      });
+      await fetch(
+        `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/emails/send-new-message`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            recipientId: recipient_id,
+            senderId: user.id,
+            messagePreview: content.substring(0, 100),
+            messageId: message.id,
+            threadId: conversationId,
+          }),
+        }
+      );
     } catch (emailError) {
       console.error('Error sending message notification email:', emailError);
       // Don't fail the message creation if email fails
     }
 
-    return NextResponse.json({ 
-      success: true, 
+    return NextResponse.json({
+      success: true,
       message: message,
-      conversation_id: conversationId 
+      conversation_id: conversationId,
     });
-
   } catch (error) {
     console.error('Error sending message:', error);
     return NextResponse.json({ error: 'Failed to send message' }, { status: 500 });
@@ -100,9 +107,12 @@ export async function POST(request) {
 export async function GET(request) {
   try {
     const supabase = createClient();
-    
+
     // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -117,7 +127,8 @@ export async function GET(request) {
     // Fetch messages for the conversation
     const { data: messages, error } = await supabase
       .from('messages')
-      .select(`
+      .select(
+        `
         *,
         sender:profiles!messages_sender_id_fkey (
           id,
@@ -125,14 +136,14 @@ export async function GET(request) {
           last_name,
           profile_photo_url
         )
-      `)
+      `
+      )
       .eq('availability_id', conversationId)
       .order('created_at', { ascending: true });
 
     if (error) throw error;
 
     return NextResponse.json({ messages });
-
   } catch (error) {
     console.error('Error fetching messages:', error);
     return NextResponse.json({ error: 'Failed to fetch messages' }, { status: 500 });

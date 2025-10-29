@@ -3,10 +3,12 @@
 ## Quick Deploy to Vercel (Recommended)
 
 ### Step 1: Prepare Your Code
+
 1. Make sure all your changes are committed to GitHub
 2. Ensure your `.env.local` has production values (copy from `.env.example`)
 
 ### Step 2: Deploy to Vercel
+
 1. Go to [vercel.com](https://vercel.com) and sign up/login
 2. Click "New Project"
 3. Import your GitHub repository
@@ -21,19 +23,23 @@
 6. Click "Deploy"
 
 ### Step 3: Connect Custom Domain
+
 1. In Vercel dashboard, go to your project
 2. Click "Settings" → "Domains"
 3. Add `shareskippy.com`
 4. Vercel will provide DNS records
 
 ### Step 4: Update Namecheap DNS
+
 In your Namecheap domain management:
+
 - **Type**: `A` | **Name**: `@` | **Value**: `76.76.19.76`
 - **Type**: `CNAME` | **Name**: `www` | **Value**: `cname.vercel-dns.com`
 
 ## Alternative: Deploy to Netlify
 
 ### Step 1: Deploy
+
 1. Go to [netlify.com](https://netlify.com)
 2. Connect your GitHub repo
 3. Build settings:
@@ -43,6 +49,7 @@ In your Namecheap domain management:
 5. Deploy
 
 ### Step 2: Custom Domain
+
 1. Add custom domain in Netlify
 2. Update Namecheap DNS with Netlify's records
 
@@ -81,12 +88,14 @@ OPENAI_API_KEY=your-openai-api-key
 ## Troubleshooting
 
 ### Common Issues:
+
 1. **Environment Variables**: Make sure all required vars are set
 2. **Build Errors**: Check build logs in Vercel/Netlify
 3. **Domain Not Working**: Wait 24-48 hours for DNS propagation
 4. **Database Issues**: Verify Supabase connection strings
 
 ### Support:
+
 - Vercel: [vercel.com/support](https://vercel.com/support)
 - Netlify: [netlify.com/support](https://netlify.com/support)
 - Supabase: [supabase.com/support](https://supabase.com/support)

@@ -18,6 +18,11 @@ export default function AvailabilityDetailPage() {
     recipient: null,
     availabilityPost: null,
   });
+  const [messageModal, setMessageModal] = useState({
+    isOpen: false,
+    recipient: null,
+    availabilityPost: null,
+  });
   const [showStickyBar, setShowStickyBar] = useState(false);
 
   // Scroll detection for mobile sticky bar

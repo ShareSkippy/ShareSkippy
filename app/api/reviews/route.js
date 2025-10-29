@@ -7,9 +7,12 @@ export const dynamic = 'force-dynamic';
 export async function GET(request) {
   try {
     const supabase = createClient();
-    
+
     // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -21,12 +24,14 @@ export async function GET(request) {
 
     let query = supabase
       .from('reviews')
-      .select(`
+      .select(
+        `
         *,
         reviewer:profiles!reviews_reviewer_id_fkey(first_name, last_name, email, profile_photo_url),
         reviewee:profiles!reviews_reviewee_id_fkey(first_name, last_name, email, profile_photo_url),
         meeting:meetings(title, start_datetime, end_datetime)
-      `)
+      `
+      )
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1);
 
@@ -50,9 +55,12 @@ export async function GET(request) {
 export async function POST(request) {
   try {
     const supabase = createClient();
-    
+
     // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -68,7 +76,10 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Rating must be between 1 and 5' }, { status: 400 });
     }
 
-    const wordCount = comment.trim().split(/\s+/).filter(word => word.length > 0).length;
+    const wordCount = comment
+      .trim()
+      .split(/\s+/)
+      .filter((word) => word.length > 0).length;
     if (wordCount < 5) {
       return NextResponse.json({ error: 'Comment must be at least 5 words' }, { status: 400 });
     }
@@ -84,20 +95,29 @@ export async function POST(request) {
 
     // Validate that user is part of the meeting
     if (meeting.requester_id !== user.id && meeting.recipient_id !== user.id) {
-      return NextResponse.json({ error: 'You can only review meetings you participated in' }, { status: 403 });
+      return NextResponse.json(
+        { error: 'You can only review meetings you participated in' },
+        { status: 403 }
+      );
     }
 
     // Validate that meeting is completed
     if (meeting.status !== 'completed') {
-      return NextResponse.json({ error: 'You can only review completed meetings' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'You can only review completed meetings' },
+        { status: 400 }
+      );
     }
 
     // Validate that meeting has ended
     const meetingEndTime = new Date(meeting.end_datetime);
     const now = new Date();
-    
+
     if (now < meetingEndTime) {
-      return NextResponse.json({ error: 'You can only review meetings that have ended' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'You can only review meetings that have ended' },
+        { status: 400 }
+      );
     }
 
     // Get the availability post to determine post type and roles
@@ -112,10 +132,10 @@ export async function POST(request) {
     // Determine reviewee (the other participant) and roles based on post type
     const isRequester = meeting.requester_id === user.id;
     const revieweeId = isRequester ? meeting.recipient_id : meeting.requester_id;
-    
+
     // Determine roles based on post type and who posted it
     let reviewerRole, reviewedRole;
-    
+
     if (availability.post_type === 'dog_available') {
       // For dog_available posts: poster is owner, other person is walker
       if (isRequester) {
@@ -173,15 +193,21 @@ export async function POST(request) {
       isRequester,
       revieweeId,
       reviewerRole,
-      reviewedRole
+      reviewedRole,
     });
 
     // Validate roles
     if (!['owner', 'walker'].includes(reviewerRole)) {
-      return NextResponse.json({ error: `Invalid reviewer role: ${reviewerRole}` }, { status: 400 });
+      return NextResponse.json(
+        { error: `Invalid reviewer role: ${reviewerRole}` },
+        { status: 400 }
+      );
     }
     if (!['owner', 'walker'].includes(reviewedRole)) {
-      return NextResponse.json({ error: `Invalid reviewed role: ${reviewedRole}` }, { status: 400 });
+      return NextResponse.json(
+        { error: `Invalid reviewed role: ${reviewedRole}` },
+        { status: 400 }
+      );
     }
 
     // Check if user has already reviewed this meeting
@@ -194,7 +220,10 @@ export async function POST(request) {
     if (existingError) throw existingError;
 
     if (existingReviews && existingReviews.length > 0) {
-      return NextResponse.json({ error: 'You have already reviewed this meeting' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'You have already reviewed this meeting' },
+        { status: 400 }
+      );
     }
 
     // Create the review
@@ -205,7 +234,7 @@ export async function POST(request) {
       reviewer_role: reviewerRole,
       reviewed_role: reviewedRole,
       rating,
-      comment: comment.trim()
+      comment: comment.trim(),
     };
 
     console.log('Inserting review data:', reviewData);
@@ -213,12 +242,14 @@ export async function POST(request) {
     const { data: review, error: reviewError } = await supabase
       .from('reviews')
       .insert(reviewData)
-      .select(`
+      .select(
+        `
         *,
         reviewer:profiles!reviews_reviewer_id_fkey(first_name, last_name, email, profile_photo_url),
         reviewee:profiles!reviews_reviewee_id_fkey(first_name, last_name, email, profile_photo_url),
         meeting:meetings(title, start_datetime, end_datetime)
-      `)
+      `
+      )
       .single();
 
     if (reviewError) {
@@ -233,12 +264,15 @@ export async function POST(request) {
       message: error.message,
       code: error.code,
       details: error.details,
-      hint: error.hint
+      hint: error.hint,
     });
-    return NextResponse.json({ 
-      error: 'Failed to create review', 
-      details: error.message,
-      code: error.code 
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: 'Failed to create review',
+        details: error.message,
+        code: error.code,
+      },
+      { status: 500 }
+    );
   }
 }

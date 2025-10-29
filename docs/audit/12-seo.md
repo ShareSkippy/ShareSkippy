@@ -17,5 +17,3 @@ Status: Reviewed metadata, sitemap, and robots; no behavior changes.
 ## Manual QA note
 
 - No SEO content changes made. Confirm that current routes are reflected correctly in generated sitemap.
-
-

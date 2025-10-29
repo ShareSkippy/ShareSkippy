@@ -3,6 +3,7 @@
 ## ✅ Completed Tasks
 
 ### 1. Database Schema Migration
+
 - **Created**: `supabase/migrations/20240101000021_create_email_system_tables.sql`
 - **Tables Added**:
   - `email_catalog` - Email type definitions
@@ -12,6 +13,7 @@
 - **Features**: Proper indexes, RLS policies, and constraints
 
 ### 2. Centralized Email Module
+
 - **Location**: `libs/email/`
 - **Files Created**:
   - `sendEmail.ts` - Main email sending with idempotency
@@ -21,6 +23,7 @@
   - `index.ts` - Centralized exports
 
 ### 3. New API Routes
+
 - **Created**:
   - `/api/emails/send-welcome` - Welcome email sending
   - `/api/emails/send-new-message` - New message notifications
@@ -30,6 +33,7 @@
   - `/api/admin/email-events` - Admin email event viewing
 
 ### 4. Email Types Supported
+
 1. **welcome** - Sent once on first successful sign-in
 2. **nurture_day3** - Sent 3 days after first sign-in
 3. **meeting_reminder** - Sent 1 day before scheduled meeting
@@ -37,6 +41,7 @@
 5. **new_message** - Sent when user receives a new message
 
 ### 5. Key Features Implemented
+
 - **Idempotency**: Single-shot emails (welcome, nurture_day3) can only be sent once
 - **Comprehensive Logging**: All email events tracked in database
 - **Scheduled Processing**: Queue-based system for delayed emails
@@ -45,6 +50,7 @@
 - **Rate Limiting**: Respects Resend's 2 requests/second limit
 
 ### 6. Legacy Code Cleanup
+
 - **Removed Files**:
   - `libs/emailTemplates.js` (replaced by centralized system)
   - `app/api/emails/welcome/route.js` (replaced by new route)
@@ -58,12 +64,14 @@
   - Various test files that used old system
 
 ### 7. Updated Existing Code
+
 - **Modified**:
   - `app/api/messages/route.js` - Updated to use new message notification system
   - `app/api/auth/callback/route.js` - Updated to use new welcome email system
   - `app/api/meetings/route.js` - Updated to schedule meeting reminders
 
 ### 8. Testing & Documentation
+
 - **Created**:
   - `tests/email-system.test.js` - Comprehensive test suite
   - `EMAIL_SYSTEM_REFACTOR.md` - Detailed documentation
@@ -72,12 +80,15 @@
 ## 🚀 How to Deploy
 
 ### 1. Apply Database Migration
+
 ```bash
 supabase db push
 ```
 
 ### 2. Set Up Cron Jobs
+
 Add to `vercel.json`:
+
 ```json
 {
   "crons": [
@@ -86,7 +97,7 @@ Add to `vercel.json`:
       "schedule": "0 9 * * *"
     },
     {
-      "path": "/api/cron/process-reengage-emails", 
+      "path": "/api/cron/process-reengage-emails",
       "schedule": "0 10 * * *"
     }
   ]
@@ -94,32 +105,39 @@ Add to `vercel.json`:
 ```
 
 ### 3. Environment Variables
+
 Ensure these are set:
+
 - `RESEND_API_KEY` - Resend API key
 - `NEXT_PUBLIC_APP_URL` - App URL for email links
 
 ## 📊 Benefits Achieved
 
 ### 1. Centralized Management
+
 - All email sending goes through one system
 - Consistent logging and error handling
 - Easy to monitor and debug
 
 ### 2. Idempotency
+
 - No duplicate emails for single-shot types
 - Prevents user annoyance and email provider issues
 
 ### 3. Scalability
+
 - Queue-based system handles high volume
 - Batch processing for efficiency
 - Rate limiting prevents API issues
 
 ### 4. Observability
+
 - Complete audit trail of all email events
 - Admin interface for monitoring
 - Detailed error logging
 
 ### 5. Maintainability
+
 - Single source of truth for email logic
 - Easy to add new email types
 - Consistent template system
@@ -127,6 +145,7 @@ Ensure these are set:
 ## 🔧 Usage Examples
 
 ### Sending an Email
+
 ```javascript
 import { sendEmail } from '@/libs/email';
 
@@ -134,11 +153,12 @@ await sendEmail({
   userId: 'user-id',
   to: 'user@example.com',
   emailType: 'welcome',
-  payload: { userName: 'John Doe' }
+  payload: { userName: 'John Doe' },
 });
 ```
 
 ### Scheduling an Email
+
 ```javascript
 import { scheduleEmail } from '@/libs/email';
 
@@ -146,11 +166,12 @@ await scheduleEmail({
   userId: 'user-id',
   emailType: 'nurture_day3',
   runAfter: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-  payload: { userName: 'John Doe' }
+  payload: { userName: 'John Doe' },
 });
 ```
 
 ### Processing Scheduled Emails
+
 ```bash
 curl -X GET https://shareskippy.com/api/cron/process-scheduled-emails
 ```
@@ -158,11 +179,13 @@ curl -X GET https://shareskippy.com/api/cron/process-scheduled-emails
 ## 🧪 Testing
 
 ### Run Tests
+
 ```bash
 npm test tests/email-system.test.js
 ```
 
 ### Manual Testing
+
 ```bash
 # Test welcome email
 curl -X POST https://shareskippy.com/api/emails/send-welcome \
@@ -178,11 +201,13 @@ curl -X POST https://shareskippy.com/api/emails/send-new-message \
 ## 📈 Monitoring
 
 ### View Email Events
+
 ```bash
 curl "https://shareskippy.com/api/admin/email-events?page=1&limit=50"
 ```
 
 ### Check Scheduled Emails
+
 ```bash
 curl "https://shareskippy.com/api/admin/scheduled-emails?userId=user-id"
 ```
@@ -198,12 +223,14 @@ curl "https://shareskippy.com/api/admin/scheduled-emails?userId=user-id"
 ## 🔍 Troubleshooting
 
 ### Common Issues
+
 1. **Emails not sending** - Check `email_events` table for error details
 2. **Duplicate emails** - Check idempotency constraints in `email_events`
 3. **Scheduled emails not processing** - Verify cron job is running
 4. **Template errors** - Check template files exist and have correct syntax
 
 ### Debug Commands
+
 ```bash
 # Check email events for a user
 curl "https://shareskippy.com/api/admin/email-events?userId=user-id"

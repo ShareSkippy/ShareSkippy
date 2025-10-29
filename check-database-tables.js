@@ -8,9 +8,9 @@ const checkDatabaseTables = async () => {
   console.log('🔍 CHECKING PRODUCTION DATABASE TABLES\n');
 
   const baseUrl = 'https://www.shareskippy.com';
-  
+
   console.log('=== TESTING DATABASE CONNECTIVITY ===');
-  
+
   try {
     // Test if we can access the database through the API
     const response = await fetch(`${baseUrl}/api/emails/send-new-message`, {
@@ -21,15 +21,15 @@ const checkDatabaseTables = async () => {
         senderId: '00000000-0000-0000-0000-000000000002',
         messagePreview: 'Database connectivity test',
         messageId: 'test-db-connectivity',
-        threadId: 'test-thread'
-      })
+        threadId: 'test-thread',
+      }),
     });
 
     const result = await response.json();
-    
+
     console.log('Response Status:', response.status);
     console.log('Response Body:', JSON.stringify(result, null, 2));
-    
+
     if (response.status === 404 && result.error === 'Recipient not found') {
       console.log('✅ Database is accessible - recipient not found is expected');
       console.log('✅ Email system can connect to database');
@@ -54,7 +54,9 @@ const checkDatabaseTables = async () => {
   console.log('\n=== HOW TO APPLY MIGRATION ===');
   console.log('1. Go to Supabase Dashboard');
   console.log('2. Go to SQL Editor');
-  console.log('3. Run the migration from: supabase/migrations/20240101000021_create_email_system_tables.sql');
+  console.log(
+    '3. Run the migration from: supabase/migrations/20240101000021_create_email_system_tables.sql'
+  );
   console.log('4. Or use Supabase CLI: supabase db push');
 
   console.log('\n=== VERIFICATION STEPS ===');

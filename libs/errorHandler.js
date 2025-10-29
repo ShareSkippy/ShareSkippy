@@ -15,7 +15,7 @@ export const handleAPIError = (error, request) => {
     stack: error.stack,
     url: request.url,
     method: request.method,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 
   // Handle known error types
@@ -23,7 +23,7 @@ export const handleAPIError = (error, request) => {
     return {
       error: error.message,
       code: error.code,
-      status: error.statusCode
+      status: error.statusCode,
     };
   }
 
@@ -32,7 +32,7 @@ export const handleAPIError = (error, request) => {
     return {
       error: error.message,
       code: error.code,
-      status: 400
+      status: 400,
     };
   }
 
@@ -40,7 +40,7 @@ export const handleAPIError = (error, request) => {
   if (error.message && error.message.includes('Validation failed')) {
     return {
       error: error.message,
-      status: 400
+      status: 400,
     };
   }
 
@@ -48,7 +48,7 @@ export const handleAPIError = (error, request) => {
   if (error.message && error.message.includes('Unauthorized')) {
     return {
       error: 'Authentication required',
-      status: 401
+      status: 401,
     };
   }
 
@@ -56,14 +56,14 @@ export const handleAPIError = (error, request) => {
   if (error.message && error.message.includes('Too many requests')) {
     return {
       error: error.message,
-      status: 429
+      status: 429,
     };
   }
 
   // Default error
   return {
     error: 'Internal server error',
-    status: 500
+    status: 500,
   };
 };
 
@@ -73,18 +73,18 @@ export const withErrorHandling = (handler) => {
       return await handler(request, context);
     } catch (error) {
       const errorResponse = handleAPIError(error, request);
-      
+
       return new Response(
         JSON.stringify({
           error: errorResponse.error,
           code: errorResponse.code,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         }),
         {
           status: errorResponse.status,
           headers: {
-            'Content-Type': 'application/json'
-          }
+            'Content-Type': 'application/json',
+          },
         }
       );
     }
@@ -97,25 +97,22 @@ export const createErrorResponse = (message, status = 500, code = null) => {
     JSON.stringify({
       error: message,
       code,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     }),
     {
       status,
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     }
   );
 };
 
 export const createSuccessResponse = (data, status = 200) => {
-  return new Response(
-    JSON.stringify(data),
-    {
-      status,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }
-  );
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
 };

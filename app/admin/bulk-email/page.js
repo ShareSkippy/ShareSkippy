@@ -9,7 +9,7 @@ export default function BulkEmailPage() {
     htmlContent: '',
     textContent: '',
     batchSize: 50,
-    delayMs: 1000
+    delayMs: 1000,
   });
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState(null);
@@ -32,7 +32,9 @@ export default function BulkEmailPage() {
 
       if (response.ok) {
         setResults(data.results);
-        toast.success(`Bulk email sent! ${data.results.successful} successful, ${data.results.failed} failed`);
+        toast.success(
+          `Bulk email sent! ${data.results.successful} successful, ${data.results.failed} failed`
+        );
       } else {
         toast.error(data.error || 'Failed to send bulk email');
       }
@@ -46,9 +48,9 @@ export default function BulkEmailPage() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -57,7 +59,7 @@ export default function BulkEmailPage() {
       <div className="max-w-4xl mx-auto px-4">
         <div className="bg-white rounded-lg shadow-xs p-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-8">Send Bulk Email</h1>
-          
+
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
@@ -121,7 +123,9 @@ export default function BulkEmailPage() {
                   max="100"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-hidden focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 />
-                <p className="text-xs text-gray-500 mt-1">Number of emails to send per batch (1-100)</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Number of emails to send per batch (1-100)
+                </p>
               </div>
 
               <div>
@@ -146,7 +150,10 @@ export default function BulkEmailPage() {
               <h3 className="text-sm font-medium text-yellow-800 mb-2">⚠️ Important Notes:</h3>
               <ul className="text-sm text-yellow-700 space-y-1">
                 <li>• This will send emails to ALL users in your database</li>
-                <li>• Use personalization variables: {'{{first_name}}'}, {'{{last_name}}'}, {'{{email}}'}</li>
+                <li>
+                  • Use personalization variables: {'{{first_name}}'}, {'{{last_name}}'},{' '}
+                  {'{{email}}'}
+                </li>
                 <li>• Test with a small batch first</li>
                 <li>• Respect email rate limits to avoid being marked as spam</li>
               </ul>
@@ -178,7 +185,7 @@ export default function BulkEmailPage() {
                   <div className="text-sm text-gray-600">Failed</div>
                 </div>
               </div>
-              
+
               {results.errors.length > 0 && (
                 <div className="mt-4">
                   <h4 className="font-medium text-gray-900 mb-2">Errors:</h4>

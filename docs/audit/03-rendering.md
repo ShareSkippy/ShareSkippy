@@ -16,5 +16,3 @@ Status: Documented current RSC/Client usage and caching; no behavior changes.
 ## Manual QA note
 
 - No code edits in this task. Pure documentation.
-
-

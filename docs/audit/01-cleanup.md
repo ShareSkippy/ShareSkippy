@@ -20,5 +20,3 @@ Status: Review-only cleanup. No features added.
 ## Manual QA note
 
 - No code changes that affect runtime behavior. Formatting config only.
-
-

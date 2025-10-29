@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import React, { useEffect, useRef } from 'react';
 
 const Map = React.memo(({ lat, lng, zoom = 12 }) => {
@@ -10,7 +10,7 @@ const Map = React.memo(({ lat, lng, zoom = 12 }) => {
     // For now, we'll create a simple map placeholder
     // In a real implementation, you'd integrate with Google Maps, Mapbox, or similar
     const mapContainer = mapRef.current;
-    
+
     // Create a simple map representation
     mapContainer.innerHTML = `
       <div style="

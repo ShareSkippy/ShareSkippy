@@ -8,9 +8,9 @@ const debugEmailSystem = async () => {
   console.log('🔍 COMPREHENSIVE EMAIL SYSTEM DEBUGGING\n');
 
   const baseUrl = 'https://www.shareskippy.com';
-  
+
   console.log('=== TESTING EMAIL SYSTEM COMPONENTS ===');
-  
+
   // Test 1: Check if email endpoint is accessible
   console.log('1. Testing email endpoint accessibility...');
   try {
@@ -22,14 +22,14 @@ const debugEmailSystem = async () => {
         senderId: 'test-sender',
         messagePreview: 'Debug test',
         messageId: 'debug-test',
-        threadId: 'debug-thread'
-      })
+        threadId: 'debug-thread',
+      }),
     });
 
     const result = await response.json();
     console.log(`   Status: ${response.status}`);
     console.log(`   Response: ${JSON.stringify(result)}`);
-    
+
     if (response.status === 404 && result.error === 'Recipient not found') {
       console.log('   ✅ Email endpoint is working correctly');
     } else if (response.status === 500) {
@@ -49,8 +49,8 @@ const debugEmailSystem = async () => {
         recipient_id: 'test-recipient',
         availability_id: 'test-availability',
         subject: 'Test Subject',
-        content: 'Test Content'
-      })
+        content: 'Test Content',
+      }),
     });
 
     console.log(`   Status: ${response.status}`);

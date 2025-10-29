@@ -9,7 +9,6 @@ import Callout from '@/components/HowTo/Callout';
 import SafetyChecklist from '@/components/HowTo/SafetyChecklist';
 import Badge from '@/components/ui/Badge';
 
-
 export const metadata: Metadata = pageMetadata;
 
 const SECTIONS = [
@@ -42,7 +41,8 @@ export default function HowToUsePage() {
                   🐕 How to Use ShareSkippy
                 </h1>
                 <p className="text-xl text-gray-700 max-w-3xl mx-auto">
-                  Your complete guide to connecting with fellow dog lovers and building a stronger community through shared dog care experiences.
+                  Your complete guide to connecting with fellow dog lovers and building a stronger
+                  community through shared dog care experiences.
                 </p>
               </div>
 
@@ -55,23 +55,32 @@ export default function HowToUsePage() {
                   <SectionHeading id="what-is-shareskippy">🐕 What is ShareSkippy?</SectionHeading>
                   <div className="prose prose-lg max-w-none mt-6">
                     <p className="text-gray-700 mb-4">
-                      ShareSkippy is a community-driven platform that connects dog owners with dog lovers for free, collaborative dog care experiences. We believe in building stronger neighborhoods through shared love for dogs.
+                      ShareSkippy is a community-driven platform that connects dog owners with dog
+                      lovers for free, collaborative dog care experiences. We believe in building
+                      stronger neighborhoods through shared love for dogs.
                     </p>
                     <div className="grid md:grid-cols-3 gap-6 mt-6">
                       <div className="text-center p-4 bg-blue-50 rounded-lg">
                         <div className="text-3xl mb-2">🐕</div>
                         <h3 className="font-semibold text-gray-900 mb-2">For Dog Owners</h3>
-                        <p className="text-sm text-gray-600">Find trusted neighbors to help with dog walking, sitting, and care when you need it.</p>
+                        <p className="text-sm text-gray-600">
+                          Find trusted neighbors to help with dog walking, sitting, and care when
+                          you need it.
+                        </p>
                       </div>
                       <div className="text-center p-4 bg-green-50 rounded-lg">
                         <div className="text-3xl mb-2">🤝</div>
                         <h3 className="font-semibold text-gray-900 mb-2">For Dog Lovers</h3>
-                        <p className="text-sm text-gray-600">Get your canine fix without the full-time responsibility of ownership.</p>
+                        <p className="text-sm text-gray-600">
+                          Get your canine fix without the full-time responsibility of ownership.
+                        </p>
                       </div>
                       <div className="text-center p-4 bg-purple-50 rounded-lg">
                         <div className="text-3xl mb-2">🏘️</div>
                         <h3 className="font-semibold text-gray-900 mb-2">For Communities</h3>
-                        <p className="text-sm text-gray-600">Build stronger neighborhood bonds through shared dog care experiences.</p>
+                        <p className="text-sm text-gray-600">
+                          Build stronger neighborhood bonds through shared dog care experiences.
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -84,10 +93,17 @@ export default function HowToUsePage() {
                   <SectionHeading id="getting-started">🚀 Getting Started</SectionHeading>
                   <div className="space-y-6 mt-6">
                     <div className="flex items-start space-x-4">
-                      <div className="shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">1</div>
+                      <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">
+                        1
+                      </div>
                       <div>
-                        <h3 className="text-xl font-semibold text-gray-900 mb-2">Create Your Profile</h3>
-                        <p className="text-gray-700 mb-2">Start by creating your ShareSkippy profile with basic information about yourself.</p>
+                        <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                          Create Your Profile
+                        </h3>
+                        <p className="text-gray-700 mb-2">
+                          Start by creating your ShareSkippy profile with basic information about
+                          yourself.
+                        </p>
                         <ul className="list-disc list-inside text-gray-600 space-y-1">
                           <li>Add your name, photo, and bio</li>
                           <li>Set your location (neighborhood and city)</li>
@@ -96,12 +112,19 @@ export default function HowToUsePage() {
                         </ul>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-start space-x-4">
-                      <div className="shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">2</div>
+                      <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">
+                        2
+                      </div>
                       <div>
-                        <h3 className="text-xl font-semibold text-gray-900 mb-2">Add Your Dogs (If You&apos;re a Dog Owner)</h3>
-                        <p className="text-gray-700 mb-2">Create detailed profiles for each of your dogs to help others understand their needs.</p>
+                        <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                          Add Your Dogs (If You&apos;re a Dog Owner)
+                        </h3>
+                        <p className="text-gray-700 mb-2">
+                          Create detailed profiles for each of your dogs to help others understand
+                          their needs.
+                        </p>
                         <ul className="list-disc list-inside text-gray-600 space-y-1">
                           <li>Upload photos of your dogs</li>
                           <li>Add breed, age, size, and temperament information</li>
@@ -111,12 +134,18 @@ export default function HowToUsePage() {
                         </ul>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-start space-x-4">
-                      <div className="shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">3</div>
+                      <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">
+                        3
+                      </div>
                       <div>
-                        <h3 className="text-xl font-semibold text-gray-900 mb-2">Explore the Community</h3>
-                        <p className="text-gray-700 mb-2">Visit the Community page to see what&apos;s available in your area.</p>
+                        <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                          Explore the Community
+                        </h3>
+                        <p className="text-gray-700 mb-2">
+                          Visit the Community page to see what&apos;s available in your area.
+                        </p>
                         <ul className="list-disc list-inside text-gray-600 space-y-1">
                           <li>Browse dog availability posts</li>
                           <li>Check out PetPal availability posts</li>
@@ -131,10 +160,15 @@ export default function HowToUsePage() {
               {/* Section 3: Understanding Availability Posts */}
               <section id="understanding-posts">
                 <div className="bg-white rounded-xl shadow-lg p-8">
-                  <SectionHeading id="understanding-posts">📋 Understanding Availability Posts</SectionHeading>
+                  <SectionHeading id="understanding-posts">
+                    📋 Understanding Availability Posts
+                  </SectionHeading>
                   <div className="space-y-8 mt-6">
                     <Callout tone="blue" title="🐕 Dog Availability Posts">
-                      <p className="mb-3">These are posts made by dog owners when their dogs are available for walks, playdates, or care.</p>
+                      <p className="mb-3">
+                        These are posts made by dog owners when their dogs are available for walks,
+                        playdates, or care.
+                      </p>
                       <ul className="list-disc list-inside space-y-1">
                         <li>Show when your dogs are available</li>
                         <li>Include which dogs are available</li>
@@ -143,9 +177,12 @@ export default function HowToUsePage() {
                         <li>Add special instructions or requirements</li>
                       </ul>
                     </Callout>
-                    
+
                     <Callout tone="green" title="🤝 PetPal Availability Posts">
-                      <p className="mb-3">These are posts made by dog lovers when they&apos;re available to help with other people&apos;s dogs.</p>
+                      <p className="mb-3">
+                        These are posts made by dog lovers when they&apos;re available to help with
+                        other people&apos;s dogs.
+                      </p>
                       <ul className="list-disc list-inside space-y-1">
                         <li>Show when you&apos;re available to help</li>
                         <li>Specify what activities you can do (walking, sitting, etc.)</li>
@@ -154,9 +191,12 @@ export default function HowToUsePage() {
                         <li>Include any special skills or certifications</li>
                       </ul>
                     </Callout>
-                    
+
                     <Callout tone="purple" title="📅 My Availability">
-                      <p className="mb-3">This section shows all your own availability posts, both active and inactive.</p>
+                      <p className="mb-3">
+                        This section shows all your own availability posts, both active and
+                        inactive.
+                      </p>
                       <ul className="list-disc list-inside space-y-1">
                         <li>View all your posts in one place</li>
                         <li>Edit or update existing posts</li>
@@ -171,10 +211,14 @@ export default function HowToUsePage() {
               {/* Section 4: Creating Availability Posts */}
               <section id="creating-posts">
                 <div className="bg-white rounded-xl shadow-lg p-8">
-                  <SectionHeading id="creating-posts">✏️ Creating Availability Posts</SectionHeading>
+                  <SectionHeading id="creating-posts">
+                    ✏️ Creating Availability Posts
+                  </SectionHeading>
                   <div className="space-y-6 mt-6">
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-4">For Dog Owners: Sharing Your Dog&apos;s Availability</h3>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                        For Dog Owners: Sharing Your Dog&apos;s Availability
+                      </h3>
                       <Callout tone="blue">
                         <ol className="list-decimal list-inside space-y-3">
                           <li>Go to the Community page and click &quot;Share Availability&quot;</li>
@@ -182,7 +226,9 @@ export default function HowToUsePage() {
                           <li>Choose which of your dogs are available</li>
                           <li>Set your availability schedule (days and times)</li>
                           <li>Add a title and description for your post</li>
-                          <li>Set your location (use profile location or specify a custom location)</li>
+                          <li>
+                            Set your location (use profile location or specify a custom location)
+                          </li>
                           <li>Choose transportation options (can you pick up/drop off?)</li>
                           <li>Add any special instructions or requirements</li>
                           <li>Mark if this is urgent or needs community support</li>
@@ -190,9 +236,11 @@ export default function HowToUsePage() {
                         </ol>
                       </Callout>
                     </div>
-                    
+
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-4">For PetPals: Offering Your Help</h3>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                        For PetPals: Offering Your Help
+                      </h3>
                       <Callout tone="green">
                         <ol className="list-decimal list-inside space-y-3">
                           <li>Go to the Community page and click &quot;Share Availability&quot;</li>
@@ -207,7 +255,7 @@ export default function HowToUsePage() {
                         </ol>
                       </Callout>
                     </div>
-                    
+
                     <Callout tone="yellow" title="💡 Pro Tips for Great Posts:">
                       <ul className="list-disc list-inside space-y-1">
                         <li>Be specific about times and activities</li>
@@ -224,11 +272,17 @@ export default function HowToUsePage() {
               {/* Section 5: Finding Opportunities */}
               <section id="finding-opportunities">
                 <div className="bg-white rounded-xl shadow-lg p-8">
-                  <SectionHeading id="finding-opportunities">🔍 Finding Opportunities</SectionHeading>
+                  <SectionHeading id="finding-opportunities">
+                    🔍 Finding Opportunities
+                  </SectionHeading>
                   <div className="space-y-6 mt-6">
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-4">Browsing Dog Availability Posts</h3>
-                      <p className="text-gray-700 mb-4">Find dogs in your area that need walks, playdates, or care.</p>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                        Browsing Dog Availability Posts
+                      </h3>
+                      <p className="text-gray-700 mb-4">
+                        Find dogs in your area that need walks, playdates, or care.
+                      </p>
                       <Callout tone="blue" title="What you'll see:">
                         <ul className="list-disc list-inside space-y-1">
                           <li>Dog photos and basic information (name, breed, size)</li>
@@ -241,10 +295,14 @@ export default function HowToUsePage() {
                         </ul>
                       </Callout>
                     </div>
-                    
+
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-4">Browsing PetPal Availability Posts</h3>
-                      <p className="text-gray-700 mb-4">Find people in your area who are available to help with your dogs.</p>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                        Browsing PetPal Availability Posts
+                      </h3>
+                      <p className="text-gray-700 mb-4">
+                        Find people in your area who are available to help with your dogs.
+                      </p>
                       <Callout tone="green" title="What you'll see:">
                         <ul className="list-disc list-inside space-y-1">
                           <li>PetPal&apos;s name and profile photo</li>
@@ -256,20 +314,32 @@ export default function HowToUsePage() {
                         </ul>
                       </Callout>
                     </div>
-                    
+
                     <Callout tone="purple" title="🎯 Understanding Post Badges:">
                       <div className="grid md:grid-cols-2 gap-4">
                         <div>
-                          <Badge variant="yellow" className="mb-2">🤝 Community Support</Badge>
-                          <p className="text-sm text-gray-600">This person needs extra help (elderly, disabled, single parent, etc.)</p>
+                          <Badge variant="yellow" className="mb-2">
+                            🤝 Community Support
+                          </Badge>
+                          <p className="text-sm text-gray-600">
+                            This person needs extra help (elderly, disabled, single parent, etc.)
+                          </p>
                         </div>
                         <div>
-                          <Badge variant="red" className="mb-2">🚨 Urgent</Badge>
-                          <p className="text-sm text-gray-600">This is a time-sensitive request that needs immediate attention</p>
+                          <Badge variant="red" className="mb-2">
+                            🚨 Urgent
+                          </Badge>
+                          <p className="text-sm text-gray-600">
+                            This is a time-sensitive request that needs immediate attention
+                          </p>
                         </div>
                         <div>
-                          <Badge variant="green" className="mb-2">🚗 Can Pick Up & Drop Off</Badge>
-                          <p className="text-sm text-gray-600">This person can provide transportation for the dog</p>
+                          <Badge variant="green" className="mb-2">
+                            🚗 Can Pick Up & Drop Off
+                          </Badge>
+                          <p className="text-sm text-gray-600">
+                            This person can provide transportation for the dog
+                          </p>
                         </div>
                       </div>
                     </Callout>
@@ -296,10 +366,14 @@ export default function HowToUsePage() {
                         </ol>
                       </Callout>
                     </div>
-                    
+
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-4">Managing Conversations</h3>
-                      <p className="text-gray-700 mb-4">All your conversations are organized in the Messages page.</p>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                        Managing Conversations
+                      </h3>
+                      <p className="text-gray-700 mb-4">
+                        All your conversations are organized in the Messages page.
+                      </p>
                       <Callout tone="green" title="In the Messages page you can:">
                         <ul className="list-disc list-inside space-y-1">
                           <li>View all your active conversations</li>
@@ -310,7 +384,7 @@ export default function HowToUsePage() {
                         </ul>
                       </Callout>
                     </div>
-                    
+
                     <Callout tone="yellow" title="💡 Tips for Great Messages:">
                       <ul className="list-disc list-inside space-y-1">
                         <li>Be friendly and introduce yourself</li>
@@ -330,7 +404,9 @@ export default function HowToUsePage() {
                   <SectionHeading id="scheduling">📅 Scheduling Meetings</SectionHeading>
                   <div className="space-y-6 mt-6">
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-4">Requesting a Meeting</h3>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                        Requesting a Meeting
+                      </h3>
                       <Callout tone="blue">
                         <ol className="list-decimal list-inside space-y-3">
                           <li>In an active conversation, click &quot;Schedule Meeting&quot;</li>
@@ -343,36 +419,50 @@ export default function HowToUsePage() {
                             <li>Additional details (optional)</li>
                           </ul>
                           <li>Send the meeting request</li>
-                          <li>The other person will receive a notification and can accept or reject</li>
+                          <li>
+                            The other person will receive a notification and can accept or reject
+                          </li>
                         </ol>
                       </Callout>
                     </div>
-                    
+
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-4">Managing Meeting Requests</h3>
-                      <p className="text-gray-700 mb-4">All your meetings are tracked in the Meetings page.</p>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                        Managing Meeting Requests
+                      </h3>
+                      <p className="text-gray-700 mb-4">
+                        All your meetings are tracked in the Meetings page.
+                      </p>
                       <Callout tone="green" title="Meeting Statuses:">
                         <div className="space-y-2">
                           <div className="flex items-center space-x-2">
                             <span className="w-3 h-3 bg-yellow-400 rounded-full"></span>
-                            <span className="text-sm"><strong>Pending:</strong> Waiting for the other person to respond</span>
+                            <span className="text-sm">
+                              <strong>Pending:</strong> Waiting for the other person to respond
+                            </span>
                           </div>
                           <div className="flex items-center space-x-2">
                             <span className="w-3 h-3 bg-green-400 rounded-full"></span>
-                            <span className="text-sm"><strong>Scheduled:</strong> Meeting has been accepted and confirmed</span>
+                            <span className="text-sm">
+                              <strong>Scheduled:</strong> Meeting has been accepted and confirmed
+                            </span>
                           </div>
                           <div className="flex items-center space-x-2">
                             <span className="w-3 h-3 bg-purple-400 rounded-full"></span>
-                            <span className="text-sm"><strong>Completed:</strong> Meeting has finished</span>
+                            <span className="text-sm">
+                              <strong>Completed:</strong> Meeting has finished
+                            </span>
                           </div>
                           <div className="flex items-center space-x-2">
                             <span className="w-3 h-3 bg-gray-400 rounded-full"></span>
-                            <span className="text-sm"><strong>Cancelled:</strong> Meeting was cancelled by either party</span>
+                            <span className="text-sm">
+                              <strong>Cancelled:</strong> Meeting was cancelled by either party
+                            </span>
                           </div>
                         </div>
                       </Callout>
                     </div>
-                    
+
                     <Callout tone="yellow" title="📋 Meeting Best Practices:">
                       <ul className="list-disc list-inside space-y-1">
                         <li>Choose public, safe meeting locations</li>
@@ -394,7 +484,10 @@ export default function HowToUsePage() {
                   <div className="space-y-6 mt-6">
                     <div>
                       <h3 className="text-xl font-semibold text-gray-900 mb-4">Leaving Reviews</h3>
-                      <p className="text-gray-700 mb-4">After a completed meeting, you can leave a review to help build trust in the community.</p>
+                      <p className="text-gray-700 mb-4">
+                        After a completed meeting, you can leave a review to help build trust in the
+                        community.
+                      </p>
                       <Callout tone="blue">
                         <ol className="list-decimal list-inside space-y-3">
                           <li>Go to your Meetings page</li>
@@ -406,9 +499,11 @@ export default function HowToUsePage() {
                         </ol>
                       </Callout>
                     </div>
-                    
+
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-4">Understanding Reviews</h3>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                        Understanding Reviews
+                      </h3>
                       <Callout tone="green" title="Reviews help you:">
                         <ul className="list-disc list-inside space-y-1">
                           <li>Learn about other users&apos; experiences</li>
@@ -418,7 +513,7 @@ export default function HowToUsePage() {
                         </ul>
                       </Callout>
                     </div>
-                    
+
                     <Callout tone="yellow" title="💡 Writing Helpful Reviews:">
                       <ul className="list-disc list-inside space-y-1">
                         <li>Be honest and constructive</li>
@@ -438,7 +533,9 @@ export default function HowToUsePage() {
                   <SectionHeading id="managing-posts">⚙️ Managing Your Posts</SectionHeading>
                   <div className="space-y-6 mt-6">
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-4">Editing Availability Posts</h3>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                        Editing Availability Posts
+                      </h3>
                       <Callout tone="blue">
                         <ol className="list-decimal list-inside space-y-3">
                           <li>Go to the Community page</li>
@@ -450,11 +547,14 @@ export default function HowToUsePage() {
                         </ol>
                       </Callout>
                     </div>
-                    
+
                     <div>
                       <h3 className="text-xl font-semibold text-gray-900 mb-4">Hiding Old Posts</h3>
                       <Callout tone="green">
-                        <p className="mb-3">When a post is no longer relevant, you can hide it instead of deleting it completely.</p>
+                        <p className="mb-3">
+                          When a post is no longer relevant, you can hide it instead of deleting it
+                          completely.
+                        </p>
                         <ol className="list-decimal list-inside space-y-2">
                           <li>Go to &quot;My Availability&quot; tab</li>
                           <li>Find the post you want to hide</li>
@@ -462,11 +562,12 @@ export default function HowToUsePage() {
                           <li>Confirm that you want to hide it</li>
                         </ol>
                         <p className="text-sm text-gray-600 mt-3">
-                          <strong>Note:</strong> Hidden posts won&apos;t be visible to other users, but existing conversations will be preserved.
+                          <strong>Note:</strong> Hidden posts won&apos;t be visible to other users,
+                          but existing conversations will be preserved.
                         </p>
                       </Callout>
                     </div>
-                    
+
                     <Callout tone="yellow" title="💡 Post Management Tips:">
                       <ul className="list-disc list-inside space-y-1">
                         <li>Update your posts regularly to keep them current</li>
@@ -486,9 +587,14 @@ export default function HowToUsePage() {
                   <SectionHeading id="account-management">👤 Account Management</SectionHeading>
                   <div className="space-y-6 mt-6">
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-4">Updating Your Profile</h3>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                        Updating Your Profile
+                      </h3>
                       <Callout tone="blue">
-                        <p className="mb-3">Keep your profile information current to help others get to know you better.</p>
+                        <p className="mb-3">
+                          Keep your profile information current to help others get to know you
+                          better.
+                        </p>
                         <ul className="list-disc list-inside space-y-1">
                           <li>Update your bio and interests</li>
                           <li>Change your profile photo</li>
@@ -498,11 +604,15 @@ export default function HowToUsePage() {
                         </ul>
                       </Callout>
                     </div>
-                    
+
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-4">Managing Your Dogs</h3>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                        Managing Your Dogs
+                      </h3>
                       <Callout tone="green">
-                        <p className="mb-3">Keep your dog profiles up-to-date with current information.</p>
+                        <p className="mb-3">
+                          Keep your dog profiles up-to-date with current information.
+                        </p>
                         <ul className="list-disc list-inside space-y-1">
                           <li>Add new dogs to your profile</li>
                           <li>Update existing dog information</li>
@@ -512,7 +622,7 @@ export default function HowToUsePage() {
                         </ul>
                       </Callout>
                     </div>
-                    
+
                     <Callout tone="yellow" title="💡 Profile Best Practices:">
                       <ul className="list-disc list-inside space-y-1">
                         <li>Use clear, recent photos</li>
@@ -532,21 +642,34 @@ export default function HowToUsePage() {
                   <SectionHeading id="safety">🛡️ Safety & Guidelines</SectionHeading>
                   <div className="space-y-6 mt-6">
                     <Callout tone="red" title="🚨 Safety First">
-                      <p className="mb-3">Your safety and the safety of the dogs is our top priority.</p>
+                      <p className="mb-3">
+                        Your safety and the safety of the dogs is our top priority.
+                      </p>
                       <SafetyChecklist />
                     </Callout>
-                    
+
                     <div className="grid md:grid-cols-2 gap-6">
                       <Callout tone="blue" title="📋 Community Guidelines">
-                        <p className="text-sm mb-3">We have established guidelines to ensure a positive experience for everyone.</p>
-                        <Link href="/community-guidelines" className="text-blue-600 hover:text-blue-800 font-medium">
+                        <p className="text-sm mb-3">
+                          We have established guidelines to ensure a positive experience for
+                          everyone.
+                        </p>
+                        <Link
+                          href="/community-guidelines"
+                          className="text-blue-600 hover:text-blue-800 font-medium"
+                        >
                           Read Community Guidelines →
                         </Link>
                       </Callout>
-                      
+
                       <Callout tone="green" title="🛡️ Safety Tips">
-                        <p className="text-sm mb-3">Learn more about staying safe while using ShareSkippy.</p>
-                        <Link href="/safety" className="text-green-600 hover:text-green-800 font-medium">
+                        <p className="text-sm mb-3">
+                          Learn more about staying safe while using ShareSkippy.
+                        </p>
+                        <Link
+                          href="/safety"
+                          className="text-green-600 hover:text-green-800 font-medium"
+                        >
                           Read Safety Tips →
                         </Link>
                       </Callout>
@@ -562,26 +685,31 @@ export default function HowToUsePage() {
                   <div className="space-y-6 mt-6">
                     <div className="grid md:grid-cols-2 gap-6">
                       <Callout tone="blue" title="❓ Frequently Asked Questions">
-                        <p className="text-sm mb-3">Find answers to common questions about using ShareSkippy.</p>
+                        <p className="text-sm mb-3">
+                          Find answers to common questions about using ShareSkippy.
+                        </p>
                         <Link href="/faq" className="text-blue-600 hover:text-blue-800 font-medium">
                           Visit FAQ Page →
                         </Link>
                       </Callout>
-                      
+
                       <Callout tone="green" title="📄 Privacy Policy">
                         <p className="text-sm mb-3">Learn how we protect your privacy and data.</p>
-                        <Link href="/privacy-policy" className="text-green-600 hover:text-green-800 font-medium">
+                        <Link
+                          href="/privacy-policy"
+                          className="text-green-600 hover:text-green-800 font-medium"
+                        >
                           Read Privacy Policy →
                         </Link>
                       </Callout>
                     </div>
-                    
+
                     <div className="mt-8 p-6 bg-gray-50 rounded-lg">
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">Contact Support</h3>
                       <p className="text-gray-600">
                         Need help or want to report an issue? We&apos;re here to help!{' '}
-                        <a 
-                          href="mailto:support@shareskippy.com" 
+                        <a
+                          href="mailto:support@shareskippy.com"
                           className="text-purple-600 hover:text-purple-700 font-medium underline"
                         >
                           Email Us!

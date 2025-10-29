@@ -1,5 +1,5 @@
-import config from "@/config";
-import { LEGAL } from "@/lib/legal";
+import config from '@/config';
+import { LEGAL } from '@/lib/legal';
 
 // These are all the SEO tags you can add to your pages.
 // It prefills data with default title/description/OG, etc.. and you can cusotmize it for each page.
@@ -24,7 +24,7 @@ export const getSEOTags = ({
     applicationName: config.appName,
     // set a base URL prefix for other fields that require a fully qualified URL (.e.g og:image: og:image: 'https://yourdomain.com/share.png' => '/share.png')
     metadataBase: new URL(
-      process.env.NODE_ENV === "development"
+      process.env.NODE_ENV === 'development'
         ? `http://localhost:3000/`
         : `https://${config.domainName}/`
     ),
@@ -42,8 +42,8 @@ export const getSEOTags = ({
       //     height: 660,
       //   },
       // ],
-      locale: "en_US",
-      type: "website",
+      locale: 'en_US',
+      type: 'website',
     },
 
     twitter: {
@@ -51,8 +51,8 @@ export const getSEOTags = ({
       description: openGraph?.description || config.appDescription,
       // If you add an twitter-image.(jpg|jpeg|png|gif) image to the /app folder, you don't need the code below
       // images: [openGraph?.image || defaults.og.image],
-      card: "summary_large_image",
-      creator: "@marc_louvion",
+      card: 'summary_large_image',
+      creator: '@marc_louvion',
     },
 
     // If a canonical URL is given, we add it. The metadataBase will turn the relative URL into a fully qualified URL
@@ -78,22 +78,22 @@ export const renderSchemaTags = () => {
       type="application/ld+json"
       dangerouslySetInnerHTML={{
         __html: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "Organization",
+          '@context': 'https://schema.org',
+          '@type': 'Organization',
           name: config.appName,
           description: config.appDescription,
           image: `https://${config.domainName}/icon.png`,
           url: `https://${config.domainName}/`,
           parentOrganization: {
-            "@type": "Organization",
-            name: LEGAL.umbrellaName
+            '@type': 'Organization',
+            name: LEGAL.umbrellaName,
           },
           legalName: LEGAL.umbrellaName,
           sameAs: [
             // Add ShareVita website when available
           ],
-          datePublished: "2023-08-01",
-          applicationCategory: "CommunityApplication",
+          datePublished: '2023-08-01',
+          applicationCategory: 'CommunityApplication',
         }),
       }}
     ></script>

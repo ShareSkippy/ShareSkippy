@@ -5,7 +5,7 @@ import { useUserReviews } from '@/hooks/useReviews';
 
 const UserReviews = React.memo(({ userId, showAll = false }) => {
   const { data, isLoading, error } = useUserReviews(userId, showAll);
-  
+
   const reviews = data?.reviews || [];
   const stats = data?.stats || { averageRating: 0, reviewCount: 0, ratingDistribution: {} };
 
@@ -15,9 +15,7 @@ const UserReviews = React.memo(({ userId, showAll = false }) => {
         {[1, 2, 3, 4, 5].map((star) => (
           <span
             key={star}
-            className={`text-lg ${
-              star <= rating ? 'text-yellow-400' : 'text-gray-300'
-            }`}
+            className={`text-lg ${star <= rating ? 'text-yellow-400' : 'text-gray-300'}`}
           >
             ★
           </span>
@@ -30,7 +28,7 @@ const UserReviews = React.memo(({ userId, showAll = false }) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
     });
   };
 
@@ -53,19 +51,11 @@ const UserReviews = React.memo(({ userId, showAll = false }) => {
   }
 
   if (error) {
-    return (
-      <div className="text-red-600 text-sm">
-        {error}
-      </div>
-    );
+    return <div className="text-red-600 text-sm">{error}</div>;
   }
 
   if (reviews.length === 0 && stats.reviewCount === 0) {
-    return (
-      <div className="text-gray-500 text-sm">
-        No reviews yet
-      </div>
-    );
+    return <div className="text-gray-500 text-sm">No reviews yet</div>;
   }
 
   return (
@@ -73,9 +63,7 @@ const UserReviews = React.memo(({ userId, showAll = false }) => {
       {/* Rating Summary */}
       <div className="flex items-center space-x-4">
         <div className="flex items-center space-x-2">
-          <span className="text-2xl font-bold text-gray-900">
-            {stats.averageRating.toFixed(1)}
-          </span>
+          <span className="text-2xl font-bold text-gray-900">{stats.averageRating.toFixed(1)}</span>
           {renderStars(Math.round(stats.averageRating))}
         </div>
         <div className="text-sm text-gray-600">
@@ -89,7 +77,7 @@ const UserReviews = React.memo(({ userId, showAll = false }) => {
           {[5, 4, 3, 2, 1].map((rating) => {
             const count = stats.ratingDistribution[rating] || 0;
             const percentage = stats.reviewCount > 0 ? (count / stats.reviewCount) * 100 : 0;
-            
+
             return (
               <div key={rating} className="flex items-center space-x-2 text-sm">
                 <span className="w-4 text-gray-600">{rating}</span>
@@ -118,15 +106,11 @@ const UserReviews = React.memo(({ userId, showAll = false }) => {
               <div className="flex items-start justify-between mb-2">
                 <div className="flex items-center space-x-2">
                   {renderStars(review.rating)}
-                  <span className="text-sm text-gray-600">
-                    {formatDate(review.created_at)}
-                  </span>
+                  <span className="text-sm text-gray-600">{formatDate(review.created_at)}</span>
                 </div>
               </div>
               <p className="text-gray-800 mb-2">{review.comment}</p>
-              <div className="text-xs text-gray-500">
-                Meeting: {review.meeting?.title}
-              </div>
+              <div className="text-xs text-gray-500">Meeting: {review.meeting?.title}</div>
             </div>
           ))}
         </div>

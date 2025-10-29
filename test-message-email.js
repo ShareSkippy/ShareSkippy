@@ -9,27 +9,27 @@ const testMessageEmail = async () => {
   console.log('🧪 Testing Message Email System...\n');
 
   const baseUrl = 'https://www.shareskippy.com';
-  
+
   // Test data
   const testData = {
     recipientId: 'test-recipient-123',
-    senderId: 'test-sender-456', 
+    senderId: 'test-sender-456',
     messagePreview: 'This is a test message to verify email notifications are working properly.',
     messageId: 'test-message-789',
-    threadId: 'test-thread-101'
+    threadId: 'test-thread-101',
   };
 
   console.log('1. Testing email endpoint directly...');
-  
+
   try {
     const response = await fetch(`${baseUrl}/api/emails/send-new-message`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(testData)
+      body: JSON.stringify(testData),
     });
 
     const result = await response.json();
-    
+
     if (response.ok) {
       console.log('✅ Email endpoint is responding');
       console.log('   Response:', result);
@@ -41,7 +41,7 @@ const testMessageEmail = async () => {
   }
 
   console.log('\n2. Testing message API endpoint...');
-  
+
   try {
     const response = await fetch(`${baseUrl}/api/messages`, {
       method: 'POST',
@@ -50,12 +50,12 @@ const testMessageEmail = async () => {
         recipient_id: 'test-recipient-123',
         availability_id: 'test-availability-456',
         subject: 'Test Message',
-        content: 'This is a test message to verify the complete flow works.'
-      })
+        content: 'This is a test message to verify the complete flow works.',
+      }),
     });
 
     const result = await response.json();
-    
+
     if (response.ok) {
       console.log('✅ Message API is responding');
       console.log('   Response:', result);

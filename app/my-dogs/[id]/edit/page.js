@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
@@ -33,12 +33,20 @@ export default function EditDogPage() {
     kid_friendly: false,
     activities: [],
     description: '',
-    temperament: []
+    temperament: [],
   });
 
   const activityOptions = [
-    'Walking', 'Running', 'Swimming', 'Fetch', 'Tug of War', 
-    'Training', 'Socializing', 'Agility', 'Hiking', 'Dog Parks'
+    'Walking',
+    'Running',
+    'Swimming',
+    'Fetch',
+    'Tug of War',
+    'Training',
+    'Socializing',
+    'Agility',
+    'Hiking',
+    'Dog Parks',
   ];
 
   useEffect(() => {
@@ -84,7 +92,7 @@ export default function EditDogPage() {
         birthday: data.birthday || '',
         description: data.description || '',
         temperament: data.temperament || [],
-        activities: data.activities || []
+        activities: data.activities || [],
       };
 
       setFormData(formattedData);
@@ -99,27 +107,27 @@ export default function EditDogPage() {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
   const handleActivityChange = (activity) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       activities: prev.activities.includes(activity)
-        ? prev.activities.filter(a => a !== activity)
-        : [...prev.activities, activity]
+        ? prev.activities.filter((a) => a !== activity)
+        : [...prev.activities, activity],
     }));
   };
 
   const handleTemperamentChange = (trait) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       temperament: prev.temperament.includes(trait)
-        ? prev.temperament.filter(t => t !== trait)
-        : [...prev.temperament, trait]
+        ? prev.temperament.filter((t) => t !== trait)
+        : [...prev.temperament, trait],
     }));
   };
 
@@ -154,7 +162,7 @@ export default function EditDogPage() {
         fully_vaccinated: Boolean(formData.fully_vaccinated),
         dog_friendly: Boolean(formData.dog_friendly),
         cat_friendly: Boolean(formData.cat_friendly),
-        kid_friendly: Boolean(formData.kid_friendly)
+        kid_friendly: Boolean(formData.kid_friendly),
       };
 
       console.log('Updating dog with data:', updateData);
@@ -205,8 +213,8 @@ export default function EditDogPage() {
           <div className="text-6xl mb-6">🐕</div>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Oops!</h2>
           <p className="text-gray-600 mb-8">{error}</p>
-          <Link 
-            href="/my-dogs" 
+          <Link
+            href="/my-dogs"
             className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors inline-block font-medium"
           >
             Back to My Dogs
@@ -221,7 +229,7 @@ export default function EditDogPage() {
       <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <Link 
+          <Link
             href={`/my-dogs/${id}`}
             className="text-blue-600 hover:text-blue-700 font-medium mb-2 inline-block"
           >
@@ -230,7 +238,10 @@ export default function EditDogPage() {
           <h1 className="text-3xl font-bold text-gray-900">Edit {formData.name}</h1>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-xs border border-gray-200 p-8">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white rounded-xl shadow-xs border border-gray-200 p-8"
+        >
           {/* Error Message */}
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
@@ -242,7 +253,7 @@ export default function EditDogPage() {
             {/* Basic Information */}
             <div>
               <h2 className="text-xl font-semibold text-gray-900 mb-6">Basic Information</h2>
-              
+
               <div className="space-y-4">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
@@ -274,7 +285,10 @@ export default function EditDogPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="birthday" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="birthday"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Birthday
                   </label>
                   <input
@@ -289,7 +303,10 @@ export default function EditDogPage() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="age_years" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label
+                      htmlFor="age_years"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
                       Age (Years)
                     </label>
                     <input
@@ -303,7 +320,10 @@ export default function EditDogPage() {
                     />
                   </div>
                   <div>
-                    <label htmlFor="age_months" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label
+                      htmlFor="age_months"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
                       Age (Months)
                     </label>
                     <input
@@ -358,7 +378,10 @@ export default function EditDogPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="energy_level" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="energy_level"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Energy Level *
                   </label>
                   <select
@@ -377,9 +400,7 @@ export default function EditDogPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Dog Photo
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Dog Photo</label>
                   <PhotoUpload
                     onPhotoUploaded={handlePhotoUpload}
                     initialPhotoUrl={photoUrl}
@@ -392,7 +413,7 @@ export default function EditDogPage() {
             {/* Training & Health */}
             <div>
               <h2 className="text-xl font-semibold text-gray-900 mb-6">Training & Health</h2>
-              
+
               <div className="space-y-4">
                 <div className="flex items-center">
                   <input
@@ -511,7 +532,16 @@ export default function EditDogPage() {
                     Temperament (select all that apply)
                   </label>
                   <div className="grid grid-cols-2 gap-2">
-                    {['Friendly', 'Playful', 'Calm', 'Energetic', 'Shy', 'Confident', 'Curious', 'Loyal'].map((trait) => (
+                    {[
+                      'Friendly',
+                      'Playful',
+                      'Calm',
+                      'Energetic',
+                      'Shy',
+                      'Confident',
+                      'Curious',
+                      'Loyal',
+                    ].map((trait) => (
                       <div key={trait} className="flex items-center">
                         <input
                           type="checkbox"
@@ -520,7 +550,10 @@ export default function EditDogPage() {
                           onChange={() => handleTemperamentChange(trait)}
                           className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded-sm"
                         />
-                        <label htmlFor={`temperament-${trait}`} className="ml-2 block text-sm text-gray-700">
+                        <label
+                          htmlFor={`temperament-${trait}`}
+                          className="ml-2 block text-sm text-gray-700"
+                        >
                           {trait}
                         </label>
                       </div>
@@ -544,7 +577,10 @@ export default function EditDogPage() {
                     onChange={() => handleActivityChange(activity)}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded-sm"
                   />
-                  <label htmlFor={`activity-${activity}`} className="ml-2 block text-sm text-gray-900">
+                  <label
+                    htmlFor={`activity-${activity}`}
+                    className="ml-2 block text-sm text-gray-900"
+                  >
                     {activity}
                   </label>
                 </div>

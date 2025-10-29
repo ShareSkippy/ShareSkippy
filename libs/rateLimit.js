@@ -11,9 +11,11 @@ export const rateLimit = (options = {}) => {
     keyGenerator = (request) => {
       // Get IP address from request headers
       const forwarded = request.headers.get('x-forwarded-for');
-      const ip = forwarded ? forwarded.split(',')[0] : request.headers.get('x-real-ip') || 'unknown';
+      const ip = forwarded
+        ? forwarded.split(',')[0]
+        : request.headers.get('x-real-ip') || 'unknown';
       return ip;
-    }
+    },
   } = options;
 
   return (request) => {
@@ -25,7 +27,7 @@ export const rateLimit = (options = {}) => {
     let rateLimitData = rateLimitMap.get(key) || { requests: [], resetTime: now + windowMs };
 
     // Clean up old requests outside the window
-    rateLimitData.requests = rateLimitData.requests.filter(timestamp => timestamp > windowStart);
+    rateLimitData.requests = rateLimitData.requests.filter((timestamp) => timestamp > windowStart);
 
     // Check if limit exceeded
     if (rateLimitData.requests.length >= max) {
@@ -33,8 +35,8 @@ export const rateLimit = (options = {}) => {
         success: false,
         error: {
           message,
-          retryAfter: Math.ceil((rateLimitData.requests[0] + windowMs - now) / 1000)
-        }
+          retryAfter: Math.ceil((rateLimitData.requests[0] + windowMs - now) / 1000),
+        },
       };
     }
 
@@ -43,7 +45,8 @@ export const rateLimit = (options = {}) => {
     rateLimitMap.set(key, rateLimitData);
 
     // Clean up old entries periodically
-    if (Math.random() < 0.01) { // 1% chance
+    if (Math.random() < 0.01) {
+      // 1% chance
       for (const [k, v] of rateLimitMap.entries()) {
         if (v.resetTime < now) {
           rateLimitMap.delete(k);
@@ -59,17 +62,17 @@ export const rateLimit = (options = {}) => {
 export const authRateLimit = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 5, // 5 attempts per 15 minutes
-  message: 'Too many authentication attempts, please try again later.'
+  message: 'Too many authentication attempts, please try again later.',
 });
 
 export const apiRateLimit = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // 100 requests per 15 minutes
-  message: 'Too many API requests, please try again later.'
+  message: 'Too many API requests, please try again later.',
 });
 
 export const strictRateLimit = rateLimit({
   windowMs: 60 * 1000, // 1 minute
   max: 10, // 10 requests per minute
-  message: 'Too many requests, please slow down.'
+  message: 'Too many requests, please slow down.',
 });

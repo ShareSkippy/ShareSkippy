@@ -1,7 +1,7 @@
 # ShareSkippy Cleanup Changeset Plan
 
 **Date:** 2024-12-19  
-**Phase:** 1 - Planning Complete  
+**Phase:** 1 - Planning Complete
 
 ## Overview
 
@@ -14,6 +14,7 @@ This plan outlines a safe, incremental cleanup of the ShareSkippy codebase. Each
 **User Impact:** None (internal fixes only)
 
 ### Changes:
+
 1. **Fix TypeScript Error** (Critical)
    - File: `libs/email/reengage.ts:158`
    - Issue: Type error in Date constructor
@@ -51,6 +52,7 @@ This plan outlines a safe, incremental cleanup of the ShareSkippy codebase. Each
    - `app/community/page.js` - Remove unused variables
 
 ### Safety Checks:
+
 ```bash
 npm install
 npm run typecheck  # Should now pass
@@ -60,6 +62,7 @@ npm run build      # Should now succeed
 ```
 
 ### Rollback:
+
 ```bash
 git revert <commit-hash>
 ```
@@ -73,9 +76,10 @@ git revert <commit-hash>
 **User Impact:** None (unused components)
 
 ### Changes:
+
 1. **Delete Unused Components**
    - `components/Testimonials1.js` - No imports found
-   - `components/Testimonials11.js` - No imports found  
+   - `components/Testimonials11.js` - No imports found
    - `components/Testimonials3.js` - No imports found
    - `components/FeaturesAccordion.js` - No imports found
    - `components/FeaturesGrid.js` - No imports found
@@ -83,11 +87,13 @@ git revert <commit-hash>
    - `components/FAQ.js` - No imports found
 
 ### Evidence:
+
 - `grep -r "Testimonials1\|Testimonials11\|Testimonials3" .` - No matches
 - `grep -r "FeaturesAccordion\|FeaturesGrid\|FeaturesListicle" .` - No matches
 - `grep -r "import.*FAQ" .` - No matches
 
 ### Safety Checks:
+
 ```bash
 npm install
 npm run typecheck
@@ -97,6 +103,7 @@ npm run build
 ```
 
 ### Rollback:
+
 ```bash
 git revert <commit-hash>
 ```
@@ -110,6 +117,7 @@ git revert <commit-hash>
 **User Impact:** None (test routes only)
 
 ### Changes:
+
 1. **Delete Test API Routes**
    - `app/api/test-resend/route.js` - Disabled test route
    - `app/api/test-availability/route.js` - Database test route
@@ -118,11 +126,13 @@ git revert <commit-hash>
    - `app/api/admin/test-bulk-email/route.js` - Email test route
 
 ### Evidence:
+
 - All routes are test/debug only
 - No production functionality
 - Some already disabled
 
 ### Safety Checks:
+
 ```bash
 npm install
 npm run typecheck
@@ -132,6 +142,7 @@ npm run build
 ```
 
 ### Rollback:
+
 ```bash
 git revert <commit-hash>
 ```
@@ -145,6 +156,7 @@ git revert <commit-hash>
 **User Impact:** None (unused files)
 
 ### Changes:
+
 1. **Delete Unused Files**
    - `next` - Binary file with no clear purpose
    - `shareskippy_magic_link_template.html` - Superseded by new email system
@@ -162,11 +174,13 @@ git revert <commit-hash>
    - `test-reengagement-simple.js`
 
 ### Evidence:
+
 - No imports found for any of these files
 - Test files are not part of production build
 - Documentation files are not referenced
 
 ### Safety Checks:
+
 ```bash
 npm install
 npm run typecheck
@@ -176,6 +190,7 @@ npm run build
 ```
 
 ### Rollback:
+
 ```bash
 git revert <commit-hash>
 ```
@@ -189,6 +204,7 @@ git revert <commit-hash>
 **User Impact:** None (already applied migrations)
 
 ### Changes:
+
 1. **Delete Unused SQL Files**
    - `add_can_pick_up_drop_off_migration.sql`
    - `add_dog_ids_to_meetings.sql`
@@ -207,11 +223,13 @@ git revert <commit-hash>
    - `test_constraint_fix.sql`
 
 ### Evidence:
+
 - All migrations are already applied to database
 - Files are not referenced in code
 - Supabase migrations are in `supabase/migrations/` directory
 
 ### Safety Checks:
+
 ```bash
 npm install
 npm run typecheck
@@ -221,6 +239,7 @@ npm run build
 ```
 
 ### Rollback:
+
 ```bash
 git revert <commit-hash>
 ```
@@ -234,6 +253,7 @@ git revert <commit-hash>
 **User Impact:** Performance improvement
 
 ### Changes:
+
 1. **Replace Image Elements**
    - `app/community/availability/[id]/edit/page.js` - 3 instances
    - `app/community/availability/[id]/page.js` - 3 instances
@@ -244,6 +264,7 @@ git revert <commit-hash>
    - Configure Next.js image optimization
 
 ### Safety Checks:
+
 ```bash
 npm install sharp
 npm run typecheck
@@ -253,6 +274,7 @@ npm run build
 ```
 
 ### Rollback:
+
 ```bash
 git revert <commit-hash>
 ```
@@ -266,6 +288,7 @@ git revert <commit-hash>
 **User Impact:** Better development experience
 
 ### Changes:
+
 1. **Fix Scripts**
    - Replace placeholder `typecheck` with actual TypeScript checking
    - Replace placeholder `test` with actual test runner
@@ -276,6 +299,7 @@ git revert <commit-hash>
    - Address security vulnerabilities
 
 ### Safety Checks:
+
 ```bash
 npm install
 npm run typecheck  # Should now work
@@ -285,6 +309,7 @@ npm run build
 ```
 
 ### Rollback:
+
 ```bash
 git revert <commit-hash>
 ```
@@ -294,18 +319,21 @@ git revert <commit-hash>
 ## Success Criteria
 
 ### Phase 2 (PRs 1-2)
+
 - [ ] Build passes without errors
 - [ ] TypeScript compilation succeeds
 - [ ] Linting errors reduced by 80%
 - [ ] No unused components remain
 
 ### Phase 3 (PRs 3-5)
+
 - [ ] All test/debug routes removed
 - [ ] All unused files removed
 - [ ] All unused SQL files removed
 - [ ] Build still passes
 
 ### Phase 4 (PRs 6-7)
+
 - [ ] Images optimized for performance
 - [ ] Package.json scripts functional
 - [ ] Security vulnerabilities addressed

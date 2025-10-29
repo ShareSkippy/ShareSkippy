@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import { useState } from 'react';
 
 export default function MessageModal({ isOpen, onClose, recipient, availabilityPost }) {
@@ -11,7 +11,7 @@ export default function MessageModal({ isOpen, onClose, recipient, availabilityP
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!recipient || !message.trim()) {
       setError('Please fill in all required fields');
       return;
@@ -29,7 +29,7 @@ export default function MessageModal({ isOpen, onClose, recipient, availabilityP
         body: JSON.stringify({
           recipient_id: recipient.id,
           availability_id: null, // Always null for new messages
-          content: message.trim()
+          content: message.trim(),
         }),
       });
 
@@ -41,13 +41,12 @@ export default function MessageModal({ isOpen, onClose, recipient, availabilityP
 
       setSuccess(true);
       setMessage('');
-      
+
       // Close modal after 2 seconds
       setTimeout(() => {
         onClose();
         setSuccess(false);
       }, 2000);
-
     } catch (error) {
       console.error('Error sending message:', error);
       setError(error.message || 'Failed to send message. Please try again.');
@@ -57,14 +56,17 @@ export default function MessageModal({ isOpen, onClose, recipient, availabilityP
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start sm:items-center justify-center z-50 overflow-y-auto p-4" style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}>
+    <div
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-start sm:items-center justify-center z-50 overflow-y-auto p-4"
+      style={{
+        paddingTop: 'env(safe-area-inset-top)',
+        paddingBottom: 'env(safe-area-inset-bottom)',
+      }}
+    >
       <div className="bg-white rounded-xl p-6 w-full max-w-md mx-4 my-4 sm:my-0 max-h-[90vh] overflow-y-auto shadow-xl">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold">Send Message</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 text-xl"
-          >
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-700 text-xl">
             ✕
           </button>
         </div>
@@ -76,7 +78,8 @@ export default function MessageModal({ isOpen, onClose, recipient, availabilityP
             </p>
             {availabilityPost && (
               <p className="text-sm text-gray-600 mt-1">
-                Re: <span className="font-medium">{availabilityPost.title || 'Availability Post'}</span>
+                Re:{' '}
+                <span className="font-medium">{availabilityPost.title || 'Availability Post'}</span>
               </p>
             )}
             {!availabilityPost && (
@@ -89,9 +92,7 @@ export default function MessageModal({ isOpen, onClose, recipient, availabilityP
 
         <form onSubmit={handleSubmit}>
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-3">
-              Message
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-3">Message</label>
             <textarea
               value={message}
               onChange={(e) => {
@@ -114,11 +115,7 @@ export default function MessageModal({ isOpen, onClose, recipient, availabilityP
             />
           </div>
 
-          {error && (
-            <div className="mb-6 p-4 bg-red-100 text-red-700 rounded-lg">
-              {error}
-            </div>
-          )}
+          {error && <div className="mb-6 p-4 bg-red-100 text-red-700 rounded-lg">{error}</div>}
 
           {success && (
             <div className="mb-6 p-4 bg-green-100 text-green-700 rounded-lg">

@@ -7,9 +7,12 @@ export const dynamic = 'force-dynamic';
 export async function GET(request) {
   try {
     const supabase = createClient();
-    
+
     // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -20,11 +23,13 @@ export async function GET(request) {
     // Get average rating and review count using database functions
     let avgRating = 0;
     let reviewCount = 0;
-    
+
     try {
-      const { data: avgRatingData, error: avgError } = await supabase
-        .rpc('get_user_average_rating', { user_id: userId });
-      
+      const { data: avgRatingData, error: avgError } = await supabase.rpc(
+        'get_user_average_rating',
+        { user_id: userId }
+      );
+
       if (!avgError) {
         avgRating = avgRatingData || 0;
       } else {
@@ -35,9 +40,11 @@ export async function GET(request) {
     }
 
     try {
-      const { data: reviewCountData, error: countError } = await supabase
-        .rpc('get_user_review_count', { user_id: userId });
-      
+      const { data: reviewCountData, error: countError } = await supabase.rpc(
+        'get_user_review_count',
+        { user_id: userId }
+      );
+
       if (!countError) {
         reviewCount = reviewCountData || 0;
       } else {
@@ -57,14 +64,14 @@ export async function GET(request) {
 
     // Calculate rating distribution
     const distribution = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
-    ratingDistribution.forEach(review => {
+    ratingDistribution.forEach((review) => {
       distribution[review.rating]++;
     });
 
     return NextResponse.json({
       averageRating: avgRating,
       reviewCount: reviewCount,
-      ratingDistribution: distribution
+      ratingDistribution: distribution,
     });
   } catch (error) {
     console.error('Error fetching review stats:', error);

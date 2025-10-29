@@ -9,9 +9,9 @@ const diagnosticEmailSystem = async () => {
   console.log('🔍 COMPREHENSIVE EMAIL SYSTEM DIAGNOSTIC\n');
 
   const baseUrl = 'https://www.shareskippy.com';
-  
+
   console.log('=== 1. TESTING EMAIL ENDPOINTS ===');
-  
+
   // Test email endpoint
   try {
     const response = await fetch(`${baseUrl}/api/emails/send-new-message`, {
@@ -19,11 +19,11 @@ const diagnosticEmailSystem = async () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         recipientId: 'test-recipient',
-        senderId: 'test-sender', 
-        messagePreview: 'Test message'
-      })
+        senderId: 'test-sender',
+        messagePreview: 'Test message',
+      }),
     });
-    
+
     const result = await response.json();
     console.log('✅ Email endpoint responding:', response.status);
     console.log('   Response:', result);
@@ -32,7 +32,7 @@ const diagnosticEmailSystem = async () => {
   }
 
   console.log('\n=== 2. TESTING MESSAGE API ===');
-  
+
   // Test message API (should return 401 - unauthorized, which is expected)
   try {
     const response = await fetch(`${baseUrl}/api/messages`, {
@@ -41,10 +41,10 @@ const diagnosticEmailSystem = async () => {
       body: JSON.stringify({
         recipient_id: 'test',
         availability_id: 'test',
-        content: 'test'
-      })
+        content: 'test',
+      }),
     });
-    
+
     console.log('✅ Message API responding:', response.status);
     if (response.status === 401) {
       console.log('   ✅ Expected: Unauthorized (authentication required)');
@@ -54,7 +54,7 @@ const diagnosticEmailSystem = async () => {
   }
 
   console.log('\n=== 3. TESTING EMAIL TEMPLATES ===');
-  
+
   // Test if email templates are accessible
   try {
     const response = await fetch(`${baseUrl}/email-templates/new-message-notification.html`);

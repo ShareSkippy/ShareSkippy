@@ -1,17 +1,20 @@
 # Multiple Dogs Per Availability Post Implementation
 
 ## Overview
+
 This implementation modifies the availability system to allow users to post availability for multiple dogs in a single post, rather than creating separate posts for each dog. This creates a cleaner community page experience where related dog availabilities are grouped together.
 
 ## Changes Made
 
 ### 1. Database Schema Updates
+
 - **File**: `database_schema.sql`
 - **Change**: Added `dog_ids UUID[]` field to the `availability` table
 - **Purpose**: Store multiple dog IDs in a single availability post
 - **Backward Compatibility**: Kept existing `dog_id` field for single dog posts
 
 ### 2. Database Migration
+
 - **File**: `availability_migration.sql`
 - **Purpose**: Add the new field to existing databases and migrate existing data
 - **Features**:
@@ -21,12 +24,14 @@ This implementation modifies the availability system to allow users to post avai
   - Adds constraint validation
 
 ### 3. Share Availability Page Updates
+
 - **File**: `app/share-availability/page.js`
 - **Change**: Modified `handleSubmit` function to create single post with multiple dogs
 - **Before**: Created separate posts for each selected dog
 - **After**: Creates one post with `dog_ids` array containing all selected dogs
 
 ### 4. Community Page Updates
+
 - **File**: `app/community/page.js`
 - **Changes**:
   - Modified `fetchAvailabilityData` to fetch additional dogs for posts with multiple dogs
@@ -34,6 +39,7 @@ This implementation modifies the availability system to allow users to post avai
   - Applied changes to both main community view and "My Availability" section
 
 ### 5. Individual Availability Page Updates
+
 - **File**: `app/community/availability/[id]/page.js`
 - **Changes**:
   - Modified fetch function to get all dogs for posts with multiple dogs
@@ -43,6 +49,7 @@ This implementation modifies the availability system to allow users to post avai
 ## How It Works
 
 ### Creating Availability Posts
+
 1. User selects multiple dogs on the share availability page
 2. System creates a single availability post with:
    - `dog_id`: First selected dog (for backward compatibility)
@@ -50,6 +57,7 @@ This implementation modifies the availability system to allow users to post avai
    - All other availability details (schedule, location, etc.)
 
 ### Displaying on Community Page
+
 1. System fetches availability posts
 2. For posts with multiple dogs, additional dog data is fetched
 3. Posts display:
@@ -57,6 +65,7 @@ This implementation modifies the availability system to allow users to post avai
    - **Multiple dogs**: Grid layout showing all dogs with photos, names, and breeds
 
 ### Individual Post View
+
 1. Fetches all dogs associated with the post
 2. Displays either:
    - **Single dog**: Full detailed profile
@@ -72,15 +81,19 @@ This implementation modifies the availability system to allow users to post avai
 ## Implementation Steps
 
 ### 1. Database Migration
+
 Run the migration script on your existing database:
+
 ```sql
 -- Run availability_migration.sql
 ```
 
 ### 2. Code Deployment
+
 Deploy the updated code files to your application.
 
 ### 3. Testing
+
 - Test creating availability posts with multiple dogs
 - Verify display on community page
 - Test individual post views
@@ -89,22 +102,24 @@ Deploy the updated code files to your application.
 ## Technical Details
 
 ### Data Structure
+
 ```typescript
 interface AvailabilityPost {
   id: string;
   owner_id: string;
-  dog_id: string;           // Primary dog (backward compatibility)
-  dog_ids: string[];        // All dogs in this post
+  dog_id: string; // Primary dog (backward compatibility)
+  dog_ids: string[]; // All dogs in this post
   post_type: 'dog_available' | 'petpal_available';
   // ... other fields
 }
 ```
 
 ### Query Pattern
+
 ```sql
 -- Fetch posts with multiple dogs
-SELECT * FROM availability 
-WHERE post_type = 'dog_available' 
+SELECT * FROM availability
+WHERE post_type = 'dog_available'
   AND array_length(dog_ids, 1) > 1;
 
 -- Fetch additional dogs for a post

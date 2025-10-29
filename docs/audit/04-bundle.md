@@ -11,12 +11,14 @@ Status: Analyzer integrated (opt-in via `ANALYZE=true`). No behavior changes.
   - `daisyUI`/Tailwind (CSS, not JS-heavy but theme CSS present)
 
 Build notes:
+
 - Reports saved locally:
   - `.next/analyze/client.html`
   - `.next/analyze/nodejs.html`
   - `.next/analyze/edge.html`
 
 Warnings observed (informational):
+
 - Supabase packages reference Node APIs when evaluated in Edge runtime paths; currently warnings only.
 - Missing `sharp` optional dependency for image optimization.
 
@@ -29,5 +31,3 @@ Warnings observed (informational):
 ## Manual QA note
 
 - No code paths changed. Analyzer is gated behind `ANALYZE=true` and only affects build reporting.
-
-

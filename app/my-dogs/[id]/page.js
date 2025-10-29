@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
@@ -57,7 +57,12 @@ export default function DogDetailsPage() {
   };
 
   const deleteDog = async () => {
-    if (!user || !dog || !confirm('Are you sure you want to delete this dog? This action cannot be undone.')) return;
+    if (
+      !user ||
+      !dog ||
+      !confirm('Are you sure you want to delete this dog? This action cannot be undone.')
+    )
+      return;
 
     try {
       const { error } = await supabase
@@ -101,8 +106,8 @@ export default function DogDetailsPage() {
           <div className="text-6xl mb-6">🐕</div>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Oops!</h2>
           <p className="text-gray-600 mb-8">{error}</p>
-          <Link 
-            href="/my-dogs" 
+          <Link
+            href="/my-dogs"
             className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors inline-block font-medium"
           >
             Back to My Dogs
@@ -118,9 +123,12 @@ export default function DogDetailsPage() {
         <div className="max-w-md mx-auto text-center">
           <div className="text-6xl mb-6">🐕</div>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Dog not found</h2>
-          <p className="text-gray-600 mb-8">The dog you&apos;re looking for doesn&apos;t exist or you don&apos;t have permission to view it.</p>
-          <Link 
-            href="/my-dogs" 
+          <p className="text-gray-600 mb-8">
+            The dog you&apos;re looking for doesn&apos;t exist or you don&apos;t have permission to
+            view it.
+          </p>
+          <Link
+            href="/my-dogs"
             className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors inline-block font-medium"
           >
             Back to My Dogs
@@ -136,7 +144,7 @@ export default function DogDetailsPage() {
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
-            <Link 
+            <Link
               href="/my-dogs"
               className="text-blue-600 hover:text-blue-700 font-medium mb-2 inline-block"
             >
@@ -164,15 +172,9 @@ export default function DogDetailsPage() {
           {/* Dog Photo */}
           <div className="aspect-video bg-gray-100 relative">
             {dog.photo_url ? (
-              <img
-                src={dog.photo_url}
-                alt={dog.name}
-                className="w-full h-full object-cover"
-              />
+              <img src={dog.photo_url} alt={dog.name} className="w-full h-full object-cover" />
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-8xl">
-                🐕
-              </div>
+              <div className="w-full h-full flex items-center justify-center text-8xl">🐕</div>
             )}
           </div>
 
@@ -187,22 +189,24 @@ export default function DogDetailsPage() {
                     <label className="text-sm font-medium text-gray-500">Name</label>
                     <p className="text-lg text-gray-900">{dog.name}</p>
                   </div>
-                  
+
                   {dog.breed && (
                     <div>
                       <label className="text-sm font-medium text-gray-500">Breed</label>
                       <p className="text-lg text-gray-900">{dog.breed}</p>
                     </div>
                   )}
-                  
+
                   <div>
                     <label className="text-sm font-medium text-gray-500">Age</label>
                     <p className="text-lg text-gray-900">
-                      {dog.age_years > 0 && `${dog.age_years} year${dog.age_years !== 1 ? 's' : ''} `}
-                      {dog.age_months > 0 && `${dog.age_months} month${dog.age_months !== 1 ? 's' : ''}`}
+                      {dog.age_years > 0 &&
+                        `${dog.age_years} year${dog.age_years !== 1 ? 's' : ''} `}
+                      {dog.age_months > 0 &&
+                        `${dog.age_months} month${dog.age_months !== 1 ? 's' : ''}`}
                     </p>
                   </div>
-                  
+
                   <div>
                     <label className="text-sm font-medium text-gray-500">Gender</label>
                     <p className="text-lg text-gray-900 capitalize">
@@ -210,7 +214,7 @@ export default function DogDetailsPage() {
                       {dog.neutered && ' (Neutered)'}
                     </p>
                   </div>
-                  
+
                   {dog.size && (
                     <div>
                       <label className="text-sm font-medium text-gray-500">Size</label>
@@ -219,7 +223,7 @@ export default function DogDetailsPage() {
                       </p>
                     </div>
                   )}
-                  
+
                   {dog.energy_level && (
                     <div>
                       <label className="text-sm font-medium text-gray-500">Energy Level</label>
@@ -253,7 +257,7 @@ export default function DogDetailsPage() {
                       )}
                     </div>
                   </div>
-                  
+
                   <div>
                     <label className="text-sm font-medium text-gray-500">Health</label>
                     <div className="flex flex-wrap gap-2 mt-2">
@@ -264,7 +268,7 @@ export default function DogDetailsPage() {
                       )}
                     </div>
                   </div>
-                  
+
                   <div>
                     <label className="text-sm font-medium text-gray-500">Friendliness</label>
                     <div className="flex flex-wrap gap-2 mt-2">
@@ -292,10 +296,15 @@ export default function DogDetailsPage() {
             {/* Activities */}
             {dog.activities && dog.activities.length > 0 && (
               <div className="mt-8 pt-8 border-t border-gray-200">
-                <h2 className="text-2xl font-semibold text-gray-900 mb-4">Activities & Preferences</h2>
+                <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+                  Activities & Preferences
+                </h2>
                 <div className="flex flex-wrap gap-2">
                   {dog.activities.map((activity, index) => (
-                    <span key={index} className="bg-orange-100 text-orange-800 text-sm px-3 py-1 rounded-full">
+                    <span
+                      key={index}
+                      className="bg-orange-100 text-orange-800 text-sm px-3 py-1 rounded-full"
+                    >
                       {activity}
                     </span>
                   ))}
@@ -309,10 +318,13 @@ export default function DogDetailsPage() {
                 <h2 className="text-2xl font-semibold text-gray-900 mb-4">Temperament</h2>
                 <div className="flex flex-wrap gap-2">
                   {dog.temperament.map((trait, index) => (
-                    <span key={index} className="bg-yellow-100 text-yellow-800 text-sm px-3 py-1 rounded-full">
+                    <span
+                      key={index}
+                      className="bg-yellow-100 text-yellow-800 text-sm px-3 py-1 rounded-full"
+                    >
                       {trait}
                     </span>
-                    ))}
+                  ))}
                 </div>
               </div>
             )}

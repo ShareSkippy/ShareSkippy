@@ -3,12 +3,12 @@ import Callout from './Callout';
 const safetyItems = [
   'Always meet in public places initially',
   'Bring a friend or family member to first meetings',
-  'Trust your instincts - if something feels wrong, don\'t proceed',
+  "Trust your instincts - if something feels wrong, don't proceed",
   'Keep emergency contact information handy',
-  'Let someone know where you\'re going and when you\'ll be back',
+  "Let someone know where you're going and when you'll be back",
   'For dog emergencies, contact the owner immediately and seek veterinary care',
   'Report any concerning behavior to ShareSkippy support',
-  'Keep emergency contact information for both humans and dogs readily available'
+  'Keep emergency contact information for both humans and dogs readily available',
 ];
 
 export default function SafetyChecklist() {

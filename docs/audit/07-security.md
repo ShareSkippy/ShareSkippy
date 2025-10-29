@@ -25,5 +25,3 @@ Status: Reviewed cookie handling, headers, and secret exposure; no behavior chan
 ## Manual QA note
 
 - No changes made; documentation only. Further hardening requires careful end-to-end validation and is out of scope for review-only changes.
-
-

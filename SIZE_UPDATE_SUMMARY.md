@@ -1,11 +1,13 @@
 # Dog Size Options Update Summary
 
 ## Overview
+
 Updated the dog size options from descriptive sizes (small, medium, large, extra_large) to specific weight ranges for better accuracy and clarity.
 
 ## Changes Made
 
 ### 1. Form Updates
+
 - **File**: `app/my-dogs/add/page.js`
   - Updated size dropdown options from descriptive sizes to weight ranges
   - Changed default value from 'medium' to '26-40'
@@ -16,6 +18,7 @@ Updated the dog size options from descriptive sizes (small, medium, large, extra
   - Same weight range options
 
 ### 2. Display Logic Updates
+
 - **File**: `app/my-dogs/[id]/page.js`
   - Enhanced size display to show "lbs" for weight ranges
   - Maintains backward compatibility for old size values
@@ -29,6 +32,7 @@ Updated the dog size options from descriptive sizes (small, medium, large, extra
   - Enhanced `getSizeIcon` function to handle weight ranges intelligently
 
 ### 3. Database Updates
+
 - **File**: `database_schema.sql`
   - Updated size constraint to allow new weight range values
   - New constraint: `CHECK (size IN ('0-10', '11-25', '26-40', '41-70', '71-90', '91-110'))`
@@ -42,6 +46,7 @@ Updated the dog size options from descriptive sizes (small, medium, large, extra
     - extra_large → 91-110 lbs
 
 ## Weight Range Mapping
+
 - **0-10 lbs**: Very small dogs (Chihuahuas, Yorkies, etc.)
 - **11-25 lbs**: Small dogs (Beagles, Corgis, etc.)
 - **26-40 lbs**: Medium dogs (Border Collies, Australian Shepherds, etc.)
@@ -50,17 +55,20 @@ Updated the dog size options from descriptive sizes (small, medium, large, extra
 - **91-110 lbs**: Extra large dogs (St. Bernards, Newfoundlands, etc.)
 
 ## Backward Compatibility
+
 - The display logic maintains backward compatibility for any existing records with old size values
 - The `getSizeIcon` function handles both old and new size formats
 - Old size values will still display correctly but should be updated via the migration
 
 ## Next Steps
+
 1. Run the `size_migration.sql` script on your database to update existing records
 2. Test the forms to ensure the new weight ranges work correctly
 3. Verify that existing dog profiles display correctly with the new format
 4. Consider updating any other components that might reference dog sizes
 
 ## Benefits
+
 - More accurate size representation for dog matching
 - Better user experience with specific weight information
 - Easier to filter and search by actual dog size

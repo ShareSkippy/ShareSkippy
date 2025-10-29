@@ -1,6 +1,7 @@
 # Availability Table Setup Guide
 
 ## Problem
+
 The "My Availability" tab in the Community page is not showing posts because the `availability` table doesn't exist in your database.
 
 ## Solution

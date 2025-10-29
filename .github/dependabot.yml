@@ -6,77 +6,76 @@
 version: 2
 updates:
   # Monitor GitHub Actions for updates
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: 'github-actions'
+    directory: '/'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
     open-pull-requests-limit: 3
     labels:
-      - "dependencies"
-      - "github-actions"
+      - 'dependencies'
+      - 'github-actions'
 
   # Monitor npm packages
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
     open-pull-requests-limit: 10
     labels:
-      - "dependencies"
-      - "npm"
-    
+      - 'dependencies'
+      - 'npm'
+
     # Group patch updates together to reduce PR noise
     groups:
       patch-updates:
         patterns:
-          - "*"
+          - '*'
         update-types:
-          - "patch"
-    
+          - 'patch'
+
     # CRITICAL PROTECTION: Ignore major version updates for core packages
     # These require manual testing and deliberate upgrades
     ignore:
       # Frontend Framework - React 18 -> 19 has breaking changes
-      - dependency-name: "react"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "react-dom"
-        update-types: ["version-update:semver-major"]
-      
-      # Next.js Framework - major updates require migration guides
-      - dependency-name: "next"
-        update-types: ["version-update:semver-major"]
-      
-      # CSS Framework - Tailwind 3 -> 4 is a complete rewrite
-      - dependency-name: "tailwindcss"
-        update-types: ["version-update:semver-major"]
-      
-      # UI Component Library - DaisyUI major updates have breaking changes
-      - dependency-name: "daisyui"
-        update-types: ["version-update:semver-major"]
-      
-      # Linting - ESLint 8 -> 9 requires flat config migration
-      - dependency-name: "eslint"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "eslint-config-next"
-        update-types: ["version-update:semver-major"]
-      
-      # Email System - Nodemailer major updates may break email sending
-      - dependency-name: "nodemailer"
-        update-types: ["version-update:semver-major"]
-      
-      # Database - Supabase major updates require careful testing
-      - dependency-name: "@supabase/supabase-js"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "@supabase/ssr"
-        update-types: ["version-update:semver-major"]
-      
-      # Build tooling
-      - dependency-name: "postcss"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "autoprefixer"
-        update-types: ["version-update:semver-major"]
+      - dependency-name: 'react'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'react-dom'
+        update-types: ['version-update:semver-major']
 
+      # Next.js Framework - major updates require migration guides
+      - dependency-name: 'next'
+        update-types: ['version-update:semver-major']
+
+      # CSS Framework - Tailwind 3 -> 4 is a complete rewrite
+      - dependency-name: 'tailwindcss'
+        update-types: ['version-update:semver-major']
+
+      # UI Component Library - DaisyUI major updates have breaking changes
+      - dependency-name: 'daisyui'
+        update-types: ['version-update:semver-major']
+
+      # Linting - ESLint 8 -> 9 requires flat config migration
+      - dependency-name: 'eslint'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'eslint-config-next'
+        update-types: ['version-update:semver-major']
+
+      # Email System - Nodemailer major updates may break email sending
+      - dependency-name: 'nodemailer'
+        update-types: ['version-update:semver-major']
+
+      # Database - Supabase major updates require careful testing
+      - dependency-name: '@supabase/supabase-js'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@supabase/ssr'
+        update-types: ['version-update:semver-major']
+
+      # Build tooling
+      - dependency-name: 'postcss'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'autoprefixer'
+        update-types: ['version-update:semver-major']

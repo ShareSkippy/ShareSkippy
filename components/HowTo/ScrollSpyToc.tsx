@@ -36,7 +36,7 @@ export default function ScrollSpyToc({ sections }: ScrollSpyTocProps) {
       },
       {
         rootMargin: '-20% 0px -70% 0px',
-        threshold: [0, 0.1, 0.25, 0.5, 0.75, 1.0]
+        threshold: [0, 0.1, 0.25, 0.5, 0.75, 1.0],
       }
     );
 
@@ -56,9 +56,11 @@ export default function ScrollSpyToc({ sections }: ScrollSpyTocProps) {
   const handleLinkClick = (id: string) => {
     // Dispatch analytics event
     if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('analytics', {
-        detail: { event: 'toc_click', id }
-      }));
+      window.dispatchEvent(
+        new CustomEvent('analytics', {
+          detail: { event: 'toc_click', id },
+        })
+      );
     }
   };
 

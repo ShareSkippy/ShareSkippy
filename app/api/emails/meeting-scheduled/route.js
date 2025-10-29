@@ -6,9 +6,12 @@ export async function POST(request) {
     const { meetingId, userId } = await request.json();
 
     if (!meetingId || !userId) {
-      return Response.json({ 
-        error: 'Meeting ID and User ID are required' 
-      }, { status: 400 });
+      return Response.json(
+        {
+          error: 'Meeting ID and User ID are required',
+        },
+        { status: 400 }
+      );
     }
 
     const supabase = createClient();
@@ -16,11 +19,13 @@ export async function POST(request) {
     // Get meeting details
     const { data: meeting, error: meetingError } = await supabase
       .from('meetings')
-      .select(`
+      .select(
+        `
         *,
         requester:profiles!meetings_requester_id_fkey(first_name, last_name, email),
         recipient:profiles!meetings_recipient_id_fkey(first_name, last_name, email)
-      `)
+      `
+      )
       .eq('id', meetingId)
       .single();
 
@@ -57,19 +62,18 @@ export async function POST(request) {
         meetingTime: new Date(meeting.starts_at).toLocaleTimeString(),
         meetingLocation: meeting.location || 'Location TBD',
         meetingUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://shareskippy.com'}/meetings/${meetingId}`,
-        isRequester
-      }
+        isRequester,
+      },
     });
 
-    return Response.json({ 
-      success: true, 
-      message: 'Meeting scheduled confirmation sent successfully' 
+    return Response.json({
+      success: true,
+      message: 'Meeting scheduled confirmation sent successfully',
     });
-
   } catch (error) {
     console.error('Error sending meeting scheduled confirmation:', error);
     return Response.json(
-      { error: 'Failed to send meeting scheduled confirmation' }, 
+      { error: 'Failed to send meeting scheduled confirmation' },
       { status: 500 }
     );
   }

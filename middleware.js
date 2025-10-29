@@ -1,5 +1,5 @@
-import { updateSession } from "@/libs/supabase/middleware";
-import { NextResponse } from "next/server";
+import { updateSession } from '@/libs/supabase/middleware';
+import { NextResponse } from 'next/server';
 
 export async function middleware(request) {
   let response = NextResponse.next({
@@ -7,7 +7,7 @@ export async function middleware(request) {
       headers: request.headers,
     },
   });
-  
+
   return await updateSession(request, response);
 }
 
@@ -20,6 +20,6 @@ export const config = {
      * - favicon.ico (favicon file)
      * Feel free to modify this pattern to include more paths.
      */
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 };

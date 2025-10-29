@@ -14,7 +14,10 @@ export default function AdminLayout({ children }) {
   useEffect(() => {
     const getUser = async () => {
       try {
-        const { data: { user }, error } = await supabase.auth.getUser();
+        const {
+          data: { user },
+          error,
+        } = await supabase.auth.getUser();
         if (error) {
           console.error('Error getting user:', error);
           setError(error.message);
@@ -71,14 +74,12 @@ export default function AdminLayout({ children }) {
     'admin@shareskippy.com',
     'support@shareskippy.com',
     'kcolban@gmail.com',
-    'kaia@shareskippy.com' // Admin email
+    'kaia@shareskippy.com', // Admin email
     // Add more admin emails as needed
   ];
-  
-  const isAdmin = user?.email && (
-    adminEmails.includes(user.email) || 
-    user.user_metadata?.role === 'admin'
-  );
+
+  const isAdmin =
+    user?.email && (adminEmails.includes(user.email) || user.user_metadata?.role === 'admin');
 
   if (!isAdmin) {
     return (

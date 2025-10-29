@@ -1,202 +1,212 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Connect with Dog Lovers in Your Area - ShareSkippy</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            line-height: 1.6;
-            color: #374151;
-            background-color: #f9fafb;
-            margin: 0;
-            padding: 0;
-        }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+          sans-serif;
+        line-height: 1.6;
+        color: #374151;
+        background-color: #f9fafb;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+        color: white;
+        padding: 40px 30px;
+        text-align: center;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 700;
+      }
+      .header p {
+        margin: 10px 0 0 0;
+        font-size: 16px;
+        opacity: 0.9;
+      }
+      .content {
+        padding: 40px 30px;
+      }
+      .greeting {
+        font-size: 18px;
+        margin-bottom: 20px;
+        color: #1f2937;
+      }
+      .features {
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 25px 0;
+      }
+      .features h3 {
+        margin: 0 0 15px 0;
+        color: #2563eb;
+        font-size: 16px;
+      }
+      .feature-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+        font-size: 15px;
+      }
+      .feature-icon {
+        margin-right: 12px;
+        font-size: 18px;
+        width: 20px;
+      }
+      .cta-button {
+        display: inline-block;
+        background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+        color: white !important;
+        text-decoration: none;
+        padding: 14px 28px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 16px;
+        margin: 20px 0;
+        transition: all 0.2s ease;
+      }
+      .cta-button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      }
+      .highlight {
+        background-color: #eff6ff;
+        border: 1px solid #3b82f6;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 25px 0;
+      }
+      .highlight h4 {
+        margin-top: 0;
+        color: #1e40af;
+        font-size: 16px;
+      }
+      .highlight p {
+        margin-bottom: 0;
+        color: #1e40af;
+      }
+      .footer {
+        background-color: #f8fafc;
+        padding: 30px;
+        text-align: center;
+        border-top: 1px solid #e5e7eb;
+      }
+      .footer p {
+        margin: 0;
+        color: #6b7280;
+        font-size: 14px;
+      }
+      .footer a {
+        color: #2563eb;
+        text-decoration: none;
+      }
+      .footer a:hover {
+        text-decoration: underline;
+      }
+      @media (max-width: 600px) {
         .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+          margin: 0;
+          border-radius: 0;
         }
-        .header {
-            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
-            color: white;
-            padding: 40px 30px;
-            text-align: center;
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 28px;
-            font-weight: 700;
-        }
-        .header p {
-            margin: 10px 0 0 0;
-            font-size: 16px;
-            opacity: 0.9;
-        }
-        .content {
-            padding: 40px 30px;
-        }
-        .greeting {
-            font-size: 18px;
-            margin-bottom: 20px;
-            color: #1f2937;
-        }
-        .features {
-            background-color: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 25px 0;
-        }
-        .features h3 {
-            margin: 0 0 15px 0;
-            color: #4f46e5;
-            font-size: 16px;
-        }
-        .feature-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 12px;
-            font-size: 15px;
-        }
-        .feature-icon {
-            margin-right: 12px;
-            font-size: 18px;
-            width: 20px;
+        .header,
+        .content,
+        .footer {
+          padding: 20px;
         }
         .cta-button {
-            display: inline-block;
-            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
-            color: white !important;
-            text-decoration: none;
-            padding: 14px 28px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 16px;
-            margin: 20px 0;
-            transition: all 0.2s ease;
+          display: block;
+          text-align: center;
+          margin: 10px 0;
         }
-        .cta-button:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-        }
-        .highlight {
-            background-color: #eff6ff;
-            border: 1px solid #3b82f6;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 25px 0;
-        }
-        .highlight h4 {
-            margin-top: 0;
-            color: #1e40af;
-            font-size: 16px;
-        }
-        .highlight p {
-            margin-bottom: 0;
-            color: #1e40af;
-        }
-        .footer {
-            background-color: #f8fafc;
-            padding: 30px;
-            text-align: center;
-            border-top: 1px solid #e5e7eb;
-        }
-        .footer p {
-            margin: 0;
-            color: #6b7280;
-            font-size: 14px;
-        }
-        .footer a {
-            color: #4f46e5;
-            text-decoration: none;
-        }
-        .footer a:hover {
-            text-decoration: underline;
-        }
-        @media (max-width: 600px) {
-            .container {
-                margin: 0;
-                border-radius: 0;
-            }
-            .header, .content, .footer {
-                padding: 20px;
-            }
-            .cta-button {
-                display: block;
-                text-align: center;
-                margin: 10px 0;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-            <div class="header">
-            <h1>🐕 Ready to Connect?</h1>
-            <p>Your neighbors and their dogs would love to meet!</p>
+      <div class="header">
+        <h1>🐕 Ready to Connect?</h1>
+        <p>Your neighbors and their dogs would love to meet!</p>
+      </div>
+
+      <div class="content">
+        <div class="greeting">
+          <p>Hi {{userName}}!</p>
+          <p>It's been a couple days since you joined ShareSkippy — welcome again! 🎉</p>
+          <p>
+            Right now, neighbors (and their dogs) are waiting to connect. To get started, all you
+            need to do is share your availability:
+          </p>
         </div>
-        
-        <div class="content">
-            <div class="greeting">
-                <p>Hi {{userName}}!</p>
-                <p>It's been a couple days since you joined ShareSkippy — welcome again! 🎉</p>
-                <p>Right now, neighbors (and their dogs) are waiting to connect. To get started, all you need to do is share your availability:</p>
-            </div>
-            
-            <div class="features">
-                <h3>What you can do:</h3>
-                
-                <div class="feature-item">
-                    <span class="feature-icon">🐾</span>
-                    <span>Borrow a dog for a walk or playdate</span>
-                </div>
-                
-                <div class="feature-item">
-                    <span class="feature-icon">🐕</span>
-                    <span>Find a petpal for your pup</span>
-                </div>
-                
-                <div class="feature-item">
-                    <span class="feature-icon">🌟</span>
-                    <span>Meet new neighbors who love dogs as much as you do</span>
-                </div>
-            </div>
-            
-            <div style="text-align: center;">
-                <a href="{{appUrl}}/share-availability" class="cta-button">Share My Availability</a>
-            </div>
-            
-            <div class="highlight">
-                <h4>💡 Quick & Easy</h4>
-                <p>It only takes a minute, and it's the easiest way to start getting belly rubs, tail wags, and new connections.</p>
-            </div>
-            
-            <p>See you (and your future dog buddies) soon!</p>
+
+        <div class="features">
+          <h3>What you can do:</h3>
+
+          <div class="feature-item">
+            <span class="feature-icon">🐾</span>
+            <span>Borrow a dog for a walk or playdate</span>
+          </div>
+
+          <div class="feature-item">
+            <span class="feature-icon">🐕</span>
+            <span>Find a petpal for your pup</span>
+          </div>
+
+          <div class="feature-item">
+            <span class="feature-icon">🌟</span>
+            <span>Meet new neighbors who love dogs as much as you do</span>
+          </div>
         </div>
-        
-        <div class="footer">
-            <p>— The ShareSkippy Team 🐶✨</p>
-            <p style="margin-top: 20px; font-size: 12px;">
-                <a href="{{appUrl}}/share-availability">Share availability</a> | 
-                <a href="{{appUrl}}/community">Join community</a> |
-                <a href="{{unsubscribeUrl}}">Unsubscribe</a>
-            </p>
-            <p style="margin-top: 15px; font-size: 11px; color: #9ca3af;">
-                ShareSkippy LLC<br>
-                San Francisco, CA 94102<br>
-                United States
-            </p>
-            <p style="margin-top: 10px; font-size: 11px; color: #9ca3af;">
-                You received this follow-up email as a member of ShareSkippy. 
-                We're here to help you get the most out of our community! If you no longer wish to receive follow-up emails, you can 
-                <a href="{{unsubscribeUrl}}" style="color: #4f46e5;">unsubscribe here</a>.
-            </p>
+
+        <div style="text-align: center">
+          <a href="{{appUrl}}/share-availability" class="cta-button">Share My Availability</a>
         </div>
+
+        <div class="highlight">
+          <h4>💡 Quick & Easy</h4>
+          <p>
+            It only takes a minute, and it's the easiest way to start getting belly rubs, tail wags,
+            and new connections.
+          </p>
+        </div>
+
+        <p>See you (and your future dog buddies) soon!</p>
+      </div>
+
+      <div class="footer">
+        <p>— The ShareSkippy Team 🐶✨</p>
+        <p style="margin-top: 20px; font-size: 12px">
+          <a href="{{appUrl}}/share-availability">Share availability</a> |
+          <a href="{{appUrl}}/community">Join community</a> |
+          <a href="{{unsubscribeUrl}}">Unsubscribe</a>
+        </p>
+        <p style="margin-top: 15px; font-size: 11px; color: #9ca3af">
+          ShareSkippy LLC<br />
+          San Francisco, CA 94102<br />
+          United States
+        </p>
+        <p style="margin-top: 10px; font-size: 11px; color: #9ca3af">
+          You received this follow-up email as a member of ShareSkippy. We're here to help you get
+          the most out of our community! If you no longer wish to receive follow-up emails, you can
+          <a href="{{unsubscribeUrl}}" style="color: #2563eb">unsubscribe here</a>.
+        </p>
+      </div>
     </div>
-</body>
+  </body>
 </html>

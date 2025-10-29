@@ -8,32 +8,32 @@ const testProductionEmail = async () => {
   console.log('🧪 TESTING PRODUCTION EMAIL SYSTEM\n');
 
   const baseUrl = 'https://www.shareskippy.com';
-  
+
   console.log('=== TESTING EMAIL ENDPOINT WITH REAL DATA ===');
-  
+
   // Test with more realistic data
   const testData = {
     recipientId: '00000000-0000-0000-0000-000000000001', // Valid UUID format
-    senderId: '00000000-0000-0000-0000-000000000002',     // Valid UUID format
+    senderId: '00000000-0000-0000-0000-000000000002', // Valid UUID format
     messagePreview: 'This is a test message to verify email notifications are working properly.',
     messageId: 'test-message-123',
-    threadId: 'test-thread-456'
+    threadId: 'test-thread-456',
   };
 
   try {
     console.log('Sending test email with data:', JSON.stringify(testData, null, 2));
-    
+
     const response = await fetch(`${baseUrl}/api/emails/send-new-message`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(testData)
+      body: JSON.stringify(testData),
     });
 
     const result = await response.json();
-    
+
     console.log('Response Status:', response.status);
     console.log('Response Body:', JSON.stringify(result, null, 2));
-    
+
     if (response.status === 404 && result.error === 'Recipient not found') {
       console.log('✅ Email endpoint is working, but recipient not found (expected for test data)');
     } else if (response.status === 500) {

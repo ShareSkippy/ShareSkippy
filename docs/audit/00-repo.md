@@ -32,4 +32,3 @@ Added placeholders (no behavior change):
 ## Manual QA note
 
 No runtime behavior changes. Local `npm run dev` and `npm run build` unaffected.
-

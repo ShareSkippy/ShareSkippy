@@ -5,9 +5,12 @@ import { createClient } from '@/libs/supabase/server';
 export async function POST() {
   try {
     const supabase = createClient();
-    
+
     // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -36,9 +39,9 @@ export async function POST() {
     }
 
     if (!readyDeletions || readyDeletions.length === 0) {
-      return NextResponse.json({ 
+      return NextResponse.json({
         message: 'No deletion requests ready for processing',
-        processedCount: 0
+        processedCount: 0,
       });
     }
 
@@ -51,9 +54,9 @@ export async function POST() {
         // Update status to processing
         await supabase
           .from('account_deletion_requests')
-          .update({ 
+          .update({
             status: 'processing',
-            processed_at: new Date().toISOString()
+            processed_at: new Date().toISOString(),
           })
           .eq('id', deletionRequest.id);
 
@@ -71,7 +74,7 @@ export async function POST() {
             .insert({
               email: userProfile.email.toLowerCase().trim(),
               original_user_id: deletionRequest.user_id,
-              deletion_reason: deletionRequest.reason
+              deletion_reason: deletionRequest.reason,
             })
             .onConflict('email')
             .ignoreDuplicates(); // Don't error if email already exists
@@ -85,24 +88,25 @@ export async function POST() {
           .eq('id', deletionRequest.user_id);
 
         if (profileError) {
-          console.error(`Error deleting profile for user ${deletionRequest.user_id}:`, profileError);
+          console.error(
+            `Error deleting profile for user ${deletionRequest.user_id}:`,
+            profileError
+          );
           errors.push({
             userId: deletionRequest.user_id,
-            error: profileError.message
+            error: profileError.message,
           });
           continue;
         }
 
         // Delete the auth user (this requires admin privileges)
-        const { error: authError } = await supabase.auth.admin.deleteUser(
-          deletionRequest.user_id
-        );
+        const { error: authError } = await supabase.auth.admin.deleteUser(deletionRequest.user_id);
 
         if (authError) {
           console.error(`Error deleting auth user ${deletionRequest.user_id}:`, authError);
           errors.push({
             userId: deletionRequest.user_id,
-            error: authError.message
+            error: authError.message,
           });
           continue;
         }
@@ -110,19 +114,18 @@ export async function POST() {
         // Mark deletion request as completed
         await supabase
           .from('account_deletion_requests')
-          .update({ 
+          .update({
             status: 'completed',
-            processed_at: new Date().toISOString()
+            processed_at: new Date().toISOString(),
           })
           .eq('id', deletionRequest.id);
 
         processedUsers.push(deletionRequest.user_id);
-
       } catch (error) {
         console.error(`Error processing deletion for user ${deletionRequest.user_id}:`, error);
         errors.push({
           userId: deletionRequest.user_id,
-          error: error.message
+          error: error.message,
         });
       }
     }
@@ -131,14 +134,16 @@ export async function POST() {
       message: `Processed ${processedUsers.length} deletion requests`,
       processedCount: processedUsers.length,
       processedUsers,
-      errors: errors.length > 0 ? errors : undefined
+      errors: errors.length > 0 ? errors : undefined,
     });
-
   } catch (error) {
     console.error('Error processing deletions:', error);
-    return NextResponse.json({ 
-      error: 'Failed to process deletion requests' 
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: 'Failed to process deletion requests',
+      },
+      { status: 500 }
+    );
   }
 }
 
@@ -146,9 +151,12 @@ export async function POST() {
 export async function GET() {
   try {
     const supabase = createClient();
-    
+
     // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -167,7 +175,8 @@ export async function GET() {
     // Get all pending deletion requests with user info
     const { data: deletionRequests, error } = await supabase
       .from('account_deletion_requests')
-      .select(`
+      .select(
+        `
         *,
         user:profiles!account_deletion_requests_user_id_fkey (
           id,
@@ -175,7 +184,8 @@ export async function GET() {
           first_name,
           last_name
         )
-      `)
+      `
+      )
       .in('status', ['pending', 'processing'])
       .order('scheduled_deletion_date', { ascending: true });
 
@@ -184,29 +194,30 @@ export async function GET() {
     }
 
     // Calculate days remaining for each request
-    const requestsWithDaysRemaining = deletionRequests.map(request => {
+    const requestsWithDaysRemaining = deletionRequests.map((request) => {
       const now = new Date();
       const scheduledDate = new Date(request.scheduled_deletion_date);
       const daysRemaining = Math.ceil((scheduledDate - now) / (1000 * 60 * 60 * 24));
-      
+
       return {
         ...request,
         daysRemaining: Math.max(0, daysRemaining),
-        isReadyForProcessing: daysRemaining <= 0
+        isReadyForProcessing: daysRemaining <= 0,
       };
     });
 
     return NextResponse.json({
       deletionRequests: requestsWithDaysRemaining,
       totalCount: requestsWithDaysRemaining.length,
-      readyForProcessing: requestsWithDaysRemaining.filter(r => r.isReadyForProcessing).length
+      readyForProcessing: requestsWithDaysRemaining.filter((r) => r.isReadyForProcessing).length,
     });
-
   } catch (error) {
     console.error('Error fetching deletion requests:', error);
-    return NextResponse.json({ 
-      error: 'Failed to fetch deletion requests' 
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: 'Failed to fetch deletion requests',
+      },
+      { status: 500 }
+    );
   }
 }
-

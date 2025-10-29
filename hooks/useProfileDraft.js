@@ -7,29 +7,33 @@ export const useProfileDraft = (initialProfile) => {
   // Save to sessionStorage with error handling
   const saveToSessionStorage = useCallback((profileData) => {
     try {
-      sessionStorage.setItem('profileDraft', JSON.stringify({
-        ...profileData,
-        timestamp: Date.now(),
-        version: '2.0'
-      }));
-       
+      sessionStorage.setItem(
+        'profileDraft',
+        JSON.stringify({
+          ...profileData,
+          timestamp: Date.now(),
+          version: '2.0',
+        })
+      );
+
       console.log('💾 Draft saved to sessionStorage');
     } catch (error) {
-       
       console.warn('❌ Failed to save to sessionStorage:', error);
       // Handle quota exceeded by clearing old data
       if (error.name === 'QuotaExceededError') {
         try {
           sessionStorage.clear();
-          sessionStorage.setItem('profileDraft', JSON.stringify({
-            ...profileData,
-            timestamp: Date.now(),
-            version: '2.0'
-          }));
-           
+          sessionStorage.setItem(
+            'profileDraft',
+            JSON.stringify({
+              ...profileData,
+              timestamp: Date.now(),
+              version: '2.0',
+            })
+          );
+
           console.log('💾 Draft saved after clearing storage');
         } catch (retryError) {
-           
           console.error('❌ Failed to save even after clearing storage:', retryError);
         }
       }
@@ -42,20 +46,18 @@ export const useProfileDraft = (initialProfile) => {
       const draft = sessionStorage.getItem('profileDraft');
       if (draft) {
         const parsed = JSON.parse(draft);
-         
+
         console.log('📂 Draft loaded from sessionStorage');
         setHasDraft(true);
         return parsed;
       }
       return null;
     } catch (error) {
-       
       console.warn('❌ Failed to load draft from sessionStorage:', error);
       // Clear corrupted data
       try {
         sessionStorage.removeItem('profileDraft');
       } catch (clearError) {
-         
         console.warn('❌ Failed to clear corrupted draft:', clearError);
       }
       return null;
@@ -67,10 +69,9 @@ export const useProfileDraft = (initialProfile) => {
     try {
       sessionStorage.removeItem('profileDraft');
       setHasDraft(false);
-       
+
       console.log('🗑️ Draft cleared from sessionStorage');
     } catch (error) {
-       
       console.warn('❌ Failed to clear draft:', error);
     }
   }, []);
@@ -83,10 +84,9 @@ export const useProfileDraft = (initialProfile) => {
           const newDraft = JSON.parse(e.newValue);
           setProfile(newDraft);
           setHasDraft(true);
-           
+
           console.log('🔄 Draft synchronized from another tab');
         } catch (error) {
-           
           console.warn('❌ Failed to sync draft from storage event:', error);
         }
       }
@@ -97,13 +97,16 @@ export const useProfileDraft = (initialProfile) => {
   }, []);
 
   // Update profile and auto-save
-  const updateProfile = useCallback((updater) => {
-    setProfile(prev => {
-      const updated = typeof updater === 'function' ? updater(prev) : updater;
-      saveToSessionStorage(updated);
-      return updated;
-    });
-  }, [saveToSessionStorage]);
+  const updateProfile = useCallback(
+    (updater) => {
+      setProfile((prev) => {
+        const updated = typeof updater === 'function' ? updater(prev) : updater;
+        saveToSessionStorage(updated);
+        return updated;
+      });
+    },
+    [saveToSessionStorage]
+  );
 
   return {
     profile,
@@ -111,6 +114,6 @@ export const useProfileDraft = (initialProfile) => {
     loadDraft: loadFromSessionStorage,
     clearDraft,
     hasDraft,
-    draftSource: hasDraft ? 'session' : null
+    draftSource: hasDraft ? 'session' : null,
   };
 };

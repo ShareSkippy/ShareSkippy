@@ -15,13 +15,9 @@ const variantClasses = {
   gray: 'bg-gray-100 text-gray-800',
 };
 
-export default function Badge({ 
-  children, 
-  variant = 'blue', 
-  className 
-}: BadgeProps) {
+export default function Badge({ children, variant = 'blue', className }: BadgeProps) {
   return (
-    <span 
+    <span
       className={cn(
         'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
         variantClasses[variant],

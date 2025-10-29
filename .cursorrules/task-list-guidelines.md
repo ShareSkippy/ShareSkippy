@@ -1,13 +1,13 @@
 ## Guidelines
 
 - Write clear and unambiguous tasks. Avoid writing vague or ambiguous tasks.
-  - Special case: Do not write tasks that say, "Test XYZ" or "Verify XYZ". "Test" and "verify" are vague words by themselves. It's not clear whether they imply QA testing, a simple visual code review, automated integration testing, automated unit testing, etc. Always be more specific when discussing testing/verification and discuss *what method* it should be done by.
+  - Special case: Do not write tasks that say, "Test XYZ" or "Verify XYZ". "Test" and "verify" are vague words by themselves. It's not clear whether they imply QA testing, a simple visual code review, automated integration testing, automated unit testing, etc. Always be more specific when discussing testing/verification and discuss _what method_ it should be done by.
     - Note that tasks that request a "visual code review" should be clear that means "reasoning through the code execution path line-by-line".
 - Write each task on a single line starting with `- [ ]`. Do not put additional details on other lines.
 - Coding task lists should be written assuming an LLM coding agent will implement them. Specifically, assume that implementer will not have access to a browser. Therefore any QA will need to be done by a human, and tasks for that should be placed in a separate QA task list, which should come after and be separate from the coding task list.
   - Label the coding task list by prefacing it with `**Coding Tasks:**`.
   - Label the QA task list by prefacing it with `**QA for <nameOfHumanYouAreWorkingWith>:**` or just `**QA Tasks** if you don't know the person's name.
-- Automated testing tasks should *generally* come at the end of the coding task list.
+- Automated testing tasks should _generally_ come at the end of the coding task list.
 
 ## For example...
 
@@ -48,6 +48,7 @@ Below is a real task list that was once created for a Hatch project. Note that i
 ```
 
 Some issues:
+
 - Many tasks are a bit vague and ambiguous.
 - Indented bullet points to provide additional task details, but tasks should be written on a single line.
 - Lots of lines start with "Test...", which is vague.
@@ -58,6 +59,7 @@ Here's a much improved version of the same task list:
 
 ```md
 **Coding Tasks:**
+
 - [ ] Configure MarkdownPaste extension with threshold set to 0.6 (default) and add a comment explaining this choice
 - [ ] Consider custom pattern weights if certain patterns should be prioritized, and if it's truly worth implementing, append appropriate tasks to this task list
 - [ ] Verify ClipboardHandler integration by visually double-checking (reasoning through the code execution path line-by-line) that the MarkdownPaste code returns false for non-markdown content and that ClipboardHandler properly handles plain text when MarkdownPaste passes through; fix things if necessary
@@ -70,6 +72,7 @@ Here's a much improved version of the same task list:
 - [ ] Create automated integration tests in new file `/apps/web/tests/integration/components/note-editor-markdown-paste-test.ts` that test note-editor with MarkdownPaste loaded and verify undo/redo operations after paste
 
 **QA Tasks:**
+
 - [ ] Test Y.js collaboration scenarios with multiple users pasting markdown simultaneously
 - [ ] Test pasting markdown content from various sources (GitHub README, Stack Overflow, VS Code, Obsidian)
 - [ ] Test that rich HTML content from web pages is handled by ProseMirror's default paste, not MarkdownPaste

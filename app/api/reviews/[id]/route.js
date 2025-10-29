@@ -7,9 +7,12 @@ export const dynamic = 'force-dynamic';
 export async function GET(request, { params }) {
   try {
     const supabase = createClient();
-    
+
     // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -18,12 +21,14 @@ export async function GET(request, { params }) {
 
     const { data: review, error } = await supabase
       .from('reviews')
-      .select(`
+      .select(
+        `
         *,
         reviewer:profiles!reviews_reviewer_id_fkey(first_name, last_name, email, profile_photo_url),
         reviewee:profiles!reviews_reviewee_id_fkey(first_name, last_name, email, profile_photo_url),
         meeting:meetings(title, start_datetime, end_datetime)
-      `)
+      `
+      )
       .eq('id', id)
       .single();
 
@@ -40,9 +45,12 @@ export async function GET(request, { params }) {
 export async function PATCH(request, { params }) {
   try {
     const supabase = createClient();
-    
+
     // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -83,12 +91,14 @@ export async function PATCH(request, { params }) {
       .from('reviews')
       .update(updateData)
       .eq('id', id)
-      .select(`
+      .select(
+        `
         *,
         reviewer:profiles!reviews_reviewer_id_fkey(first_name, last_name, email, profile_photo_url),
         reviewee:profiles!reviews_reviewee_id_fkey(first_name, last_name, email, profile_photo_url),
         meeting:meetings(title, start_datetime, end_datetime)
-      `)
+      `
+      )
       .single();
 
     if (updateError) throw updateError;
@@ -104,9 +114,12 @@ export async function PATCH(request, { params }) {
 export async function DELETE(request, { params }) {
   try {
     const supabase = createClient();
-    
+
     // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -128,10 +141,7 @@ export async function DELETE(request, { params }) {
     }
 
     // Delete the review
-    const { error: deleteError } = await supabase
-      .from('reviews')
-      .delete()
-      .eq('id', id);
+    const { error: deleteError } = await supabase.from('reviews').delete().eq('id', id);
 
     if (deleteError) throw deleteError;
 

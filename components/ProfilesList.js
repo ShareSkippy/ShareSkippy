@@ -10,7 +10,7 @@ export default function ProfilesList({ role, onMessage }) {
   const [nextCursor, setNextCursor] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
   const [error, setError] = useState(null);
-  
+
   const observerRef = useRef();
   const listRef = useRef();
 
@@ -39,48 +39,51 @@ export default function ProfilesList({ role, onMessage }) {
   }, [loading, hasMore]);
 
   // Fetch profiles
-  const fetchProfiles = useCallback(async (cursor = null) => {
-    if (loading) return;
-    
-    setLoading(true);
-    setError(null);
+  const fetchProfiles = useCallback(
+    async (cursor = null) => {
+      if (loading) return;
 
-    try {
-      const params = new URLSearchParams();
-      if (cursor) params.append('cursor', cursor);
-      params.append('limit', '24');
-      // Add multiple cache-busting parameters
-      params.append('_t', Date.now());
-      params.append('_r', Math.random().toString(36).substring(7));
-      params.append('_v', '1.0.0');
+      setLoading(true);
+      setError(null);
 
-      const response = await fetch(`/api/community/profiles?${params}`);
-      
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('API Error:', response.status, errorText);
-        throw new Error(`HTTP error! status: ${response.status}`);
+      try {
+        const params = new URLSearchParams();
+        if (cursor) params.append('cursor', cursor);
+        params.append('limit', '24');
+        // Add multiple cache-busting parameters
+        params.append('_t', Date.now());
+        params.append('_r', Math.random().toString(36).substring(7));
+        params.append('_v', '1.0.0');
+
+        const response = await fetch(`/api/community/profiles?${params}`);
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('API Error:', response.status, errorText);
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (cursor) {
+          // Append to existing profiles
+          setProfiles((prev) => [...prev, ...data.items]);
+        } else {
+          // Replace profiles
+          setProfiles(data.items);
+        }
+
+        setNextCursor(data.nextCursor);
+        setHasMore(!!data.nextCursor);
+      } catch (err) {
+        console.error('Error fetching profiles:', err);
+        setError('Failed to load profiles. Please try again.');
+      } finally {
+        setLoading(false);
       }
-
-      const data = await response.json();
-      
-      if (cursor) {
-        // Append to existing profiles
-        setProfiles(prev => [...prev, ...data.items]);
-      } else {
-        // Replace profiles
-        setProfiles(data.items);
-      }
-      
-      setNextCursor(data.nextCursor);
-      setHasMore(!!data.nextCursor);
-    } catch (err) {
-      console.error('Error fetching profiles:', err);
-      setError('Failed to load profiles. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  }, [loading]);
+    },
+    [loading]
+  );
 
   // Load more profiles
   const loadMore = useCallback(() => {
@@ -97,7 +100,7 @@ export default function ProfilesList({ role, onMessage }) {
   }, [isVisible, profiles.length, loading, fetchProfiles]);
 
   // Filter profiles by role
-  const filteredProfiles = profiles.filter(profile => {
+  const filteredProfiles = profiles.filter((profile) => {
     if (role === 'dog_owner') {
       return profile.role === 'dog_owner' || profile.role === 'both';
     } else if (role === 'petpal') {
@@ -150,11 +153,7 @@ export default function ProfilesList({ role, onMessage }) {
       {filteredProfiles.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {filteredProfiles.map((profile) => (
-            <ProfileCard
-              key={profile.id}
-              profile={profile}
-              onMessage={onMessage}
-            />
+            <ProfileCard key={profile.id} profile={profile} onMessage={onMessage} />
           ))}
         </div>
       )}
@@ -183,15 +182,11 @@ export default function ProfilesList({ role, onMessage }) {
       {/* No Profiles State */}
       {!loading && filteredProfiles.length === 0 && profiles.length > 0 && (
         <div className="text-center py-12">
-          <div className="text-6xl mb-4">
-            {role === 'dog_owner' ? '🐕' : '🤝'}
-          </div>
+          <div className="text-6xl mb-4">{role === 'dog_owner' ? '🐕' : '🤝'}</div>
           <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
             No {role === 'dog_owner' ? 'Dog Owners' : 'PetPals'} available right now
           </h3>
-          <p className="text-sm sm:text-base text-gray-600">
-            Check back later for new profiles!
-          </p>
+          <p className="text-sm sm:text-base text-gray-600">Check back later for new profiles!</p>
         </div>
       )}
 
@@ -210,4 +205,3 @@ export default function ProfilesList({ role, onMessage }) {
     </div>
   );
 }
-

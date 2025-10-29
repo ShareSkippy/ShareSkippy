@@ -1,253 +1,266 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Your ShareSkippy Meeting is Tomorrow</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            line-height: 1.6;
-            color: #374151;
-            background-color: #f9fafb;
-            margin: 0;
-            padding: 0;
-        }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+          sans-serif;
+        line-height: 1.6;
+        color: #374151;
+        background-color: #f9fafb;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+        color: white;
+        padding: 40px 30px;
+        text-align: center;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 700;
+      }
+      .header p {
+        margin: 10px 0 0 0;
+        font-size: 16px;
+        opacity: 0.9;
+      }
+      .content {
+        padding: 40px 30px;
+      }
+      .greeting {
+        font-size: 18px;
+        margin-bottom: 20px;
+        color: #1f2937;
+      }
+      .reminder-badge {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 20px;
+      }
+      .meeting-details {
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 25px 0;
+      }
+      .meeting-details h3 {
+        margin: 0 0 15px 0;
+        color: #2563eb;
+        font-size: 16px;
+      }
+      .detail-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+      .detail-icon {
+        font-size: 16px;
+        margin-right: 10px;
+        width: 20px;
+      }
+      .detail-label {
+        font-weight: 600;
+        color: #374151;
+        margin-right: 8px;
+        min-width: 80px;
+      }
+      .detail-value {
+        color: #6b7280;
+      }
+      .cta-button {
+        display: inline-block;
+        background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+        color: white !important;
+        text-decoration: none;
+        padding: 14px 28px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 16px;
+        margin: 20px 10px 20px 0;
+        transition: all 0.2s ease;
+      }
+      .cta-button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      }
+      .secondary-button {
+        background: #f8fafc;
+        color: #374151;
+        border: 1px solid #e2e8f0;
+      }
+      .secondary-button:hover {
+        background: #e2e8f0;
+        transform: translateY(-1px);
+      }
+      .tips {
+        background-color: #eff6ff;
+        border: 1px solid #3b82f6;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 25px 0;
+      }
+      .tips h4 {
+        margin-top: 0;
+        color: #1e40af;
+        font-size: 16px;
+      }
+      .tips ul {
+        margin-bottom: 0;
+        padding-left: 20px;
+      }
+      .tips li {
+        margin-bottom: 5px;
+        color: #1e40af;
+      }
+      .footer {
+        background-color: #f8fafc;
+        padding: 30px;
+        text-align: center;
+        border-top: 1px solid #e5e7eb;
+      }
+      .footer p {
+        margin: 0;
+        color: #6b7280;
+        font-size: 14px;
+      }
+      .footer a {
+        color: #2563eb;
+        text-decoration: none;
+      }
+      .footer a:hover {
+        text-decoration: underline;
+      }
+      @media (max-width: 600px) {
         .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+          margin: 0;
+          border-radius: 0;
         }
-        .header {
-            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
-            color: white;
-            padding: 40px 30px;
-            text-align: center;
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 28px;
-            font-weight: 700;
-        }
-        .header p {
-            margin: 10px 0 0 0;
-            font-size: 16px;
-            opacity: 0.9;
-        }
-        .content {
-            padding: 40px 30px;
-        }
-        .greeting {
-            font-size: 18px;
-            margin-bottom: 20px;
-            color: #1f2937;
-        }
-        .reminder-badge {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            display: inline-block;
-            margin-bottom: 20px;
-        }
-        .meeting-details {
-            background-color: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 25px 0;
-        }
-        .meeting-details h3 {
-            margin: 0 0 15px 0;
-            color: #4f46e5;
-            font-size: 16px;
-        }
-        .detail-row {
-            display: flex;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-        .detail-icon {
-            font-size: 16px;
-            margin-right: 10px;
-            width: 20px;
-        }
-        .detail-label {
-            font-weight: 600;
-            color: #374151;
-            margin-right: 8px;
-            min-width: 80px;
-        }
-        .detail-value {
-            color: #6b7280;
+        .header,
+        .content,
+        .footer {
+          padding: 20px;
         }
         .cta-button {
-            display: inline-block;
-            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
-            color: white !important;
-            text-decoration: none;
-            padding: 14px 28px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 16px;
-            margin: 20px 10px 20px 0;
-            transition: all 0.2s ease;
+          display: block;
+          text-align: center;
+          margin: 10px 0;
         }
-        .cta-button:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-        }
-        .secondary-button {
-            background: #f8fafc;
-            color: #374151;
-            border: 1px solid #e2e8f0;
-        }
-        .secondary-button:hover {
-            background: #e2e8f0;
-            transform: translateY(-1px);
-        }
-        .tips {
-            background-color: #eff6ff;
-            border: 1px solid #3b82f6;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 25px 0;
-        }
-        .tips h4 {
-            margin-top: 0;
-            color: #1e40af;
-            font-size: 16px;
-        }
-        .tips ul {
-            margin-bottom: 0;
-            padding-left: 20px;
-        }
-        .tips li {
-            margin-bottom: 5px;
-            color: #1e40af;
-        }
-        .footer {
-            background-color: #f8fafc;
-            padding: 30px;
-            text-align: center;
-            border-top: 1px solid #e5e7eb;
-        }
-        .footer p {
-            margin: 0;
-            color: #6b7280;
-            font-size: 14px;
-        }
-        .footer a {
-            color: #4f46e5;
-            text-decoration: none;
-        }
-        .footer a:hover {
-            text-decoration: underline;
-        }
-        @media (max-width: 600px) {
-            .container {
-                margin: 0;
-                border-radius: 0;
-            }
-            .header, .content, .footer {
-                padding: 20px;
-            }
-            .cta-button {
-                display: block;
-                text-align: center;
-                margin: 10px 0;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="header">
-            <h1>Your ShareSkippy Playdate is Tomorrow</h1>
-            <p>Your dog playdate is scheduled for tomorrow!</p>
+      <div class="header">
+        <h1>Your ShareSkippy Playdate is Tomorrow</h1>
+        <p>Your dog playdate is scheduled for tomorrow!</p>
+      </div>
+
+      <div class="content">
+        <div class="reminder-badge">Tomorrow!</div>
+
+        <div class="greeting">
+          <p>Hi {{userName}}!</p>
+          <p>
+            Just a friendly reminder that your meeting with {{otherUserName}} is scheduled for
+            tomorrow.
+          </p>
         </div>
-        
-        <div class="content">
-            <div class="reminder-badge">Tomorrow!</div>
-            
-            <div class="greeting">
-                <p>Hi {{userName}}!</p>
-                <p>Just a friendly reminder that your meeting with {{otherUserName}} is scheduled for tomorrow.</p>
-            </div>
-            
-            <div class="meeting-details">
-                <h3>📅 Playdate Details</h3>
-                <div class="detail-row">
-                    <span class="detail-icon">👤</span>
-                    <span class="detail-label">With:</span>
-                    <span class="detail-value">{{otherUserName}} & {{otherUserDogName}}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-icon">📅</span>
-                    <span class="detail-label">Date:</span>
-                    <span class="detail-value">{{meetingDate}} (Tomorrow!)</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-icon">🕐</span>
-                    <span class="detail-label">Time:</span>
-                    <span class="detail-value">{{meetingTime}}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-icon">📍</span>
-                    <span class="detail-label">Location:</span>
-                    <span class="detail-value">{{meetingLocation}}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-icon">📝</span>
-                    <span class="detail-label">Notes:</span>
-                    <span class="detail-value">{{meetingNotes}}</span>
-                </div>
-            </div>
-            
-            <div style="text-align: center;">
-                <a href="{{meetingUrl}}" class="cta-button">View Meeting Details</a>
-                <a href="{{messageUrl}}" class="cta-button secondary">Message {{otherUserName}}</a>
-            </div>
-            
-            <div class="tips">
-                <h4>💡 Last-minute preparation tips:</h4>
-                <ul>
-                    <li>Pack water, treats, and waste bags</li>
-                    <li>Check the weather and dress accordingly</li>
-                    <li>Plan your route and allow extra time</li>
-                    <li>Bring your phone for photos and emergencies</li>
-                    <li>Have fun and let the dogs be dogs!</li>
-                </ul>
-            </div>
-            
-            <p><strong>Need to reschedule?</strong> You can still make changes up to 2 hours before the meeting time. Just visit the meeting details page or message {{otherUserName}} directly.</p>
-            
-            <p>We're excited for tomorrow's adventure! Have a wonderful time and don't forget to take lots of photos to share with the community.</p>
+
+        <div class="meeting-details">
+          <h3>📅 Playdate Details</h3>
+          <div class="detail-row">
+            <span class="detail-icon">👤</span>
+            <span class="detail-label">With:</span>
+            <span class="detail-value">{{otherUserName}} & {{otherUserDogName}}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-icon">📅</span>
+            <span class="detail-label">Date:</span>
+            <span class="detail-value">{{meetingDate}} (Tomorrow!)</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-icon">🕐</span>
+            <span class="detail-label">Time:</span>
+            <span class="detail-value">{{meetingTime}}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-icon">📍</span>
+            <span class="detail-label">Location:</span>
+            <span class="detail-value">{{meetingLocation}}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-icon">📝</span>
+            <span class="detail-label">Notes:</span>
+            <span class="detail-value">{{meetingNotes}}</span>
+          </div>
         </div>
-        
-        <div class="footer">
-            <p>Excited for tomorrow's adventure,<br>The ShareSkippy Team 🐕</p>
-            <p style="margin-top: 20px; font-size: 12px;">
-                <a href="{{appUrl}}/meetings">View all meetings</a> | 
-                <a href="{{appUrl}}/safety">Safety guidelines</a> |
-                <a href="{{unsubscribeUrl}}">Unsubscribe</a>
-            </p>
-            <p style="margin-top: 15px; font-size: 11px; color: #9ca3af;">
-                ShareSkippy LLC<br>
-                San Francisco, CA 94102<br>
-                United States
-            </p>
-            <p style="margin-top: 10px; font-size: 11px; color: #9ca3af;">
-                You received this email because you have an upcoming meeting scheduled on ShareSkippy. 
-                If you no longer wish to receive meeting reminders, you can 
-                <a href="{{unsubscribeUrl}}" style="color: #4f46e5;">unsubscribe here</a>.
-            </p>
+
+        <div style="text-align: center">
+          <a href="{{meetingUrl}}" class="cta-button">View Meeting Details</a>
+          <a href="{{messageUrl}}" class="cta-button secondary">Message {{otherUserName}}</a>
         </div>
+
+        <div class="tips">
+          <h4>💡 Last-minute preparation tips:</h4>
+          <ul>
+            <li>Pack water, treats, and waste bags</li>
+            <li>Check the weather and dress accordingly</li>
+            <li>Plan your route and allow extra time</li>
+            <li>Bring your phone for photos and emergencies</li>
+            <li>Have fun and let the dogs be dogs!</li>
+          </ul>
+        </div>
+
+        <p>
+          <strong>Need to reschedule?</strong> You can still make changes up to 2 hours before the
+          meeting time. Just visit the meeting details page or message {{otherUserName}} directly.
+        </p>
+
+        <p>
+          We're excited for tomorrow's adventure! Have a wonderful time and don't forget to take
+          lots of photos to share with the community.
+        </p>
+      </div>
+
+      <div class="footer">
+        <p>Excited for tomorrow's adventure,<br />The ShareSkippy Team 🐕</p>
+        <p style="margin-top: 20px; font-size: 12px">
+          <a href="{{appUrl}}/meetings">View all meetings</a> |
+          <a href="{{appUrl}}/safety">Safety guidelines</a> |
+          <a href="{{unsubscribeUrl}}">Unsubscribe</a>
+        </p>
+        <p style="margin-top: 15px; font-size: 11px; color: #9ca3af">
+          ShareSkippy LLC<br />
+          San Francisco, CA 94102<br />
+          United States
+        </p>
+        <p style="margin-top: 10px; font-size: 11px; color: #9ca3af">
+          You received this email because you have an upcoming meeting scheduled on ShareSkippy. If
+          you no longer wish to receive meeting reminders, you can
+          <a href="{{unsubscribeUrl}}" style="color: #2563eb">unsubscribe here</a>.
+        </p>
+      </div>
     </div>
-</body>
+  </body>
 </html>

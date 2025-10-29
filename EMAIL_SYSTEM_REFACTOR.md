@@ -51,8 +51,8 @@ await sendEmail({
   emailType: 'welcome',
   payload: {
     userName: 'John Doe',
-    appUrl: 'https://shareskippy.com'
-  }
+    appUrl: 'https://shareskippy.com',
+  },
 });
 ```
 
@@ -65,7 +65,7 @@ await scheduleEmail({
   userId: 'user-id',
   emailType: 'nurture_day3',
   runAfter: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days from now
-  payload: { userName: 'John Doe' }
+  payload: { userName: 'John Doe' },
 });
 ```
 
@@ -77,7 +77,7 @@ import { recordUserActivity } from '@/libs/email';
 await recordUserActivity({
   userId: 'user-id',
   event: 'login',
-  metadata: { source: 'web' }
+  metadata: { source: 'web' },
 });
 ```
 
@@ -96,6 +96,7 @@ The system ensures idempotency for single-shot emails:
 Set up these cron jobs to run daily:
 
 1. **Process Scheduled Emails**
+
    ```bash
    curl -X GET https://shareskippy.com/api/cron/process-scheduled-emails
    ```
@@ -117,7 +118,7 @@ Add to `vercel.json`:
       "schedule": "0 9 * * *"
     },
     {
-      "path": "/api/cron/process-reengage-emails", 
+      "path": "/api/cron/process-reengage-emails",
       "schedule": "0 10 * * *"
     }
   ]
@@ -134,6 +135,7 @@ supabase db push
 ```
 
 The migration creates:
+
 - `email_catalog` table with email type definitions
 - `email_events` table for tracking all email events
 - `scheduled_emails` table for queuing delayed emails
@@ -157,6 +159,7 @@ Templates support variable substitution using `{{variableName}}` syntax.
 ### Email Events
 
 All email sending is logged in the `email_events` table with:
+
 - User ID and email type
 - Status (queued, sent, failed, skipped)
 - External message ID from Resend
@@ -166,6 +169,7 @@ All email sending is logged in the `email_events` table with:
 ### Admin Interface
 
 View email events at `/api/admin/email-events` with pagination and filtering:
+
 - Filter by email type, status, or user
 - View recent email activity
 - Debug email sending issues
@@ -201,6 +205,7 @@ curl -X POST https://shareskippy.com/api/emails/send-new-message \
 ### Deprecated Files
 
 The following files are now deprecated and should be removed:
+
 - `libs/emailTemplates.js` (replaced by `libs/email/`)
 - `app/api/emails/welcome/route.js` (replaced by `app/api/emails/send-welcome/route.js`)
 - `app/api/emails/new-message/route.js` (replaced by `app/api/emails/send-new-message/route.js`)
@@ -210,6 +215,7 @@ The following files are now deprecated and should be removed:
 ### Environment Variables
 
 Ensure these environment variables are set:
+
 - `RESEND_API_KEY` - Resend API key
 - `NEXT_PUBLIC_APP_URL` - App URL for email links
 - `FROM_EMAIL` - From email address (configured in `config.js`)
@@ -270,6 +276,7 @@ curl -X GET https://shareskippy.com/api/cron/process-scheduled-emails
 ## Support
 
 For issues with the email system:
+
 1. Check the `email_events` table for error details
 2. Review application logs for debugging information
 3. Test individual email types using the API endpoints

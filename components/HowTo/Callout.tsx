@@ -15,26 +15,11 @@ const toneClasses = {
   purple: 'bg-purple-50 border-purple-500',
 };
 
-export default function Callout({ 
-  children, 
-  tone = 'blue', 
-  title, 
-  className 
-}: CalloutProps) {
+export default function Callout({ children, tone = 'blue', title, className }: CalloutProps) {
   return (
-    <div 
-      className={cn(
-        'rounded-lg p-6 border-l-4',
-        toneClasses[tone],
-        className
-      )}
-    >
-      {title && (
-        <h4 className="font-semibold text-gray-900 mb-2">{title}</h4>
-      )}
-      <div className="text-gray-700">
-        {children}
-      </div>
+    <div className={cn('rounded-lg p-6 border-l-4', toneClasses[tone], className)}>
+      {title && <h4 className="font-semibold text-gray-900 mb-2">{title}</h4>}
+      <div className="text-gray-700">{children}</div>
     </div>
   );
 }

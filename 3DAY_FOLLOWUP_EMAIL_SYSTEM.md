@@ -5,12 +5,15 @@ This document describes the automated 3-day follow-up email system for ShareSkip
 ## 📧 Email Overview
 
 ### Purpose
+
 The 3-day follow-up email is sent to users 3 days after they join ShareSkippy to encourage them to:
+
 - Share their availability for dog activities
 - Connect with neighbors and their dogs
 - Get started with the platform's core features
 
 ### Email Content
+
 - **Subject**: "Ready to connect with your neighbors? 🐕"
 - **Template**: `email-templates/follow-up-3days.html`
 - **Key Message**: Encourages users to share availability and start connecting
@@ -70,6 +73,7 @@ The system is already configured in `vercel.json`:
 ### 3. Environment Variables
 
 Ensure these are set:
+
 ```bash
 RESEND_API_KEY=your_resend_api_key_here
 NEXT_PUBLIC_APP_URL=https://shareskippy.com
@@ -89,6 +93,7 @@ curl -X GET https://your-domain.com/api/test-3day-followup
 ### Production Testing
 
 The cron job runs daily at 11 AM UTC. Monitor logs to ensure:
+
 - Users are correctly identified (signed up 3 days ago)
 - Emails are sent successfully
 - No duplicate emails are sent
@@ -128,6 +133,7 @@ GET /api/cron/send-3day-follow-up-emails
 ### Email Template Variables
 
 The template supports these variables:
+
 - `{{userName}}` - User's first name
 - `{{appUrl}}` - Application URL
 
@@ -136,16 +142,18 @@ The template supports these variables:
 Current schedule: Daily at 11 AM UTC (`0 11 * * *`)
 
 To change the schedule, update `vercel.json`:
+
 ```json
 {
   "path": "/api/cron/send-3day-follow-up-emails",
-  "schedule": "0 9 * * *"  // 9 AM UTC instead
+  "schedule": "0 9 * * *" // 9 AM UTC instead
 }
 ```
 
 ### User Preferences
 
 The system respects user email notification preferences:
+
 - Checks `user_settings.email_notifications` field
 - Skips users who have disabled email notifications
 - Tracks sent emails to prevent duplicates
@@ -171,19 +179,19 @@ The system respects user email notification preferences:
 
 ```bash
 # Check if migration was applied
-SELECT column_name FROM information_schema.columns 
-WHERE table_name = 'user_settings' 
+SELECT column_name FROM information_schema.columns
+WHERE table_name = 'user_settings'
 AND column_name LIKE '%3day%';
 
 # Check recent user signups
-SELECT id, email, first_name, created_at 
-FROM profiles 
+SELECT id, email, first_name, created_at
+FROM profiles
 WHERE created_at >= NOW() - INTERVAL '4 days'
 ORDER BY created_at DESC;
 
 # Check email tracking
-SELECT user_id, follow_up_3day_sent, follow_up_3day_sent_at 
-FROM user_settings 
+SELECT user_id, follow_up_3day_sent, follow_up_3day_sent_at
+FROM user_settings
 WHERE follow_up_3day_sent = true;
 ```
 
@@ -222,6 +230,7 @@ WHERE follow_up_3day_sent = true;
 ### Updates
 
 When updating the email template:
+
 1. Test with the test endpoint first
 2. Update the HTML template file
 3. Verify all variables are properly replaced

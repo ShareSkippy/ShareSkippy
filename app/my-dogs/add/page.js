@@ -1,7 +1,7 @@
-"use client";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+'use client';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { createClient } from '@/libs/supabase/client';
 import { useSupabaseAuth } from '@/libs/supabase/hooks';
 import PhotoUpload from '@/components/ui/PhotoUpload';
@@ -12,7 +12,7 @@ export default function AddDogPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [photoUrl, setPhotoUrl] = useState('');
-  
+
   const [formData, setFormData] = useState({
     name: '',
     breed: '',
@@ -30,32 +30,32 @@ export default function AddDogPage() {
     house_trained: false,
     fully_vaccinated: false,
     activities: [],
-    description: ''
+    description: '',
   });
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
   const handleTemperamentChange = (trait) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       temperament: prev.temperament.includes(trait)
-        ? prev.temperament.filter(t => t !== trait)
-        : [...prev.temperament, trait]
+        ? prev.temperament.filter((t) => t !== trait)
+        : [...prev.temperament, trait],
     }));
   };
 
   const handleActivityChange = (activity) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       activities: prev.activities.includes(activity)
-        ? prev.activities.filter(a => a !== activity)
-        : [...prev.activities, activity]
+        ? prev.activities.filter((a) => a !== activity)
+        : [...prev.activities, activity],
     }));
   };
 
@@ -68,12 +68,12 @@ export default function AddDogPage() {
     const birthDate = new Date(birthday);
     let years = today.getFullYear() - birthDate.getFullYear();
     let months = today.getMonth() - birthDate.getMonth();
-    
+
     if (months < 0 || (months === 0 && today.getDate() < birthDate.getDate())) {
       years--;
       months += 12;
     }
-    
+
     return { years, months };
   };
 
@@ -90,22 +90,24 @@ export default function AddDogPage() {
       // Debug: Log user info
       console.log('User ID:', user.id);
       console.log('User email:', user.email);
-      
+
       const dogData = {
         ...formData,
         age_years: age.years,
         age_months: age.months,
         photo_url: photoUrl,
-        owner_id: user.id
+        owner_id: user.id,
       };
-      
+
       console.log('Dog data to insert:', dogData);
 
       // Create a new client instance to ensure proper auth context
       const supabase = createClient();
-      
+
       // Verify the user is authenticated
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session) {
         setError('User not authenticated. Please sign in again.');
         return;
@@ -132,12 +134,10 @@ export default function AddDogPage() {
       // Ensure the owner_id matches the authenticated user
       const dogDataWithAuth = {
         ...dogData,
-        owner_id: session.user.id
+        owner_id: session.user.id,
       };
 
-      const { error } = await supabase
-        .from('dogs')
-        .insert(dogDataWithAuth);
+      const { error } = await supabase.from('dogs').insert(dogDataWithAuth);
 
       if (error) {
         console.error('Error creating dog:', error);
@@ -171,11 +171,9 @@ export default function AddDogPage() {
         <div className="max-w-md mx-auto text-center">
           <div className="text-6xl mb-6">🐕</div>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Sign in to add dogs</h2>
-          <p className="text-gray-600 mb-8">
-            You need to be signed in to add dog profiles.
-          </p>
-          <Link 
-            href="/signin" 
+          <p className="text-gray-600 mb-8">You need to be signed in to add dog profiles.</p>
+          <Link
+            href="/signin"
             className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors inline-block font-medium"
           >
             Sign In
@@ -208,11 +206,14 @@ export default function AddDogPage() {
         )}
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-xs border border-gray-200 p-6 space-y-6">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white rounded-xl shadow-xs border border-gray-200 p-6 space-y-6"
+        >
           {/* Basic Information */}
           <div className="space-y-4">
             <h2 className="text-xl font-semibold text-gray-900">Basic Information</h2>
-            
+
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                 Dog&apos;s Name *
@@ -266,7 +267,8 @@ export default function AddDogPage() {
               />
               {formData.birthday && (
                 <p className="text-sm text-gray-500 mt-1">
-                  Age: {calculateAge(formData.birthday).years} years, {calculateAge(formData.birthday).months} months
+                  Age: {calculateAge(formData.birthday).years} years,{' '}
+                  {calculateAge(formData.birthday).months} months
                 </p>
               )}
             </div>
@@ -325,9 +327,7 @@ export default function AddDogPage() {
 
           {/* Photo Upload */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Dog Photo
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Dog Photo</label>
             <PhotoUpload
               onPhotoUploaded={handlePhotoUpload}
               initialPhotoUrl={photoUrl}
@@ -356,7 +356,7 @@ export default function AddDogPage() {
           {/* Friendliness */}
           <div className="space-y-4">
             <h2 className="text-xl font-semibold text-gray-900">Friendliness</h2>
-            
+
             <div className="space-y-3">
               <div className="flex items-center">
                 <input
@@ -371,7 +371,7 @@ export default function AddDogPage() {
                   Dog friendly
                 </label>
               </div>
-              
+
               <div className="flex items-center">
                 <input
                   type="checkbox"
@@ -385,7 +385,7 @@ export default function AddDogPage() {
                   Cat friendly
                 </label>
               </div>
-              
+
               <div className="flex items-center">
                 <input
                   type="checkbox"
@@ -405,7 +405,7 @@ export default function AddDogPage() {
           {/* Training & Health */}
           <div className="space-y-4">
             <h2 className="text-xl font-semibold text-gray-900">Training & Health</h2>
-            
+
             <div className="space-y-3">
               <div className="flex items-center">
                 <input
@@ -420,7 +420,7 @@ export default function AddDogPage() {
                   Leash trained
                 </label>
               </div>
-              
+
               <div className="flex items-center">
                 <input
                   type="checkbox"
@@ -434,7 +434,7 @@ export default function AddDogPage() {
                   Crate trained
                 </label>
               </div>
-              
+
               <div className="flex items-center">
                 <input
                   type="checkbox"
@@ -448,7 +448,7 @@ export default function AddDogPage() {
                   House trained
                 </label>
               </div>
-              
+
               <div className="flex items-center">
                 <input
                   type="checkbox"
@@ -469,11 +469,18 @@ export default function AddDogPage() {
           <div className="space-y-4">
             <h2 className="text-xl font-semibold text-gray-900">Activities My Dog Loves</h2>
             <p className="text-sm text-gray-600">Select all the activities your dog enjoys</p>
-            
+
             <div className="grid grid-cols-2 gap-3">
               {[
-                'Cuddling', 'Hiking', 'Dog Parks', 'Running', 'Sleepovers',
-                'Camping', 'Playing Fetch', 'Swimming', 'Walking'
+                'Cuddling',
+                'Hiking',
+                'Dog Parks',
+                'Running',
+                'Sleepovers',
+                'Camping',
+                'Playing Fetch',
+                'Swimming',
+                'Walking',
               ].map((activity) => (
                 <div key={activity} className="flex items-center">
                   <input
@@ -483,7 +490,10 @@ export default function AddDogPage() {
                     onChange={() => handleActivityChange(activity)}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded-sm"
                   />
-                  <label htmlFor={`activity-${activity}`} className="ml-2 block text-sm text-gray-700">
+                  <label
+                    htmlFor={`activity-${activity}`}
+                    className="ml-2 block text-sm text-gray-700"
+                  >
                     {activity}
                   </label>
                 </div>
@@ -497,7 +507,16 @@ export default function AddDogPage() {
               Temperament (select all that apply)
             </label>
             <div className="grid grid-cols-2 gap-2">
-              {['Friendly', 'Playful', 'Calm', 'Energetic', 'Shy', 'Confident', 'Curious', 'Loyal'].map((trait) => (
+              {[
+                'Friendly',
+                'Playful',
+                'Calm',
+                'Energetic',
+                'Shy',
+                'Confident',
+                'Curious',
+                'Loyal',
+              ].map((trait) => (
                 <div key={trait} className="flex items-center">
                   <input
                     type="checkbox"
@@ -506,7 +525,10 @@ export default function AddDogPage() {
                     onChange={() => handleTemperamentChange(trait)}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded-sm"
                   />
-                  <label htmlFor={`temperament-${trait}`} className="ml-2 block text-sm text-gray-700">
+                  <label
+                    htmlFor={`temperament-${trait}`}
+                    className="ml-2 block text-sm text-gray-700"
+                  >
                     {trait}
                   </label>
                 </div>

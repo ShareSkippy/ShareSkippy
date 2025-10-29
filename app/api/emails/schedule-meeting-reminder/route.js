@@ -3,17 +3,15 @@ import { createClient } from '@/libs/supabase/server';
 
 export async function POST(request) {
   try {
-    const { 
-      userId, 
-      meetingId, 
-      meetingTitle, 
-      startsAt 
-    } = await request.json();
+    const { userId, meetingId, meetingTitle, startsAt } = await request.json();
 
     if (!userId || !meetingId || !meetingTitle || !startsAt) {
-      return Response.json({ 
-        error: 'User ID, meeting ID, meeting title, and start time are required' 
-      }, { status: 400 });
+      return Response.json(
+        {
+          error: 'User ID, meeting ID, meeting title, and start time are required',
+        },
+        { status: 400 }
+      );
     }
 
     const supabase = createClient();
@@ -43,20 +41,16 @@ export async function POST(request) {
       payload: {
         meetingId,
         title: meetingTitle || meeting.title,
-        startsAt: new Date(startsAt).toISOString()
-      }
+        startsAt: new Date(startsAt).toISOString(),
+      },
     });
 
-    return Response.json({ 
-      success: true, 
-      message: 'Meeting reminder scheduled successfully' 
+    return Response.json({
+      success: true,
+      message: 'Meeting reminder scheduled successfully',
     });
-
   } catch (error) {
     console.error('Error scheduling meeting reminder:', error);
-    return Response.json(
-      { error: 'Failed to schedule meeting reminder' }, 
-      { status: 500 }
-    );
+    return Response.json({ error: 'Failed to schedule meeting reminder' }, { status: 500 });
   }
 }

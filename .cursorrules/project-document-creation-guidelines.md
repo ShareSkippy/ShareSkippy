@@ -60,8 +60,8 @@ Generally, there should be between 5-15 constraints, depending on the scope of t
 
 Non-goals are things that are out of scope. Obviously, this list can contain infinitely many things, so your job here is to limit it to relevant things that the user will find useful to read. Specifically this means:
 
-- Do not list things that would *obviously* make no sense to implement, or that are so *clearly* outside the scope of the project that the user never would have guessed that you would implement them. This includes things that the user obviously would have specified if (s)he wanted them, but did not.
-- Prefer to list things that are decisions you've made due to ambiguities, contradictions, or other issues in the project's description. Things that the user probably *should* have specified, but did not, and entrusted to you.
+- Do not list things that would _obviously_ make no sense to implement, or that are so _clearly_ outside the scope of the project that the user never would have guessed that you would implement them. This includes things that the user obviously would have specified if (s)he wanted them, but did not.
+- Prefer to list things that are decisions you've made due to ambiguities, contradictions, or other issues in the project's description. Things that the user probably _should_ have specified, but did not, and entrusted to you.
 - Also prefer to list anything that you've decided might be surprising or unexpected to the user.
 
 Basically, stay relevant. Keep this list relatively short, ideally 3-5 items. And try to keep the items on it impactful.

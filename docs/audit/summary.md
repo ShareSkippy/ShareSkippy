@@ -37,5 +37,3 @@ Status: Review-only cleanup completed across tasks. No new features, routes, or 
 
 - Deferred mass import rewrites and Client→Server conversions to avoid behavior risk
 - Deferred CSP tightening until asset allowlists are validated end-to-end
-
-

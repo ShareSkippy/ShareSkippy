@@ -1,230 +1,245 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>How was your playdate? - ShareSkippy</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            line-height: 1.6;
-            color: #374151;
-            background-color: #f9fafb;
-            margin: 0;
-            padding: 0;
-        }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+          sans-serif;
+        line-height: 1.6;
+        color: #374151;
+        background-color: #f9fafb;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+        color: white;
+        padding: 40px 30px;
+        text-align: center;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 700;
+      }
+      .header p {
+        margin: 10px 0 0 0;
+        font-size: 16px;
+        opacity: 0.9;
+      }
+      .content {
+        padding: 40px 30px;
+      }
+      .greeting {
+        font-size: 18px;
+        margin-bottom: 20px;
+        color: #1f2937;
+      }
+      .meeting-details {
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 25px 0;
+      }
+      .meeting-details h3 {
+        margin: 0 0 15px 0;
+        color: #2563eb;
+        font-size: 16px;
+      }
+      .detail-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+      .detail-icon {
+        font-size: 16px;
+        margin-right: 10px;
+        width: 20px;
+      }
+      .detail-label {
+        font-weight: 600;
+        color: #374151;
+        margin-right: 8px;
+        min-width: 80px;
+      }
+      .detail-value {
+        color: #6b7280;
+      }
+      .cta-button {
+        display: inline-block;
+        background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+        color: white !important;
+        text-decoration: none;
+        padding: 14px 28px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 16px;
+        margin: 20px 10px 20px 0;
+        transition: all 0.2s ease;
+      }
+      .cta-button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      }
+      .secondary-button {
+        background: #f8fafc;
+        color: #374151;
+        border: 1px solid #e2e8f0;
+      }
+      .secondary-button:hover {
+        background: #e2e8f0;
+        transform: translateY(-1px);
+      }
+      .tips {
+        background-color: #eff6ff;
+        border: 1px solid #3b82f6;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 25px 0;
+      }
+      .tips h4 {
+        margin-top: 0;
+        color: #1e40af;
+        font-size: 16px;
+      }
+      .tips ul {
+        margin-bottom: 0;
+        padding-left: 20px;
+      }
+      .tips li {
+        margin-bottom: 5px;
+        color: #1e40af;
+      }
+      .footer {
+        background-color: #f8fafc;
+        padding: 30px;
+        text-align: center;
+        border-top: 1px solid #e5e7eb;
+      }
+      .footer p {
+        margin: 0;
+        color: #6b7280;
+        font-size: 14px;
+      }
+      .footer a {
+        color: #2563eb;
+        text-decoration: none;
+      }
+      .footer a:hover {
+        text-decoration: underline;
+      }
+      @media (max-width: 600px) {
         .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+          margin: 0;
+          border-radius: 0;
         }
-        .header {
-            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
-            color: white;
-            padding: 40px 30px;
-            text-align: center;
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 28px;
-            font-weight: 700;
-        }
-        .header p {
-            margin: 10px 0 0 0;
-            font-size: 16px;
-            opacity: 0.9;
-        }
-        .content {
-            padding: 40px 30px;
-        }
-        .greeting {
-            font-size: 18px;
-            margin-bottom: 20px;
-            color: #1f2937;
-        }
-        .meeting-details {
-            background-color: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 25px 0;
-        }
-        .meeting-details h3 {
-            margin: 0 0 15px 0;
-            color: #4f46e5;
-            font-size: 16px;
-        }
-        .detail-row {
-            display: flex;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-        .detail-icon {
-            font-size: 16px;
-            margin-right: 10px;
-            width: 20px;
-        }
-        .detail-label {
-            font-weight: 600;
-            color: #374151;
-            margin-right: 8px;
-            min-width: 80px;
-        }
-        .detail-value {
-            color: #6b7280;
+        .header,
+        .content,
+        .footer {
+          padding: 20px;
         }
         .cta-button {
-            display: inline-block;
-            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
-            color: white !important;
-            text-decoration: none;
-            padding: 14px 28px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 16px;
-            margin: 20px 10px 20px 0;
-            transition: all 0.2s ease;
+          display: block;
+          text-align: center;
+          margin: 10px 0;
         }
-        .cta-button:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
-        }
-        .secondary-button {
-            background: #f8fafc;
-            color: #374151;
-            border: 1px solid #e2e8f0;
-        }
-        .secondary-button:hover {
-            background: #e2e8f0;
-            transform: translateY(-1px);
-        }
-        .tips {
-            background-color: #eff6ff;
-            border: 1px solid #3b82f6;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 25px 0;
-        }
-        .tips h4 {
-            margin-top: 0;
-            color: #1e40af;
-            font-size: 16px;
-        }
-        .tips ul {
-            margin-bottom: 0;
-            padding-left: 20px;
-        }
-        .tips li {
-            margin-bottom: 5px;
-            color: #1e40af;
-        }
-        .footer {
-            background-color: #f8fafc;
-            padding: 30px;
-            text-align: center;
-            border-top: 1px solid #e5e7eb;
-        }
-        .footer p {
-            margin: 0;
-            color: #6b7280;
-            font-size: 14px;
-        }
-        .footer a {
-            color: #4f46e5;
-            text-decoration: none;
-        }
-        .footer a:hover {
-            text-decoration: underline;
-        }
-        @media (max-width: 600px) {
-            .container {
-                margin: 0;
-                border-radius: 0;
-            }
-            .header, .content, .footer {
-                padding: 20px;
-            }
-            .cta-button {
-                display: block;
-                text-align: center;
-                margin: 10px 0;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="header">
-            <h1>How was your playdate?</h1>
-            <p>We hope you had a wonderful time with your meetup!</p>
+      <div class="header">
+        <h1>How was your playdate?</h1>
+        <p>We hope you had a wonderful time with your meetup!</p>
+      </div>
+
+      <div class="content">
+        <div class="greeting">
+          <p>Hey {{userName}}!</p>
+          <p>
+            We hope you had a great time meeting {{otherUserName}} at your recent pup playdate.
+            Please take some time to review {{otherUserName}}.
+          </p>
         </div>
-        
-        <div class="content">
-            <div class="greeting">
-                <p>Hey {{userName}}!</p>
-                <p>We hope you had a great time meeting {{otherUserName}} at your recent pup playdate. Please take some time to review {{otherUserName}}.</p>
-            </div>
-            
-            <div class="meeting-details">
-                <h3>📅 Playdate Details</h3>
-                <div class="detail-row">
-                    <span class="detail-icon">👤</span>
-                    <span class="detail-label">With:</span>
-                    <span class="detail-value">{{otherUserName}} & {{otherUserDogName}}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-icon">📅</span>
-                    <span class="detail-label">Date:</span>
-                    <span class="detail-value">{{meetingDate}}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-icon">📍</span>
-                    <span class="detail-label">Location:</span>
-                    <span class="detail-value">{{meetingLocation}}</span>
-                </div>
-            </div>
-            
-            <div style="text-align: center;">
-                <a href="{{reviewUrl}}" class="cta-button">Leave a Review</a>
-                <a href="{{messageUrl}}" class="cta-button secondary">Message {{otherUserName}}</a>
-            </div>
-            
-            <div class="tips">
-                <h4>💡 Why reviews matter:</h4>
-                <ul>
-                    <li>Help other dog lovers find great playmates</li>
-                    <li>Build trust in our community</li>
-                    <li>Share your experience to help others</li>
-                    <li>Recognize awesome petpals and dog parents</li>
-                </ul>
-            </div>
-            
-            <p><strong>Your feedback helps our community grow!</strong> Reviews help other dog owners make informed decisions about potential playmates and build a safer, more connected community.</p>
-            
-            <p>If you had any concerns about your playdate, please don't hesitate to reach out to us directly. We're here to help ensure every experience is positive for both you and your furry friend.</p>
+
+        <div class="meeting-details">
+          <h3>📅 Playdate Details</h3>
+          <div class="detail-row">
+            <span class="detail-icon">👤</span>
+            <span class="detail-label">With:</span>
+            <span class="detail-value">{{otherUserName}} & {{otherUserDogName}}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-icon">📅</span>
+            <span class="detail-label">Date:</span>
+            <span class="detail-value">{{meetingDate}}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-icon">📍</span>
+            <span class="detail-label">Location:</span>
+            <span class="detail-value">{{meetingLocation}}</span>
+          </div>
         </div>
-        
-        <div class="footer">
-            <p>Happy tails and wagging adventures,<br>The ShareSkippy Team 🐕</p>
-            <p style="margin-top: 20px; font-size: 12px;">
-                <a href="{{appUrl}}/reviews">View all reviews</a> | 
-                <a href="{{appUrl}}/safety">Safety guidelines</a> |
-                <a href="{{unsubscribeUrl}}">Unsubscribe</a>
-            </p>
-            <p style="margin-top: 15px; font-size: 11px; color: #9ca3af;">
-                ShareSkippy LLC<br>
-                San Francisco, CA 94102<br>
-                United States
-            </p>
-            <p style="margin-top: 10px; font-size: 11px; color: #9ca3af;">
-                You received this email because you recently completed a meeting on ShareSkippy. 
-                If you no longer wish to receive review requests, you can 
-                <a href="{{unsubscribeUrl}}" style="color: #4f46e5;">unsubscribe here</a>.
-            </p>
+
+        <div style="text-align: center">
+          <a href="{{reviewUrl}}" class="cta-button">Leave a Review</a>
+          <a href="{{messageUrl}}" class="cta-button secondary">Message {{otherUserName}}</a>
         </div>
+
+        <div class="tips">
+          <h4>💡 Why reviews matter:</h4>
+          <ul>
+            <li>Help other dog lovers find great playmates</li>
+            <li>Build trust in our community</li>
+            <li>Share your experience to help others</li>
+            <li>Recognize awesome petpals and dog parents</li>
+          </ul>
+        </div>
+
+        <p>
+          <strong>Your feedback helps our community grow!</strong> Reviews help other dog owners
+          make informed decisions about potential playmates and build a safer, more connected
+          community.
+        </p>
+
+        <p>
+          If you had any concerns about your playdate, please don't hesitate to reach out to us
+          directly. We're here to help ensure every experience is positive for both you and your
+          furry friend.
+        </p>
+      </div>
+
+      <div class="footer">
+        <p>Happy tails and wagging adventures,<br />The ShareSkippy Team 🐕</p>
+        <p style="margin-top: 20px; font-size: 12px">
+          <a href="{{appUrl}}/reviews">View all reviews</a> |
+          <a href="{{appUrl}}/safety">Safety guidelines</a> |
+          <a href="{{unsubscribeUrl}}">Unsubscribe</a>
+        </p>
+        <p style="margin-top: 15px; font-size: 11px; color: #9ca3af">
+          ShareSkippy LLC<br />
+          San Francisco, CA 94102<br />
+          United States
+        </p>
+        <p style="margin-top: 10px; font-size: 11px; color: #9ca3af">
+          You received this email because you recently completed a meeting on ShareSkippy. If you no
+          longer wish to receive review requests, you can
+          <a href="{{unsubscribeUrl}}" style="color: #2563eb">unsubscribe here</a>.
+        </p>
+      </div>
     </div>
-</body>
+  </body>
 </html>

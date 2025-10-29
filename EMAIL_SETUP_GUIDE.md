@@ -5,27 +5,32 @@ This guide covers the complete email system setup for ShareSkippy, including all
 ## 📧 Email Types
 
 ### 1. Welcome Email
+
 - **Trigger**: When a new user signs up
 - **Template**: `email-templates/welcome-email.html`
 - **API Endpoint**: `POST /api/emails/welcome`
 
 ### 2. New Message Notification
+
 - **Trigger**: When a user receives a new message
 - **Template**: `email-templates/new-message-notification.html`
 - **API Endpoint**: `POST /api/emails/send-new-message`
 
 ### 3. Meeting Scheduled Confirmation
+
 - **Trigger**: When a meeting is successfully scheduled
 - **Template**: `email-templates/meeting-scheduled-confirmation.html`
 - **API Endpoint**: `POST /api/emails/meeting-scheduled`
 
 ### 4. Meeting Reminder (1 Day Before)
+
 - **Trigger**: 24 hours before a scheduled meeting
 - **Template**: `email-templates/meeting-reminder-1day.html`
 - **API Endpoint**: `POST /api/emails/meeting-reminder`
 - **Cron Job**: `GET /api/cron/send-email-reminders`
 
 ### 5. Follow-up Email (1 Week After Signup)
+
 - **Trigger**: 7 days after user signup
 - **Template**: `email-templates/follow-up-1week.html`
 - **API Endpoint**: `POST /api/emails/follow-up`
@@ -95,7 +100,7 @@ import { sendWelcomeEmail } from '@/libs/emailTemplates';
 await sendWelcomeEmail({
   to: 'user@example.com',
   userName: 'John',
-  appUrl: 'shareskippy.com'
+  appUrl: 'shareskippy.com',
 });
 ```
 
@@ -169,7 +174,7 @@ Add to your `vercel.json`:
       "schedule": "0 9 * * *"
     },
     {
-      "path": "/api/cron/send-follow-up-emails", 
+      "path": "/api/cron/send-follow-up-emails",
       "schedule": "0 10 * * *"
     }
   ]
@@ -189,10 +194,12 @@ All email templates are located in the `email-templates/` directory. Each templa
 Each template accepts specific variables:
 
 #### Welcome Email
+
 - `{{userName}}` - User's first name
 - `{{appUrl}}` - App URL
 
 #### New Message Notification
+
 - `{{recipientName}}` - Recipient's name
 - `{{senderName}}` - Sender's full name
 - `{{senderInitial}}` - Sender's initial for avatar
@@ -201,6 +208,7 @@ Each template accepts specific variables:
 - `{{messageUrl}}` - Link to view message
 
 #### Meeting Scheduled/Reminder
+
 - `{{userName}}` - User's name
 - `{{userDogName}}` - User's dog name
 - `{{otherUserName}}` - Other participant's name
@@ -213,6 +221,7 @@ Each template accepts specific variables:
 - `{{messageUrl}}` - Link to messages
 
 #### Follow-up Email
+
 - `{{userName}}` - User's name
 - `{{userDogName}}` - User's dog name
 - `{{profileViews}}` - Number of profile views
@@ -223,6 +232,7 @@ Each template accepts specific variables:
 ## 🔧 Integration Points
 
 ### 1. User Signup
+
 Add welcome email to your signup flow:
 
 ```javascript
@@ -230,11 +240,12 @@ Add welcome email to your signup flow:
 await fetch('/api/emails/welcome', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ userId: newUser.id })
+  body: JSON.stringify({ userId: newUser.id }),
 });
 ```
 
 ### 2. Message Creation
+
 Add notification to your message creation:
 
 ```javascript
@@ -246,12 +257,13 @@ await fetch('/api/emails/send-new-message', {
     recipientId: message.recipient_id,
     senderId: message.sender_id,
     messagePreview: message.content,
-    messageId: message.id
-  })
+    messageId: message.id,
+  }),
 });
 ```
 
 ### 3. Meeting Scheduling
+
 Add confirmation to your meeting creation:
 
 ```javascript
@@ -261,8 +273,8 @@ await fetch('/api/emails/meeting-scheduled', {
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
     meetingId: meeting.id,
-    userId: meeting.requester_id
-  })
+    userId: meeting.requester_id,
+  }),
 });
 
 // Also send to recipient
@@ -271,8 +283,8 @@ await fetch('/api/emails/meeting-scheduled', {
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
     meetingId: meeting.id,
-    userId: meeting.recipient_id
-  })
+    userId: meeting.recipient_id,
+  }),
 });
 ```
 
@@ -282,12 +294,10 @@ Users can control their email preferences through the `user_settings` table:
 
 ```javascript
 // Disable email notifications
-await supabase
-  .from('user_settings')
-  .upsert({
-    user_id: userId,
-    email_notifications: false
-  });
+await supabase.from('user_settings').upsert({
+  user_id: userId,
+  email_notifications: false,
+});
 ```
 
 ## 📊 Monitoring & Analytics
@@ -319,6 +329,7 @@ Test your email system:
 ## 📱 Mobile Optimization
 
 All email templates are:
+
 - **Responsive**: Work on mobile and desktop
 - **Email client compatible**: Tested across major email clients
 - **Accessible**: Proper contrast and readable fonts
@@ -366,4 +377,3 @@ For issues with the email system:
 ---
 
 **Happy emailing! 🐕📧**
-

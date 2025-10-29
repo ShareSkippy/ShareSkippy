@@ -2,7 +2,8 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'How to Use ShareSkippy - Complete User Guide',
-  description: 'Learn how to use ShareSkippy to connect with fellow dog lovers in your community. Complete guide covering profiles, availability posts, messaging, meetings, and reviews.',
+  description:
+    'Learn how to use ShareSkippy to connect with fellow dog lovers in your community. Complete guide covering profiles, availability posts, messaging, meetings, and reviews.',
   keywords: [
     'ShareSkippy',
     'dog sharing',
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
     'user guide',
     'tutorial',
     'dog lovers',
-    'neighborhood'
+    'neighborhood',
   ],
   authors: [{ name: 'ShareSkippy Team' }],
   creator: 'ShareSkippy',
@@ -29,7 +30,8 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'How to Use ShareSkippy - Complete User Guide',
-    description: 'Learn how to use ShareSkippy to connect with fellow dog lovers in your community. Complete guide covering profiles, availability posts, messaging, meetings, and reviews.',
+    description:
+      'Learn how to use ShareSkippy to connect with fellow dog lovers in your community. Complete guide covering profiles, availability posts, messaging, meetings, and reviews.',
     url: '/how-to-use',
     siteName: 'ShareSkippy',
     images: [
@@ -46,7 +48,8 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'How to Use ShareSkippy - Complete User Guide',
-    description: 'Learn how to use ShareSkippy to connect with fellow dog lovers in your community.',
+    description:
+      'Learn how to use ShareSkippy to connect with fellow dog lovers in your community.',
     images: ['/og-image-how-to-use.png'],
     creator: '@shareskippy',
   },

@@ -1,6 +1,18 @@
 // Centralized email system exports
-export { sendEmail, scheduleEmail, recordUserActivity, getUserLastActivity, shouldSendReengageEmail } from './sendEmail';
-export { processScheduledEmails, scheduleMeetingReminder, scheduleNurtureEmail, getUserScheduledEmails, cancelUserScheduledEmails } from './scheduler';
+export {
+  sendEmail,
+  scheduleEmail,
+  recordUserActivity,
+  getUserLastActivity,
+  shouldSendReengageEmail,
+} from './sendEmail';
+export {
+  processScheduledEmails,
+  scheduleMeetingReminder,
+  scheduleNurtureEmail,
+  getUserScheduledEmails,
+  cancelUserScheduledEmails,
+} from './scheduler';
 export { processReengageEmails, getReengageCandidates, scheduleReengageEmails } from './reengage';
 export { loadEmailTemplate, getAvailableEmailTypes, isValidEmailType } from './templates';
 

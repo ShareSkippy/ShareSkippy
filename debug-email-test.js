@@ -9,30 +9,30 @@ const testEmailSystem = async () => {
   console.log('🔍 Debugging Email System...\n');
 
   const baseUrl = 'https://www.shareskippy.com';
-  
+
   console.log('1. Testing email endpoint with real user data...');
-  
+
   // Test with real user IDs (you'll need to replace these with actual user IDs)
   const testData = {
     recipientId: 'real-recipient-id', // Replace with actual recipient ID
-    senderId: 'real-sender-id',       // Replace with actual sender ID  
+    senderId: 'real-sender-id', // Replace with actual sender ID
     messagePreview: 'This is a test message to verify email notifications are working properly.',
     messageId: 'test-message-123',
-    threadId: 'test-thread-456'
+    threadId: 'test-thread-456',
   };
 
   try {
     const response = await fetch(`${baseUrl}/api/emails/send-new-message`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(testData)
+      body: JSON.stringify(testData),
     });
 
     const result = await response.json();
-    
+
     console.log('Response Status:', response.status);
     console.log('Response Body:', JSON.stringify(result, null, 2));
-    
+
     if (response.ok) {
       console.log('✅ Email endpoint is working');
     } else {
@@ -43,7 +43,7 @@ const testEmailSystem = async () => {
   }
 
   console.log('\n2. Checking if database tables exist...');
-  
+
   // This would require authentication, but we can check if the endpoint responds
   try {
     const response = await fetch(`${baseUrl}/api/admin/email-events`);

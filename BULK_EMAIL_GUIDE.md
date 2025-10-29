@@ -51,8 +51,8 @@ const response = await fetch('/api/admin/send-bulk-email', {
     htmlContent: '<h1>Hello {{first_name}}!</h1><p>Your message here...</p>',
     textContent: 'Hello {{first_name}}! Your message here...',
     batchSize: 50,
-    delayMs: 1000
-  })
+    delayMs: 1000,
+  }),
 });
 ```
 
@@ -70,8 +70,8 @@ const response = await fetch('/api/admin/test-bulk-email', {
     testEmail: 'test@example.com',
     subject: 'Test Email',
     htmlContent: '<h1>Hello {{first_name}}!</h1>',
-    textContent: 'Hello {{first_name}}!'
-  })
+    textContent: 'Hello {{first_name}}!',
+  }),
 });
 ```
 
@@ -80,10 +80,11 @@ const response = await fetch('/api/admin/test-bulk-email', {
 Use these variables in your email content for personalization:
 
 - `{{first_name}}` - User's first name
-- `{{last_name}}` - User's last name  
+- `{{last_name}}` - User's last name
 - `{{email}}` - User's email address
 
 Example:
+
 ```html
 <h1>Hello {{first_name}}!</h1>
 <p>We hope you and your furry friend are doing well, {{first_name}}!</p>
@@ -96,20 +97,20 @@ Example:
 ```html
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ShareSkippy Announcement</title>
     <style>
-        /* Your CSS styles here */
+      /* Your CSS styles here */
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <h1>Hello {{first_name}}!</h1>
-        <p>Your message content here...</p>
+      <h1>Hello {{first_name}}!</h1>
+      <p>Your message content here...</p>
     </div>
-</body>
+  </body>
 </html>
 ```
 
@@ -127,6 +128,7 @@ The ShareSkippy Team
 ## Rate Limiting & Best Practices
 
 ### Rate Limits
+
 - **API Rate Limit**: 10 requests per minute per IP
 - **Batch Processing**: Emails are sent in batches to respect rate limits
 - **Retry Logic**: Failed emails are retried up to 2 times
@@ -161,6 +163,7 @@ The system provides detailed results including:
 - Error details for failed emails
 
 Example response:
+
 ```json
 {
   "message": "Bulk email processing completed",
@@ -190,6 +193,7 @@ Example response:
 ### Error Handling
 
 The system includes:
+
 - Automatic retries for failed emails
 - Detailed error logging
 - Graceful handling of invalid email addresses
@@ -198,6 +202,7 @@ The system includes:
 ### Logs
 
 Check your application logs for detailed information about:
+
 - Batch processing progress
 - Individual email failures
 - Rate limiting events
@@ -216,16 +221,16 @@ Check your application logs for detailed information about:
 
 ```javascript
 const welcomeEmail = {
-  subject: "Welcome to ShareSkippy!",
+  subject: 'Welcome to ShareSkippy!',
   htmlContent: `
     <h1>Welcome {{first_name}}!</h1>
     <p>Thank you for joining ShareSkippy. We're excited to help you connect with other dog lovers in your community.</p>
     <p>Get started by creating your first availability post!</p>
     <a href="https://shareskippy.com/share-availability">Share Your Availability</a>
   `,
-  textContent: "Welcome {{first_name}}! Thank you for joining ShareSkippy...",
+  textContent: 'Welcome {{first_name}}! Thank you for joining ShareSkippy...',
   batchSize: 25,
-  delayMs: 1500
+  delayMs: 1500,
 };
 ```
 
@@ -233,14 +238,14 @@ const welcomeEmail = {
 
 ```javascript
 const announcementEmail = {
-  subject: "New Feature: Enhanced Messaging",
+  subject: 'New Feature: Enhanced Messaging',
   htmlContent: `
     <h1>Hello {{first_name}}!</h1>
     <p>We're excited to announce our new enhanced messaging system with better notifications and improved user experience.</p>
     <p>Check it out and let us know what you think!</p>
   `,
   batchSize: 50,
-  delayMs: 1000
+  delayMs: 1000,
 };
 ```
 

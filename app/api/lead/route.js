@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
 // This route is used to store the leads that are generated from the landing page.
 // The API call is initiated by <ButtonLead /> component
@@ -6,7 +6,7 @@ export async function POST(req) {
   const body = await req.json();
 
   if (!body.email) {
-    return NextResponse.json({ error: "Email is required" }, { status: 400 });
+    return NextResponse.json({ error: 'Email is required' }, { status: 400 });
   }
 
   try {

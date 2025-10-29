@@ -1,5 +1,5 @@
-import Link from "next/link";
-import { LEGAL } from "@/lib/legal";
+import Link from 'next/link';
+import { LEGAL } from '@/lib/legal';
 
 export default function CommunityGuidelines() {
   return (
@@ -17,7 +17,7 @@ export default function CommunityGuidelines() {
 
         {/* Back Link */}
         <div className="mb-8">
-          <Link 
+          <Link
             href="/"
             className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium"
           >
@@ -40,7 +40,7 @@ export default function CommunityGuidelines() {
               <li>• Trust your instincts</li>
             </ul>
           </div>
-          
+
           <div className="bg-white rounded-xl p-6 shadow-md border border-gray-200">
             <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
               <span className="mr-2">🐕</span>
@@ -54,7 +54,7 @@ export default function CommunityGuidelines() {
               <li>• Be mindful of noise levels</li>
             </ul>
           </div>
-          
+
           <div className="bg-white rounded-xl p-6 shadow-md border border-gray-200">
             <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
               <span className="mr-2">💬</span>
@@ -68,7 +68,7 @@ export default function CommunityGuidelines() {
               <li>• Report any concerns</li>
             </ul>
           </div>
-          
+
           <div className="bg-white rounded-xl p-6 shadow-md border border-gray-200">
             <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
               <span className="mr-2">🏆</span>
@@ -83,7 +83,7 @@ export default function CommunityGuidelines() {
             </ul>
           </div>
         </div>
-        
+
         {/* Emergency Contacts Section */}
         <div className="bg-linear-to-r from-blue-50 to-purple-50 rounded-xl p-6 border border-blue-200 mb-8">
           <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
@@ -91,7 +91,7 @@ export default function CommunityGuidelines() {
             Emergency Contacts
           </h3>
           <p className="text-gray-600 mb-4">
-            In case of emergency, contact local authorities immediately. For non-emergency concerns, 
+            In case of emergency, contact local authorities immediately. For non-emergency concerns,
             use our support system to report issues.
           </p>
           <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
@@ -113,9 +113,7 @@ export default function CommunityGuidelines() {
             <span className="mr-2">ℹ️</span>
             About ShareSkippy
           </h3>
-          <p className="text-gray-600 mb-4">
-            {LEGAL.getCurrentDisclosure()}
-          </p>
+          <p className="text-gray-600 mb-4">{LEGAL.getCurrentDisclosure()}</p>
         </div>
 
         {/* Additional Resources */}
@@ -125,8 +123,8 @@ export default function CommunityGuidelines() {
             Additional Resources
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Link 
-              href="/safety" 
+            <Link
+              href="/safety"
               className="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
             >
               <span className="mr-3">🛡️</span>
@@ -135,8 +133,8 @@ export default function CommunityGuidelines() {
                 <div className="text-sm text-gray-500">Comprehensive safety tips</div>
               </div>
             </Link>
-            <Link 
-              href="/faq" 
+            <Link
+              href="/faq"
               className="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
             >
               <span className="mr-3">❓</span>

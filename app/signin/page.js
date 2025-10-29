@@ -48,7 +48,10 @@ export default function Login() {
     try {
       const { type, provider } = options;
       // Use production domain for OAuth redirects to avoid localhost issues
-      const redirectURL = window.location.origin + '/api/auth/callback';
+      const redirectURL =
+        window.location.hostname === 'localhost' || window.location.hostname.includes('192.168')
+          ? window.location.origin + '/api/auth/callback'
+          : `https://${config.domainName}/api/auth/callback`;
 
       if (type === 'oauth') {
         // Use Supabase's built-in OAuth but with custom branding

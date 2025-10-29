@@ -3,25 +3,22 @@ import { createClient } from '@/libs/supabase/server';
 
 export async function POST(request) {
   try {
-    const { 
-      recipientId, 
-      senderId, 
-      messagePreview, 
-      messageId,
-      threadId 
-    } = await request.json();
+    const { recipientId, senderId, messagePreview, messageId, threadId } = await request.json();
 
     if (!recipientId || !senderId || !messagePreview) {
-      return Response.json({ 
-        error: 'Recipient ID, sender ID, and message preview are required' 
-      }, { status: 400 });
+      return Response.json(
+        {
+          error: 'Recipient ID, sender ID, and message preview are required',
+        },
+        { status: 400 }
+      );
     }
 
     // Don't send email to the sender
     if (recipientId === senderId) {
-      return Response.json({ 
-        success: true, 
-        message: 'Skipped - sender and recipient are the same' 
+      return Response.json({
+        success: true,
+        message: 'Skipped - sender and recipient are the same',
       });
     }
 
@@ -58,23 +55,20 @@ export async function POST(request) {
         recipientName: recipient.first_name || '',
         senderName: `${sender.first_name} ${sender.last_name}`.trim(),
         senderInitial: (sender.first_name || 'U')[0].toUpperCase(),
-        messagePreview: messagePreview.substring(0, 100) + (messagePreview.length > 100 ? '...' : ''),
+        messagePreview:
+          messagePreview.substring(0, 100) + (messagePreview.length > 100 ? '...' : ''),
         messageTime: new Date().toLocaleString(),
         messageUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://shareskippy.com'}/messages/${messageId}`,
-        threadId: threadId || messageId
-      }
+        threadId: threadId || messageId,
+      },
     });
 
-    return Response.json({ 
-      success: true, 
-      message: 'New message notification sent successfully' 
+    return Response.json({
+      success: true,
+      message: 'New message notification sent successfully',
     });
-
   } catch (error) {
     console.error('Error sending new message notification:', error);
-    return Response.json(
-      { error: 'Failed to send new message notification' }, 
-      { status: 500 }
-    );
+    return Response.json({ error: 'Failed to send new message notification' }, { status: 500 });
   }
 }

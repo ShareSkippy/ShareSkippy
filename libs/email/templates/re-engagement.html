@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -6,60 +6,86 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- Preheader (hidden in most clients) -->
     <style>
-      .preheader { display:none !important; visibility:hidden; opacity:0; color:transparent; height:0; width:0; overflow:hidden; mso-hide:all; }
-      a { color: #7c3aed; }
+      .preheader {
+        display: none !important;
+        visibility: hidden;
+        opacity: 0;
+        color: transparent;
+        height: 0;
+        width: 0;
+        overflow: hidden;
+        mso-hide: all;
+      }
+      a {
+        color: #7c3aed;
+      }
     </style>
   </head>
-  <body style="margin:0; padding:0; background-color:#f9fafb;">
-    <div class="preheader">
-      Quick nudge: share your availability to start meeting nearby pals.
-    </div>
+  <body style="margin: 0; padding: 0; background-color: #f9fafb">
+    <div class="preheader">Quick nudge: share your availability to start meeting nearby pals.</div>
 
-    <div style="font-family: Arial, sans-serif; max-width:600px; margin:0 auto; padding:20px;">
-      <div style="background:#ffffff; border-radius:12px; padding:24px; border:1px solid #eee;">
-        <h1 style="color:#7c3aed; margin:0 0 12px;">We miss you, {{userName}}! 🐾</h1>
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px">
+      <div style="background: #ffffff; border-radius: 12px; padding: 24px; border: 1px solid #eee">
+        <h1 style="color: #7c3aed; margin: 0 0 12px">We miss you, {{userName}}! 🐾</h1>
 
-        <p style="margin:0 0 12px; color:#1f2937;">
-          It's been a bit since you joined ShareSkippy. The neighborhood has been wagging along without you, but it's not the same.
+        <p style="margin: 0 0 12px; color: #1f2937">
+          It's been a bit since you joined ShareSkippy. The neighborhood has been wagging along
+          without you, but it's not the same.
         </p>
 
-        <p style="margin:16px 0 8px; color:#1f2937;">Here's what's new nearby:</p>
-        <ul style="margin:0 0 16px 18px; padding:0; color:#374151;">
+        <p style="margin: 16px 0 8px; color: #1f2937">Here's what's new nearby:</p>
+        <ul style="margin: 0 0 16px 18px; padding: 0; color: #374151">
           <li>🐕 More pups and pals have joined</li>
           <li>📅 Fresh playtime availability each week</li>
           <li>💬 Neighbors are looking to connect</li>
         </ul>
 
-        <p style="margin:16px 0; color:#1f2937;">
-          Want to jump back in? The easiest way is to <strong>share your availability</strong> so neighbors know when you're available. That's how the real magic (and tail wags) start.
+        <p style="margin: 16px 0; color: #1f2937">
+          Want to jump back in? The easiest way is to <strong>share your availability</strong> so
+          neighbors know when you're available. That's how the real magic (and tail wags) start.
         </p>
 
-        <div style="text-align:center; margin:28px 0;">
-          <a href="{{appUrl}}/share-availability"
-             style="background-color:#7c3aed; color:#ffffff !important; padding:14px 28px; text-decoration:none; border-radius:8px; display:inline-block; font-size:16px; font-weight:600;">
+        <div style="text-align: center; margin: 28px 0">
+          <a
+            href="{{appUrl}}/share-availability"
+            style="
+              background-color: #7c3aed;
+              color: #ffffff !important;
+              padding: 14px 28px;
+              text-decoration: none;
+              border-radius: 8px;
+              display: inline-block;
+              font-size: 16px;
+              font-weight: 600;
+            "
+          >
             Share Availability Now
           </a>
         </div>
 
         <!-- Light, fun closing (not cheesy) -->
-        <p style="margin:0; color:#1f2937;">
+        <p style="margin: 0; color: #1f2937">
           No barking — just a friendly tail wag. See you back in the pack soon!
         </p>
 
-        <p style="margin:24px 0 0; font-size:14px; color:#6b7280;">— The ShareSkippy Team</p>
+        <p style="margin: 24px 0 0; font-size: 14px; color: #6b7280">— The ShareSkippy Team</p>
       </div>
 
       <!-- Footer (compliance & deliverability) -->
-      <div style="text-align:center; color:#6b7280; font-size:12px; margin:16px 0;">
-        <p style="margin:8px 0;">
-          ShareSkippy · San Francisco, CA · United States
-        </p>
-        <p style="margin:8px 0;">
-          <a href="{{appUrl}}/community" style="color:#7c3aed; text-decoration:none;">Community</a>
+      <div style="text-align: center; color: #6b7280; font-size: 12px; margin: 16px 0">
+        <p style="margin: 8px 0">ShareSkippy · San Francisco, CA · United States</p>
+        <p style="margin: 8px 0">
+          <a href="{{appUrl}}/community" style="color: #7c3aed; text-decoration: none">Community</a>
           &nbsp;•&nbsp;
-          <a href="{{appUrl}}/share-availability" style="color:#7c3aed; text-decoration:none;">Share availability</a>
+          <a href="{{appUrl}}/share-availability" style="color: #7c3aed; text-decoration: none"
+            >Share availability</a
+          >
           &nbsp;•&nbsp;
-          <a href="{{appUrl}}/unsubscribe?email={{userEmail}}" style="color:#7c3aed; text-decoration:none;">Unsubscribe</a>
+          <a
+            href="{{appUrl}}/unsubscribe?email={{userEmail}}"
+            style="color: #7c3aed; text-decoration: none"
+            >Unsubscribe</a
+          >
         </p>
       </div>
     </div>

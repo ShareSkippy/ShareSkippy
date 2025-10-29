@@ -1,4 +1,4 @@
-import Stripe from "stripe";
+import Stripe from 'stripe';
 
 // This is used to create a Stripe Checkout for one-time payments. It's usually triggered with the <ButtonCheckout /> component. Webhooks are used to update the user's state in the database.
 export const createCheckout = async ({
@@ -17,11 +17,11 @@ export const createCheckout = async ({
   if (user?.customerId) {
     extraParams.customer = user.customerId;
   } else {
-    if (mode === "payment") {
-      extraParams.customer_creation = "always";
+    if (mode === 'payment') {
+      extraParams.customer_creation = 'always';
       // The option below costs 0.4% (up to $2) per invoice. Alternatively, you can use https://zenvoice.io/ to create unlimited invoices automatically.
       // extraParams.invoice_creation = { enabled: true };
-      extraParams.payment_intent_data = { setup_future_usage: "on_session" };
+      extraParams.payment_intent_data = { setup_future_usage: 'on_session' };
     }
     if (user?.email) {
       extraParams.customer_email = user.email;
@@ -77,7 +77,7 @@ export const findCheckoutSession = async (sessionId) => {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
     const session = await stripe.checkout.sessions.retrieve(sessionId, {
-      expand: ["line_items"],
+      expand: ['line_items'],
     });
 
     return session;

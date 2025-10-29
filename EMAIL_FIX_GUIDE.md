@@ -1,14 +1,17 @@
 # 🚨 EMAIL SYSTEM FIX GUIDE
 
 ## Current Status
+
 The email system is **partially working** but has critical issues that need to be resolved:
 
 ### ✅ What's Working
+
 - Email endpoints are responding
 - Email templates are bundled with application
 - Frontend is using correct API routes
 
 ### ❌ What's Not Working
+
 - Emails are not being sent in production
 - Likely missing environment variables or database migration
 
@@ -25,6 +28,7 @@ NEXT_PUBLIC_APP_URL=https://www.shareskippy.com
 ```
 
 **To check/set these:**
+
 1. Go to [Vercel Dashboard](https://vercel.com/dashboard)
 2. Select your ShareSkippy project
 3. Go to Settings → Environment Variables
@@ -36,8 +40,9 @@ NEXT_PUBLIC_APP_URL=https://www.shareskippy.com
 The email system requires these database tables that may not exist:
 
 **Required Tables:**
+
 - `email_events` - Tracks email sending
-- `email_catalog` - Email type definitions  
+- `email_catalog` - Email type definitions
 - `scheduled_emails` - Queue for delayed emails
 - `user_activity` - User action tracking
 
@@ -65,6 +70,7 @@ After applying the fixes above, test the email system:
 ## 🔍 DEBUGGING STEPS
 
 ### Check Environment Variables
+
 ```bash
 # Test if environment variables are accessible
 curl -X POST https://www.shareskippy.com/api/emails/send-new-message \
@@ -73,14 +79,17 @@ curl -X POST https://www.shareskippy.com/api/emails/send-new-message \
 ```
 
 ### Check Database Tables
+
 In your Supabase dashboard, run:
+
 ```sql
-SELECT table_name FROM information_schema.tables 
-WHERE table_schema = 'public' 
+SELECT table_name FROM information_schema.tables
+WHERE table_schema = 'public'
 AND table_name IN ('email_events', 'email_catalog', 'scheduled_emails');
 ```
 
 ### Check Vercel Logs
+
 1. Go to Vercel dashboard
 2. Select your project
 3. Go to Functions tab

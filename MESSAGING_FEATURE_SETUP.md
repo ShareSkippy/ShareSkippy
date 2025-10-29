@@ -59,12 +59,14 @@ CREATE POLICY "Users can update conversations they participate in" ON conversati
 A reusable modal component for sending messages to availability post owners.
 
 **Props:**
+
 - `isOpen` - Boolean to control modal visibility
 - `onClose` - Function to close the modal
 - `recipient` - User object of the message recipient
 - `availabilityPost` - Availability post object for context
 
 **Features:**
+
 - Auto-generates subject line based on availability post
 - Shows recipient information and post context
 - Form validation and error handling
@@ -73,6 +75,7 @@ A reusable modal component for sending messages to availability post owners.
 ### Community Page Updates
 
 The community page now includes:
+
 - "Send Message" buttons next to "View Details" buttons
 - Message modal integration
 - Proper user authentication checks (users can't message themselves)
@@ -80,6 +83,7 @@ The community page now includes:
 ### Messages Page
 
 A comprehensive messaging interface at `/messages` featuring:
+
 - Conversations sidebar showing all user conversations
 - Message thread view with real-time updates
 - Message composition and sending
@@ -133,22 +137,26 @@ A comprehensive messaging interface at `/messages` featuring:
 ## API Endpoints
 
 ### POST /api/messages
+
 Send a new message
 
 **Body:**
+
 ```json
 {
   "recipient_id": "uuid",
-  "availability_id": "uuid", 
+  "availability_id": "uuid",
   "subject": "string",
   "content": "string"
 }
 ```
 
 ### GET /api/messages?conversation_id=uuid
+
 Fetch messages for a specific conversation
 
 **Response:**
+
 ```json
 {
   "messages": [

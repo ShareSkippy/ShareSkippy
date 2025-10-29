@@ -23,5 +23,3 @@ These appear to be custom Node scripts rather than a formal runner (e.g., Jest/P
 ## Manual QA note
 
 - No new fixtures or flows proposed. Any addition should strictly exercise existing routes and UI paths.
-
-

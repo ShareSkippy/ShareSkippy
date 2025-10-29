@@ -1,5 +1,5 @@
-import Link from "next/link";
-import ButtonSupport from "@/components/ButtonSupport";
+import Link from 'next/link';
+import ButtonSupport from '@/components/ButtonSupport';
 
 // Simple 404 page with a button to go home and a button to contact support
 // Show a cute SVG with your primary color
@@ -95,9 +95,7 @@ export default function Custom404() {
           />
         </svg>
       </div>
-      <p className="text-lg md:text-xl font-semibold">
-        This page doesn&apos;t exist 😅
-      </p>
+      <p className="text-lg md:text-xl font-semibold">This page doesn&apos;t exist 😅</p>
 
       <div className="flex flex-wrap gap-4 justify-center">
         <Link href="/" className="btn btn-sm">

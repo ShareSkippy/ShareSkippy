@@ -5,12 +5,14 @@
 This Dependabot configuration is **ULTRA-CONSERVATIVE** and designed to prevent breaking changes.
 
 ### ✅ What WILL Happen:
+
 - Security patches will be automatically suggested (e.g., `1.2.3` → `1.2.4`)
 - Minor updates will be suggested (e.g., `1.2.0` → `1.3.0`)
 - Grouped patch updates to reduce PR noise
 - Maximum 10 npm PRs + 3 GitHub Actions PRs at a time
 
 ### ❌ What WILL NOT Happen:
+
 **NO major version updates will be suggested for these critical packages:**
 
 1. **react** (stays at 18.x) - React 19 blocked
@@ -29,26 +31,29 @@ This Dependabot configuration is **ULTRA-CONSERVATIVE** and designed to prevent 
 
 ```json
 {
-  "react": "18.2.0",           // ✅ Protected from 19.x
-  "next": "14.1.4",            // ✅ Protected from 15.x/16.x
-  "tailwindcss": "3.4.3",      // ✅ Protected from 4.x
-  "eslint": "8.47.0",          // ✅ Protected from 9.x
-  "daisyui": "4.10.1",         // ✅ Protected from 5.x
-  "nodemailer": "6.9.13",      // ✅ Protected from 7.x
-  "@supabase/ssr": "0.4.0",    // ✅ Protected from 1.x
-  "@supabase/supabase-js": "2.45.0"  // ✅ Protected from 3.x
+  "react": "18.2.0", // ✅ Protected from 19.x
+  "next": "14.1.4", // ✅ Protected from 15.x/16.x
+  "tailwindcss": "3.4.3", // ✅ Protected from 4.x
+  "eslint": "8.47.0", // ✅ Protected from 9.x
+  "daisyui": "4.10.1", // ✅ Protected from 5.x
+  "nodemailer": "6.9.13", // ✅ Protected from 7.x
+  "@supabase/ssr": "0.4.0", // ✅ Protected from 1.x
+  "@supabase/supabase-js": "2.45.0" // ✅ Protected from 3.x
 }
 ```
 
 ## 🎯 For Your Interns
 
 ### Safe Updates (Auto-suggested by Dependabot)
+
 **Interns CAN review and approve these:**
+
 - ✅ Patch updates (1.2.3 → 1.2.4)
 - ✅ Minor updates for utilities (axios, react-tooltip, etc.)
 - ✅ Security patches for any package
 
 **Process:**
+
 1. Dependabot creates PR
 2. Check if it's "patch" or "minor" update
 3. Test locally: `git checkout <branch>`, `npm install`, `npm run dev`
@@ -56,13 +61,16 @@ This Dependabot configuration is **ULTRA-CONSERVATIVE** and designed to prevent 
 5. If it breaks, report to lead
 
 ### Dangerous Updates (BLOCKED)
+
 **These will NEVER be auto-suggested:**
+
 - ❌ React 18 → 19
 - ❌ Tailwind 3 → 4
 - ❌ Next.js 14 → 15
 - ❌ Any major version bump for core packages
 
 **If you need a major update:**
+
 - Must be manually initiated by project lead
 - Requires full testing plan
 - Needs migration guide review
@@ -70,13 +78,16 @@ This Dependabot configuration is **ULTRA-CONSERVATIVE** and designed to prevent 
 ## 🔍 How to Verify It's Working
 
 After merging, Dependabot will:
+
 1. Run every Monday at 9 AM
 2. Check for updates
 3. **Skip** all major version updates (due to ignore rules)
 4. Only create PRs for safe updates
 
 ### Testing the Config
+
 You can test if a package is blocked:
+
 ```bash
 # This should NOT create a PR for React 19 (it's blocked)
 # This SHOULD create PRs for patch/minor updates only
@@ -85,10 +96,12 @@ You can test if a package is blocked:
 ## 📊 What To Expect
 
 **First Week:**
+
 - Dependabot may create several PRs for accumulated patch/minor updates
 - These are safe to review and merge after testing
 
 **Ongoing:**
+
 - ~2-5 PRs per week for minor updates
 - Occasional security patches (important to merge quickly)
 - ZERO breaking changes
@@ -96,6 +109,7 @@ You can test if a package is blocked:
 ## 🚨 If Something Goes Wrong
 
 **If Dependabot suggests React 19, Tailwind 4, or other blocked packages:**
+
 1. **STOP** - The config isn't working
 2. Check the `.github/dependabot.yml` file
 3. Verify the `ignore` rules are present
@@ -104,6 +118,7 @@ You can test if a package is blocked:
 ## 📅 Manual Update Strategy
 
 **For Major Versions (When YOU Decide):**
+
 1. Create a dedicated branch
 2. Update one major package at a time
 3. Follow migration guides
@@ -111,6 +126,7 @@ You can test if a package is blocked:
 5. Only then merge to main
 
 **Recommended Schedule:**
+
 - Security patches: Immediate (Dependabot handles)
 - Minor updates: Weekly review (Dependabot handles)
 - Major updates: Quarterly or annually (Manual process)
@@ -118,6 +134,7 @@ You can test if a package is blocked:
 ## ✅ Final Safety Checklist
 
 Before this config was added:
+
 - [x] Verified syntax is correct
 - [x] All critical packages are in ignore list
 - [x] Patch updates are grouped to reduce noise
@@ -137,4 +154,3 @@ Before this config was added:
 
 **Last Updated:** October 20, 2025  
 **Config Status:** ✅ Active and protecting against breaking changes
-

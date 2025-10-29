@@ -16,11 +16,13 @@ export async function GET(request) {
     // Build query
     let query = supabase
       .from('email_events')
-      .select(`
+      .select(
+        `
         id, user_id, email_type, status, external_message_id, error,
         to_email, subject, payload, created_at,
         profiles!inner(first_name, last_name, email)
-      `)
+      `
+      )
       .order('created_at', { ascending: false });
 
     // Apply filters
@@ -46,9 +48,7 @@ export async function GET(request) {
     }
 
     // Get total count for pagination
-    let countQuery = supabase
-      .from('email_events')
-      .select('id', { count: 'exact', head: true });
+    let countQuery = supabase.from('email_events').select('id', { count: 'exact', head: true });
 
     if (emailType) {
       countQuery = countQuery.eq('email_type', emailType);
@@ -73,15 +73,11 @@ export async function GET(request) {
         page,
         limit,
         total: count || 0,
-        pages: Math.ceil((count || 0) / limit)
-      }
+        pages: Math.ceil((count || 0) / limit),
+      },
     });
-
   } catch (error) {
     console.error('Error fetching email events:', error);
-    return Response.json(
-      { error: 'Failed to fetch email events' }, 
-      { status: 500 }
-    );
+    return Response.json({ error: 'Failed to fetch email events' }, { status: 500 });
   }
 }

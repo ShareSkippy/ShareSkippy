@@ -26,7 +26,7 @@ export async function POST(request) {
     await recordUserActivity({
       userId,
       event: 'login',
-      metadata: { source: 'welcome_email_trigger' }
+      metadata: { source: 'welcome_email_trigger' },
     });
 
     // Send welcome email (idempotent)
@@ -36,23 +36,19 @@ export async function POST(request) {
       emailType: 'welcome',
       payload: {
         userName: user.first_name || '',
-        appUrl: process.env.NEXT_PUBLIC_APP_URL || 'https://shareskippy.com'
-      }
+        appUrl: process.env.NEXT_PUBLIC_APP_URL || 'https://shareskippy.com',
+      },
     });
 
     // Schedule nurture email for 3 days later
     await scheduleNurtureEmail(userId);
 
-    return Response.json({ 
-      success: true, 
-      message: 'Welcome email sent and nurture email scheduled' 
+    return Response.json({
+      success: true,
+      message: 'Welcome email sent and nurture email scheduled',
     });
-
   } catch (error) {
     console.error('Error sending welcome email:', error);
-    return Response.json(
-      { error: 'Failed to send welcome email' }, 
-      { status: 500 }
-    );
+    return Response.json({ error: 'Failed to send welcome email' }, { status: 500 });
   }
 }

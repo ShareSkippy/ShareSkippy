@@ -1,9 +1,9 @@
-import config from "@/config";
-import { getSEOTags } from "@/libs/seo";
+import config from '@/config';
+import { getSEOTags } from '@/libs/seo';
 
 export const metadata = getSEOTags({
   title: `Sign-in to ${config.appName}`,
-  canonicalUrlRelative: "/auth/signin",
+  canonicalUrlRelative: '/auth/signin',
 });
 
 export default function Layout({ children }) {

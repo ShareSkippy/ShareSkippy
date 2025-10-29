@@ -1,14 +1,17 @@
 # Location Capitalization Implementation
 
 ## Overview
+
 This implementation adds proper capitalization for location fields (neighborhood, city, state) throughout the application to ensure consistent and professional display of location information.
 
 ## What Was Implemented
 
 ### 1. Utility Functions (`libs/utils.js`)
+
 Created a comprehensive utility module with two main functions:
 
 #### `capitalizeLocation(text)`
+
 - Properly capitalizes location text
 - Handles state abbreviations (e.g., "ca" → "CA")
 - Capitalizes multi-word locations (e.g., "gourmet ghetto" → "Gourmet Ghetto")
@@ -16,21 +19,25 @@ Created a comprehensive utility module with two main functions:
 - Supports all US state abbreviations
 
 #### `formatLocation(location)`
+
 - Formats a complete location object with proper capitalization
 - Takes an object with `neighborhood`, `city`, and `state` properties
 - Returns a new object with all location fields properly capitalized
 
 ### 2. Updated Profile Display (`app/profile/page.js`)
+
 - Added import for `formatLocation` utility
 - Updated location display to use proper capitalization
 - Now shows: "📍 Gourmet Ghetto, Berkeley, CA" instead of "📍 gourmet ghetto, berkeley, ca"
 
 ### 3. Updated Profile Edit (`app/profile/edit/page.js`)
+
 - Added import for `formatLocation` utility
 - Updated address verification to capitalize location data before saving
 - Updated profile saving to ensure all location data is properly capitalized before database storage
 
 ### 4. Updated Share Availability (`app/share-availability/page.js`)
+
 - Added import for `formatLocation` utility
 - Updated profile location display to show properly capitalized location
 - Updated custom location neighborhood display
@@ -40,6 +47,7 @@ Created a comprehensive utility module with two main functions:
 ## Examples of Capitalization
 
 ### Before Implementation:
+
 ```
 Neighborhood: gourmet ghetto
 City: berkeley
@@ -47,6 +55,7 @@ State: ca
 ```
 
 ### After Implementation:
+
 ```
 Neighborhood: Gourmet Ghetto
 City: Berkeley

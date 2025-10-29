@@ -20,7 +20,7 @@ Ultimately, you should end up with one deliverable: a detailed restatement of th
 
 ## Process
 
-In the interest of speed and time, you should *skip or shorten any steps* in this process that you feel are unnecessary due to the project being small, simple, clear, and/or easy to understand. Or, vice versa, you should spend *extra time on any steps* that you feel deserve more attention.
+In the interest of speed and time, you should _skip or shorten any steps_ in this process that you feel are unnecessary due to the project being small, simple, clear, and/or easy to understand. Or, vice versa, you should spend _extra time on any steps_ that you feel deserve more attention.
 
 1. **Restate the task immediately.**
    In your own words, summarize what the user has asked for. Keep it concise but include all core details. Write this down for yourself.

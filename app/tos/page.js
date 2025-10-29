@@ -1,7 +1,7 @@
-import Link from "next/link";
-import { getSEOTags } from "@/libs/seo";
-import config from "@/config";
-import { LEGAL } from "@/lib/legal";
+import Link from 'next/link';
+import { getSEOTags } from '@/libs/seo';
+import config from '@/config';
+import { LEGAL } from '@/lib/legal';
 
 // CHATGPT PROMPT TO GENERATE YOUR TERMS & SERVICES — replace with your own data 👇
 
@@ -28,7 +28,7 @@ import { LEGAL } from "@/lib/legal";
 
 export const metadata = getSEOTags({
   title: `Terms and Conditions | ${config.appName}`,
-  canonicalUrlRelative: "/tos",
+  canonicalUrlRelative: '/tos',
 });
 
 const TOS = () => {
@@ -50,14 +50,9 @@ const TOS = () => {
           </svg>
           Back
         </Link>
-        <h1 className="text-3xl font-extrabold pb-6">
-          Terms and Conditions for {config.appName}
-        </h1>
+        <h1 className="text-3xl font-extrabold pb-6">Terms and Conditions for {config.appName}</h1>
 
-        <pre
-          className="leading-relaxed whitespace-pre-wrap"
-          style={{ fontFamily: "sans-serif" }}
-        >
+        <pre className="leading-relaxed whitespace-pre-wrap" style={{ fontFamily: 'sans-serif' }}>
           {`Last Updated: September 26, 2025 (v2)
 
 Welcome to ShareSkippy!

@@ -9,7 +9,10 @@ const contactSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
   category: z.enum(['general', 'bug', 'safety', 'feature', 'account', 'other']),
   subject: z.string().min(3, 'Subject must be at least 3 characters'),
-  message: z.string().min(5, 'Message must be at least 5 characters').max(2000, 'Message must be less than 2000 characters'),
+  message: z
+    .string()
+    .min(5, 'Message must be at least 5 characters')
+    .max(2000, 'Message must be less than 2000 characters'),
   hp: z.string().optional(), // Honeypot field
 });
 
@@ -17,13 +20,13 @@ export async function sendContact(formData: FormData) {
   try {
     // Convert FormData to object
     const data = Object.fromEntries(formData) as Record<string, string>;
-    
+
     // Validate with Zod
     const parsed = contactSchema.safeParse(data);
     if (!parsed.success) {
-      return { 
-        ok: false, 
-        errors: parsed.error.flatten().fieldErrors 
+      return {
+        ok: false,
+        errors: parsed.error.flatten().fieldErrors,
       };
     }
 
@@ -34,24 +37,22 @@ export async function sendContact(formData: FormData) {
 
     // Rate limiting
     const headersList = await headers();
-    const ip = headersList.get('x-forwarded-for') ?? 
-               headersList.get('x-real-ip') ?? 
-               'unknown';
-    
+    const ip = headersList.get('x-forwarded-for') ?? headersList.get('x-real-ip') ?? 'unknown';
+
     const rateLimitOk = await rateLimit(ip, 'contact:submit', 5, 600); // 5 submissions per 10 minutes
     if (!rateLimitOk) {
-      return { 
-        ok: false, 
-        errors: { 
-          _: ['Too many requests. Please try again later.'] 
-        } 
+      return {
+        ok: false,
+        errors: {
+          _: ['Too many requests. Please try again later.'],
+        },
       };
     }
 
     // Send email to support
     try {
       const { sendEmail } = await import('@/libs/resend');
-      
+
       const emailSubject = `[${parsed.data.category.toUpperCase()}] ${parsed.data.subject}`;
       const emailHtml = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -78,7 +79,7 @@ export async function sendContact(formData: FormData) {
           </div>
         </div>
       `;
-      
+
       const emailText = `
 New Contact Form Submission
 
@@ -111,27 +112,28 @@ This message was sent from the ShareSkippy contact form.
         category: parsed.data.category,
         subject: parsed.data.subject,
         timestamp: new Date().toISOString(),
-        ip: ip
+        ip: ip,
       });
 
       return { ok: true };
     } catch (emailError) {
       console.error('Error sending contact email:', emailError);
-      return { 
-        ok: false, 
-        errors: { 
-          _: ['Failed to send message. Please try again or contact support directly at support@shareskippy.com.'] 
-        } 
+      return {
+        ok: false,
+        errors: {
+          _: [
+            'Failed to send message. Please try again or contact support directly at support@shareskippy.com.',
+          ],
+        },
       };
     }
-
   } catch (error) {
     console.error('Error processing contact form:', error);
-    return { 
-      ok: false, 
-      errors: { 
-        _: ['An unexpected error occurred. Please try again.'] 
-      } 
+    return {
+      ok: false,
+      errors: {
+        _: ['An unexpected error occurred. Please try again.'],
+      },
     };
   }
 }

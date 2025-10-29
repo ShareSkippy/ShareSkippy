@@ -3,10 +3,11 @@ import { createClient } from '@/libs/supabase/server';
 export async function GET(request, { params }) {
   try {
     const supabase = createClient();
-    
+
     const { data, error } = await supabase
       .from('availability')
-      .select(`
+      .select(
+        `
         *,
         owner:profiles!availability_owner_id_fkey (
           id,
@@ -50,7 +51,8 @@ export async function GET(request, { params }) {
           activities,
           description
         )
-      `)
+      `
+      )
       .eq('id', params.id)
       .eq('status', 'active')
       .single();
@@ -65,7 +67,6 @@ export async function GET(request, { params }) {
     }
 
     return Response.json({ data });
-
   } catch (error) {
     console.error('API error:', error);
     return Response.json({ error: 'Internal server error' }, { status: 500 });

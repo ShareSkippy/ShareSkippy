@@ -19,17 +19,15 @@ export class EmailAnalytics {
    */
   async trackEmailSent({ emailType, userId, trigger, emailId, recipientEmail }) {
     try {
-      const { error } = await this.supabase
-        .from('email_events')
-        .insert({
-          email_type: emailType,
-          user_id: userId,
-          trigger: trigger,
-          email_id: emailId,
-          recipient_email: recipientEmail,
-          event_type: 'sent',
-          timestamp: new Date().toISOString()
-        });
+      const { error } = await this.supabase.from('email_events').insert({
+        email_type: emailType,
+        user_id: userId,
+        trigger: trigger,
+        email_id: emailId,
+        recipient_email: recipientEmail,
+        event_type: 'sent',
+        timestamp: new Date().toISOString(),
+      });
 
       if (error) {
         console.error('Error tracking email sent:', error);
@@ -45,13 +43,11 @@ export class EmailAnalytics {
    */
   async trackEmailOpened(emailId) {
     try {
-      const { error } = await this.supabase
-        .from('email_events')
-        .insert({
-          email_id: emailId,
-          event_type: 'opened',
-          timestamp: new Date().toISOString()
-        });
+      const { error } = await this.supabase.from('email_events').insert({
+        email_id: emailId,
+        event_type: 'opened',
+        timestamp: new Date().toISOString(),
+      });
 
       if (error) {
         console.error('Error tracking email opened:', error);
@@ -68,14 +64,12 @@ export class EmailAnalytics {
    */
   async trackEmailClicked(emailId, linkUrl) {
     try {
-      const { error } = await this.supabase
-        .from('email_events')
-        .insert({
-          email_id: emailId,
-          event_type: 'clicked',
-          link_url: linkUrl,
-          timestamp: new Date().toISOString()
-        });
+      const { error } = await this.supabase.from('email_events').insert({
+        email_id: emailId,
+        event_type: 'clicked',
+        link_url: linkUrl,
+        timestamp: new Date().toISOString(),
+      });
 
       if (error) {
         console.error('Error tracking email clicked:', error);
@@ -93,15 +87,13 @@ export class EmailAnalytics {
    */
   async trackEmailBounced(emailId, bounceType, reason) {
     try {
-      const { error } = await this.supabase
-        .from('email_events')
-        .insert({
-          email_id: emailId,
-          event_type: 'bounced',
-          bounce_type: bounceType,
-          bounce_reason: reason,
-          timestamp: new Date().toISOString()
-        });
+      const { error } = await this.supabase.from('email_events').insert({
+        email_id: emailId,
+        event_type: 'bounced',
+        bounce_type: bounceType,
+        bounce_reason: reason,
+        timestamp: new Date().toISOString(),
+      });
 
       if (error) {
         console.error('Error tracking email bounced:', error);
@@ -117,13 +109,11 @@ export class EmailAnalytics {
    */
   async trackEmailComplained(emailId) {
     try {
-      const { error } = await this.supabase
-        .from('email_events')
-        .insert({
-          email_id: emailId,
-          event_type: 'complained',
-          timestamp: new Date().toISOString()
-        });
+      const { error } = await this.supabase.from('email_events').insert({
+        email_id: emailId,
+        event_type: 'complained',
+        timestamp: new Date().toISOString(),
+      });
 
       if (error) {
         console.error('Error tracking email complained:', error);
@@ -160,15 +150,15 @@ export class EmailAnalytics {
 
       // Calculate metrics
       const metrics = {
-        totalSent: data.filter(e => e.event_type === 'sent').length,
-        totalOpened: data.filter(e => e.event_type === 'opened').length,
-        totalClicked: data.filter(e => e.event_type === 'clicked').length,
-        totalBounced: data.filter(e => e.event_type === 'bounced').length,
-        totalComplained: data.filter(e => e.event_type === 'complained').length,
+        totalSent: data.filter((e) => e.event_type === 'sent').length,
+        totalOpened: data.filter((e) => e.event_type === 'opened').length,
+        totalClicked: data.filter((e) => e.event_type === 'clicked').length,
+        totalBounced: data.filter((e) => e.event_type === 'bounced').length,
+        totalComplained: data.filter((e) => e.event_type === 'complained').length,
         openRate: 0,
         clickRate: 0,
         bounceRate: 0,
-        complaintRate: 0
+        complaintRate: 0,
       };
 
       if (metrics.totalSent > 0) {

@@ -4,15 +4,21 @@ import { NextResponse } from 'next/server';
 export async function GET(request) {
   try {
     const supabase = createClient();
-    
+
     // Get current user
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
     if (userError || !user) {
-      return NextResponse.json({ 
-        error: 'Authentication required', 
-        details: userError 
-      }, { status: 401 });
+      return NextResponse.json(
+        {
+          error: 'Authentication required',
+          details: userError,
+        },
+        { status: 401 }
+      );
     }
 
     // Get URL parameters for filtering
@@ -25,7 +31,8 @@ export async function GET(request) {
     // Build query with optimized select
     let query = supabase
       .from('local_places')
-      .select(`
+      .select(
+        `
         id,
         name,
         type,
@@ -39,7 +46,8 @@ export async function GET(request) {
           first_name,
           last_name
         )
-      `)
+      `
+      )
       .order('rating', { ascending: false })
       .range(offset, offset + limit - 1);
 
@@ -47,7 +55,7 @@ export async function GET(request) {
     if (placeType) {
       query = query.eq('type', placeType);
     }
-    
+
     if (dogFriendly !== null) {
       query = query.eq('dog_friendly', dogFriendly === 'true');
     }
@@ -56,44 +64,58 @@ export async function GET(request) {
 
     if (error) {
       console.error('Error fetching places:', error);
-      return NextResponse.json({ 
-        error: 'Failed to fetch places', 
-        details: error.message 
-      }, { status: 500 });
+      return NextResponse.json(
+        {
+          error: 'Failed to fetch places',
+          details: error.message,
+        },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json(places || []);
-    
   } catch (error) {
     console.error('Places API error:', error);
-    return NextResponse.json({ 
-      error: 'Internal server error', 
-      details: error.message 
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: 'Internal server error',
+        details: error.message,
+      },
+      { status: 500 }
+    );
   }
 }
 
 export async function POST(request) {
   try {
     const supabase = createClient();
-    
+
     // Get current user
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
     if (userError || !user) {
-      return NextResponse.json({ 
-        error: 'Authentication required', 
-        details: userError 
-      }, { status: 401 });
+      return NextResponse.json(
+        {
+          error: 'Authentication required',
+          details: userError,
+        },
+        { status: 401 }
+      );
     }
 
     const body = await request.json();
-    
+
     // Validate required fields
     if (!body.name || !body.address || !body.type) {
-      return NextResponse.json({ 
-        error: 'Missing required fields: name, address, type' 
-      }, { status: 400 });
+      return NextResponse.json(
+        {
+          error: 'Missing required fields: name, address, type',
+        },
+        { status: 400 }
+      );
     }
 
     // Create place
@@ -108,26 +130,31 @@ export async function POST(request) {
         photo_url: body.photo_url,
         latitude: body.latitude,
         longitude: body.longitude,
-        created_by: user.id
+        created_by: user.id,
       })
       .select()
       .single();
 
     if (error) {
       console.error('Error creating place:', error);
-      return NextResponse.json({ 
-        error: 'Failed to create place', 
-        details: error.message 
-      }, { status: 500 });
+      return NextResponse.json(
+        {
+          error: 'Failed to create place',
+          details: error.message,
+        },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json(place);
-    
   } catch (error) {
     console.error('Create place API error:', error);
-    return NextResponse.json({ 
-      error: 'Internal server error', 
-      details: error.message 
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: 'Internal server error',
+        details: error.message,
+      },
+      { status: 500 }
+    );
   }
 }
