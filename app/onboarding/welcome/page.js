@@ -63,7 +63,7 @@ export default function WelcomePage() {
     fetchMatches();
   }, [router, user, fetchCurrentProfile, fetchMatches]);
 
-  const sendInterest = async (matchUserId, matchName) => {
+  const sendInterest = async (matchUserId) => {
     setSending((prev) => ({ ...prev, [matchUserId]: true }));
 
     try {
