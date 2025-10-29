@@ -11,7 +11,10 @@
     "build": "next build",
     "postbuild": "next-sitemap",
     "start": "next start",
-    "lint": "next eslint .",
+    "lint:js": "eslint .",
+    "lint:css": "stylelint \"**/*.css\" --ignore-path .gitignore",
+    "lint": "npm run lint:js && npm run lint:css",
+    "lint:fix": "npm run lint:js --fix && npm run lint:css --fix",
     "typecheck": "echo 'Typecheck configured in Task 2'",
     "test": "echo 'Tests run in Task 9'",
     "analyze": "ANALYZE=true next build"
