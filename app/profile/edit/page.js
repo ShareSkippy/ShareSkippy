@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/libs/supabase/client';
 import { useUser } from '@/libs/supabase/hooks';
@@ -48,25 +48,7 @@ export default function ProfileEditPage() {
   const { profile, setProfile, loadDraft, clearDraft, hasDraft, draftSource } =
     useProfileDraft(initialProfile);
 
-  useEffect(() => {
-    if (userLoading) return;
-
-    if (!user) {
-      router.push('/signin');
-      return;
-    }
-
-    // Try to load draft first, then load profile
-    const draft = loadDraft();
-    if (draft) {
-      console.log('📂 Restoring profile draft from sessionStorage');
-      setLoading(false);
-    } else {
-      loadProfile();
-    }
-  }, [user, userLoading, router, loadDraft]);
-
-  const loadProfile = async () => {
+  const loadProfile = useCallback(async () => {
     try {
       const supabase = createClient();
 
@@ -165,7 +147,25 @@ export default function ProfileEditPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user, setProfile, setLoading]);
+
+  useEffect(() => {
+    if (userLoading) return;
+
+    if (!user) {
+      router.push('/signin');
+      return;
+    }
+
+    // Try to load draft first, then load profile
+    const draft = loadDraft();
+    if (draft) {
+      console.log('📂 Restoring profile draft from sessionStorage');
+      setLoading(false);
+    } else {
+      loadProfile();
+    }
+  }, [user, userLoading, router, loadDraft, loadProfile]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -285,14 +285,14 @@ export default function ProfileEditPage() {
     }));
   };
 
-  const handleSupportPreferenceChange = (preference) => {
-    setProfile((prev) => ({
-      ...prev,
-      support_preferences: prev.support_preferences.includes(preference)
-        ? prev.support_preferences.filter((p) => p !== preference)
-        : [...prev.support_preferences, preference],
-    }));
-  };
+  // const handleSupportPreferenceChange = (preference) => {
+  //   setProfile((prev) => ({
+  //     ...prev,
+  //     support_preferences: prev.support_preferences.includes(preference)
+  //       ? prev.support_preferences.filter((p) => p !== preference)
+  //       : [...prev.support_preferences, preference],
+  //   }));
+  // };
 
   const handlePhotoUpload = (photoUrl) => {
     setProfile((prev) => ({
