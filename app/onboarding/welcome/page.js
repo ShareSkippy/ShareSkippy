@@ -33,7 +33,7 @@ export default function WelcomePage() {
     } catch (error) {
       console.error('Error fetching current profile:', error);
     }
-  }, [user, setCurrentProfile]), [user]);
+  }, [user, setCurrentProfile]);
 
   const fetchMatches = useCallback(async () => {
     try {
@@ -67,8 +67,7 @@ export default function WelcomePage() {
     fetchMatches();
   }, [router, user, fetchCurrentProfile, fetchMatches]);
 
-  const sendInterest = async (matchUserId, _matchName) => {
-    // 2. Renamed matchName to _matchName to fix unused var error
+  const sendInterest = async (matchUserId) => {
     setSending((prev) => ({ ...prev, [matchUserId]: true }));
 
     try {
