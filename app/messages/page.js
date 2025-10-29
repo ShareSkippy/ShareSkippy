@@ -1,5 +1,6 @@
 'use client';
 import { useCallback, useState, useEffect, useMemo, useRef } from 'react';
+import Image from 'next/image';
 import { useSupabaseAuth } from '@/libs/supabase/hooks';
 import { supabase } from '@/libs/supabase';
 import MessageModal from '@/components/MessageModal';
@@ -440,7 +441,7 @@ export default function MessagesPage() {
                 >
                   <div className="flex items-center space-x-3">
                     {conversation.profilePhoto ? (
-                      <img
+                      <Image
                         src={conversation.profilePhoto}
                         alt={conversation.displayName}
                         className="w-12 h-12 rounded-full object-cover"
@@ -483,7 +484,7 @@ export default function MessagesPage() {
                       ←
                     </button>
                     {selectedConversation.profilePhoto ? (
-                      <img
+                      <Image
                         src={selectedConversation.profilePhoto}
                         alt={selectedConversation.displayName}
                         className="w-12 h-12 rounded-full object-cover"
