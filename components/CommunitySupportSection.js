@@ -1,17 +1,15 @@
-"use client";
-import { useState } from 'react';
+'use client';
 
-export default function CommunitySupportSection({ 
-  formData, 
+export default function CommunitySupportSection({
+  formData,
   onFormDataChange,
-  postType = 'dog_available'
+  postType = 'dog_available',
 }) {
-  
   const handleInputChange = (e) => {
     const { name, value, type } = e.target;
     onFormDataChange({
       ...formData,
-      [name]: type === 'checkbox' ? e.target.checked : value
+      [name]: type === 'checkbox' ? e.target.checked : value,
     });
   };
 
@@ -19,15 +17,14 @@ export default function CommunitySupportSection({
     <div className="space-y-6">
       {/* Community Support Section */}
       <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6">
-        <h3 className="text-xl font-semibold text-gray-800 mb-4">
-          Community Support
-        </h3>
-        
+        <h3 className="text-xl font-semibold text-gray-800 mb-4">Community Support</h3>
+
         {postType === 'dog_available' ? (
           // Dog Availability - Need Support
           <>
             <p className="text-gray-600 mb-6">
-              Let the community know if you need extra support. This helps create meaningful connections.
+              Let the community know if you need extra support. This helps create meaningful
+              connections.
             </p>
 
             <div className="space-y-4">
