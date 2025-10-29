@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import Image from 'next/image';
 import { useUser } from '@/contexts/UserContext';
 import { useMeetings, useUpdateMeetingStatus } from '@/hooks/useMeetings';
 import { useQueryClient } from '@tanstack/react-query';
@@ -220,7 +221,7 @@ export default function MeetingsPage() {
                       {/* Meeting Header */}
                       <div className="flex items-center space-x-3 mb-4">
                         {otherPerson.profile_photo_url ? (
-                          <img
+                          <Image
                             src={otherPerson.profile_photo_url}
                             alt={`${otherPerson.first_name} ${otherPerson.last_name}`}
                             className="w-12 h-12 rounded-full object-cover"
