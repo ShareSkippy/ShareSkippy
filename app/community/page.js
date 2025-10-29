@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { createClient } from '@/libs/supabase/client';
 import MessageModal from '@/components/MessageModal';
@@ -608,7 +609,7 @@ export default function CommunityPage() {
                         // Single dog display
                         <div className="flex items-center space-x-3">
                           {post.allDogs[0].photo_url ? (
-                            <img
+                            <Image
                               src={post.allDogs[0].photo_url}
                               alt={post.allDogs[0].name}
                               className="w-12 h-12 rounded-full object-cover"
@@ -631,7 +632,7 @@ export default function CommunityPage() {
                             {post.allDogs.map((dog, index) => (
                               <div key={dog.id} className="flex items-center space-x-2">
                                 {dog.photo_url ? (
-                                  <img
+                                  <Image
                                     src={dog.photo_url}
                                     alt={dog.name}
                                     className="w-8 h-8 rounded-full object-cover"
@@ -825,7 +826,7 @@ export default function CommunityPage() {
                   {/* PetPal Information */}
                   <div className="flex items-center space-x-3 mb-4">
                     {post.owner?.profile_photo_url ? (
-                      <img
+                      <Image
                         src={post.owner.profile_photo_url}
                         alt={`${post.owner.first_name} ${post.owner.last_name}`}
                         className="w-12 h-12 rounded-full object-cover"
@@ -1001,7 +1002,7 @@ export default function CommunityPage() {
                           // Single dog display
                           <div className="flex items-center space-x-3">
                             {post.allDogs[0].photo_url ? (
-                              <img
+                              <Image
                                 src={post.allDogs[0].photo_url}
                                 alt={post.allDogs[0].name}
                                 className="w-12 h-12 rounded-full object-cover"
@@ -1024,7 +1025,7 @@ export default function CommunityPage() {
                               {post.allDogs.map((dog, index) => (
                                 <div key={dog.id} className="flex items-center space-x-2">
                                   {dog.photo_url ? (
-                                    <img
+                                    <Image
                                       src={dog.photo_url}
                                       alt={dog.name}
                                       className="w-8 h-8 rounded-full object-cover"
