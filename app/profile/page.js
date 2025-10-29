@@ -1,9 +1,8 @@
 'use client';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
-import { createClient } from '@/libs/supabase/client';
-import { useUser } from '@/libs/supabase/hooks';
-import { formatLocation } from '@/libs/utils';
+import Image from 'next/image';
+import Link from 'next/link';
 import DeleteAccountModal from '../../components/DeleteAccountModal';
 import UserReviews from '../../components/UserReviews';
 import DeletionRequestStatus from '../../components/DeletionRequestStatus';
@@ -101,7 +100,7 @@ export default function ProfilePage() {
         {/* Profile Photo */}
         {profile.profile_photo_url && (
           <div className="mb-4">
-            <img
+            <Image
               src={profile.profile_photo_url}
               alt="Profile"
               className="w-24 h-24 rounded-full mx-auto object-cover"
