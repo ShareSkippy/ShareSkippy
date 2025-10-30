@@ -495,20 +495,20 @@ export default function CommunityPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
+      <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-purple-50">
       <div className="max-w-7xl mx-auto py-4 sm:py-8 px-3 sm:px-4">
         {/* Header */}
         <div className="mb-6 sm:mb-8">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
             <div>
-              <h1 className="text-2xl sm:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+              <h1 className="text-2xl sm:text-4xl font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
                 🏘️ Community
               </h1>
               <p className="text-sm sm:text-base text-gray-600">
@@ -556,7 +556,7 @@ export default function CommunityPage() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`w-full sm:flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
                   activeTab === tab.id
-                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md'
+                    ? 'bg-linear-to-r from-blue-600 to-purple-600 text-white shadow-md'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 }`}
               >
@@ -575,7 +575,7 @@ export default function CommunityPage() {
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Dogs Looking for Pals</h2>
               <Link
                 href="/share-availability"
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 sm:px-6 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 text-sm sm:text-base w-full sm:w-auto text-center"
+                className="bg-linear-to-r from-blue-600 to-purple-600 text-white px-4 sm:px-6 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 text-sm sm:text-base w-full sm:w-auto text-center"
               >
                 Share Availability
               </Link>
@@ -779,7 +779,7 @@ export default function CommunityPage() {
                   </p>
                   <Link
                     href="/share-availability"
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 sm:px-6 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 text-sm sm:text-base"
+                    className="bg-linear-to-r from-blue-600 to-purple-600 text-white px-4 sm:px-6 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 text-sm sm:text-base"
                   >
                     Share Availability
                   </Link>
@@ -806,7 +806,7 @@ export default function CommunityPage() {
               </h2>
               <Link
                 href="/share-availability"
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 sm:px-6 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 text-sm sm:text-base w-full sm:w-auto text-center"
+                className="bg-linear-to-r from-blue-600 to-purple-600 text-white px-4 sm:px-6 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 text-sm sm:text-base w-full sm:w-auto text-center"
               >
                 Share Availability
               </Link>
@@ -832,7 +832,7 @@ export default function CommunityPage() {
                         className="w-12 h-12 rounded-full object-cover"
                       />
                     ) : (
-                      <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-blue-100 rounded-full flex items-center justify-center">
+                      <div className="w-12 h-12 bg-linear-to-br from-green-100 to-blue-100 rounded-full flex items-center justify-center">
                         🤝
                       </div>
                     )}
@@ -940,7 +940,7 @@ export default function CommunityPage() {
                   </p>
                   <Link
                     href="/share-availability"
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 sm:px-6 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 text-sm sm:text-base"
+                    className="bg-linear-to-r from-blue-600 to-purple-600 text-white px-4 sm:px-6 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 text-sm sm:text-base"
                   >
                     Share Availability
                   </Link>
@@ -965,7 +965,7 @@ export default function CommunityPage() {
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">My Availability Posts</h2>
               <Link
                 href="/share-availability"
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 sm:px-6 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 text-sm sm:text-base w-full sm:w-auto text-center"
+                className="bg-linear-to-r from-blue-600 to-purple-600 text-white px-4 sm:px-6 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 text-sm sm:text-base w-full sm:w-auto text-center"
               >
                 Create New Post
               </Link>
@@ -1148,7 +1148,7 @@ export default function CommunityPage() {
                 </p>
                 <Link
                   href="/share-availability"
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 sm:px-6 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 text-sm sm:text-base"
+                  className="bg-linear-to-r from-blue-600 to-purple-600 text-white px-4 sm:px-6 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 text-sm sm:text-base"
                 >
                   Create Your First Post
                 </Link>
