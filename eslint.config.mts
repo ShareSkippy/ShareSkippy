@@ -1,13 +1,23 @@
 import js from "@eslint/js";
 import globals from "globals";
-import tseslint from "typescript-eslint";
 import nextVitals from "eslint-config-next/core-web-vitals";
+import nextTs from "eslint-config-next/typescript";
 import jestPlugin from "eslint-plugin-jest";
 import json from "@eslint/json";
 import markdown from "@eslint/markdown";
 import { defineConfig } from "eslint/config";
 
 export default defineConfig([
+  ...nextVitals,
+  ...nextTs,
+  {
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        project: "@typescript-eslint/parser",
+      },
+    },
+  },
   {
     ignores: ["**/package-lock.json", "**/node_modules/**", "**/coverage/**"],
   },
@@ -17,8 +27,7 @@ export default defineConfig([
     extends: ["js/recommended"],
     languageOptions: { globals: { ...globals.browser, ...globals.node } },
   },
-  tseslint.configs.recommended,
-  ...nextVitals,
+
   {
     files: ["**/*.json"],
     plugins: { json },
