@@ -5,7 +5,7 @@ import AppLayout from '@/components/AppLayout';
 import ClientLayout from '@/components/LayoutClient';
 import { SupabaseUserProvider } from '@/components/providers/SupabaseUserProvider';
 import { QueryProvider } from '@/contexts/QueryProvider';
-import { getServerClient } from '@/lib/supabase/server/client';
+import { createClient } from '@/lib/supabase/server/client';
 import { getSEOTags } from '@/lib/seo/getSEOTags';
 import './globals.css';
 
@@ -21,7 +21,7 @@ export const viewport = {
 export const metadata = getSEOTags();
 
 export default async function RootLayout({ children }) {
-  const supabase = getServerClient();
+  const supabase = createClient();
   const {
     data: { session },
   } = await supabase.auth.getSession();
