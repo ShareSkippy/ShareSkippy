@@ -1,9 +1,11 @@
 'use client';
+
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect, useCallback } from 'react';
 import toast from 'react-hot-toast';
 import { createClient } from '@/libs/supabase/client';
 import { useUser } from '@/libs/supabase/hooks';
+import { useProfileDraft } from '@/hooks/useProfileDraft';
 import { formatLocation } from '@/libs/utils';
 import { useProfileDraft } from '@/hooks/useProfileDraft';
 import PhotoUpload from '@/components/ui/PhotoUpload';
@@ -36,28 +38,40 @@ const initialProfileState = {
   zip_code: '',
 };
 
+// --- COMPONENT START ---
+
 export default function ProfileEditPage() {
-  const { user, loading: userLoading } = useUser();
   const router = useRouter();
+  const { user, loading: userLoading } = useUser();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [verifyingAddress, setVerifyingAddress] = useState(false);
   const [addressVerified, setAddressVerified] = useState(false);
 
   // Use the sessionStorage-based profile draft hook
-  const { profile, setProfile, loadDraft, clearDraft, hasDraft } =
-    useProfileDraft(initialProfileState);
+  const { profile, setProfile, loadDraft, clearDraft, hasDraft, draftSource } =
+    useProfileDraft(initialProfileState); // Use the consistent initial state
+
+  // --- DATA LOADING LOGIC ---
 
   const loadProfile = useCallback(async () => {
+    // Authentication verification (ensures user object is available)
+    if (!user || !user.id) {
+      setLoading(false);
+      return;
+    }
+
     try {
       const supabase = createClient();
 
+      // Fetch profile data
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', user.id)
         .single();
 
+      // Safely extract Google auth metadata for pre-filling
       const userMetadata = user?.user_metadata || {};
       const googleGivenName = userMetadata?.given_name || userMetadata?.first_name;
       const googleFamilyName = userMetadata?.family_name || userMetadata?.last_name;
@@ -66,6 +80,7 @@ export default function ProfileEditPage() {
       let loadedProfileData = { ...initialProfileState };
 
       if (data) {
+        // Merge existing data with pre-fill overrides
         loadedProfileData = {
           ...initialProfileState,
           ...data,
@@ -74,6 +89,7 @@ export default function ProfileEditPage() {
           profile_photo_url: data.profile_photo_url || googlePicture || '',
         };
       } else if (error && error.code === 'PGRST116') {
+        // Profile not found, use Google data for initial fields
         loadedProfileData = {
           ...initialProfileState,
           first_name: googleGivenName || '',
@@ -91,11 +107,14 @@ export default function ProfileEditPage() {
     } finally {
       setLoading(false);
     }
-  }, [user, setProfile, setLoading]);
+  }, [user, setProfile]);
+
+  // --- EFFECT: AUTHENTICATION & DATA FETCHING ---
 
   useEffect(() => {
     if (userLoading) return;
 
+    // 1. Authentication Verification: Redirect unauthenticated users
     if (!user) {
       router.push('/signin');
       return;
@@ -104,7 +123,6 @@ export default function ProfileEditPage() {
     // Try to load draft first, then load profile from database
     const draft = loadDraft();
     if (draft) {
-      // eslint-disable-next-line no-console
       console.log('📂 Restoring profile draft from sessionStorage');
       setLoading(false);
       // Merge draft with any missing fields from initialProfileState
@@ -114,12 +132,18 @@ export default function ProfileEditPage() {
         ...draft,
       }));
     } else {
+      // 3. Database Load
       loadProfile();
     }
   }, [user, userLoading, router, loadDraft, setProfile, loadProfile]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Authentication verification: Prevent form submission if user or ID is missing
+    if (!user || !user.id) {
+      toast.error('Authentication required to save profile.');
+      return;
+    }
     setSaving(true);
 
     try {
@@ -148,18 +172,18 @@ export default function ProfileEditPage() {
       // --- Prepare Profile Data (Safely handling potential nulls) ---
       const profileData = {
         id: user.id,
+        // Basic Fields
         first_name: String(profile.first_name).trim(),
         last_name: String(profile.last_name).trim(),
         phone_number: String(profile.phone_number).trim(),
         role: String(profile.role).trim(),
 
-        // Location data: Use String() to safely handle trim and default to null if empty
+        // Location data (verified)
         neighborhood: String(profile.neighborhood || '').trim() || null,
         city: String(profile.city || '').trim() || null,
         state: String(profile.state || '').trim() || null,
         street_address: String(profile.street_address || '').trim() || null,
         zip_code: String(profile.zip_code || '').trim() || null,
-
         display_lat: profile.display_lat,
         display_lng: profile.display_lng,
 
@@ -199,7 +223,8 @@ export default function ProfileEditPage() {
       clearDraft();
 
       toast.success('Profile saved successfully!');
-      window.location.href = '/onboarding/welcome';
+      clearDraft(); // Clear the draft since profile is now saved
+      router.push('/onboarding/welcome'); // Use router.push for client-side navigation
     } catch (err) {
       console.error('Error saving profile:', err);
 
@@ -233,15 +258,6 @@ export default function ProfileEditPage() {
       [name]: value,
     }));
   };
-
-  // const handleSupportPreferenceChange = (preference) => {
-  //   setProfile((prev) => ({
-  //     ...prev,
-  //     support_preferences: prev.support_preferences.includes(preference)
-  //       ? prev.support_preferences.filter((p) => p !== preference)
-  //       : [...prev.support_preferences, preference],
-  //   }));
-  // };
 
   const handlePhotoUpload = (photoUrl) => {
     setProfile((prev) => ({
@@ -329,6 +345,8 @@ export default function ProfileEditPage() {
     }
   };
 
+  // --- RENDERING ---
+
   if (loading || userLoading) {
     return (
       <div className="min-h-screen w-full bg-white max-w-md mx-auto p-6 text-center">
@@ -338,9 +356,34 @@ export default function ProfileEditPage() {
     );
   }
 
+  // Rest of the component's JSX goes here (omitted for brevity)
+  // ... (JSX previously provided in the user prompt)
+
   return (
     <div className="min-h-screen w-full bg-white max-w-2xl mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6 text-black">Create Your Profile</h1>
+
+      {/* Draft indicator (restored from previous versions) */}
+      {hasDraft && (
+        <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="flex items-center">
+            <div className="shrink-0">
+              <svg className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                <path
+                  fillRule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <p className="text-sm text-blue-700">
+                📂 Draft restored from {draftSource === 'session' ? 'this session' : 'storage'}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Basic Information */}
