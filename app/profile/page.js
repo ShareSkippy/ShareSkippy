@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import DeleteAccountModal from '@/components/DeleteAccountModal';
 import DeletionRequestStatus from '@/components/DeletionRequestStatus';
-import { useUser, createClient } from '@/components/providers/SupabaseUserProvider';
+import { createClient } from '@/libs/supabase/client';
+import { useUser } from '@/components/providers/SupabaseUserProvider';
 import UserReviews from '@/components/UserReviews';
 import formatLocation from '@/libs/utils';
 
