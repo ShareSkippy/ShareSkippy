@@ -1,5 +1,4 @@
 @import 'tailwindcss';
-@plugin 'daisyui'
 
 @theme {
   --background-image-gradient: linear-gradient(
