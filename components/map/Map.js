@@ -12,7 +12,7 @@ const Map = React.memo(({ lat, lng, zoom = 12 }) => {
     const mapContainer = mapRef.current;
 
     // Create a simple map representation
-    mapContainer.innerHTML = `
+    mapContainer.textContent = `
       <div style="
         width: 100%;
         height: 300px;
