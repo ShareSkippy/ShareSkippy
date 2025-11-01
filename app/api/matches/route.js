@@ -182,7 +182,7 @@ export async function GET(request) {
         profile.display_lng
       );
 
-      console.log(`Distance to ${profile.first_name} (${profile.city}):`, {
+      console.log('Distance to ', profile.first_name, '(', profile.city, '):', {
         distance: distance.toFixed(2),
         fromLat: currentProfile.display_lat,
         fromLng: currentProfile.display_lng,
