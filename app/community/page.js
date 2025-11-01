@@ -159,7 +159,7 @@ export default function CommunityPage() {
             photo_url,
             size
           )
-        `
+          `
         )
         .eq('post_type', 'dog_available')
         .eq('status', 'active');
@@ -239,7 +239,7 @@ export default function CommunityPage() {
             neighborhood,
             city
           )
-        `
+          `
         )
         .eq('post_type', 'petpal_available')
         .eq('status', 'active');
@@ -347,72 +347,72 @@ export default function CommunityPage() {
   };
 
   // const getRoleIcon = (role) => {
-  //   switch (role) {
-  //     case 'dog_owner':
-  //       return '🐕';
-  //     case 'dog_walker':
-  //       return '🚶‍♂️';
-  //     case 'both':
-  //       return '🐕‍🦺';
-  //     default:
-  //       return '👤';
-  //   }
+  // 	switch (role) {
+  // 		case 'dog_owner':
+  // 			return '🐕';
+  // 		case 'dog_walker':
+  // 			return '🚶‍♂️';
+  // 		case 'both':
+  // 			return '🐕‍🦺';
+  // 		default:
+  // 			return '👤';
+  // 	}
   // };
 
   // const getEventIcon = (eventType) => {
-  //   switch (eventType) {
-  //     case 'meetup':
-  //       return '🤝';
-  //     case 'workshop':
-  //       return '📚';
-  //     case 'outdoor':
-  //       return '🏔️';
-  //     default:
-  //       return '📅';
-  //   }
+  // 	switch (eventType) {
+  // 		case 'meetup':
+  // 			return '🤝';
+  // 		case 'workshop':
+  // 			return '📚';
+  // 		case 'outdoor':
+  // 			return '🏔️';
+  // 		default:
+  // 			return '📅';
+  // 	}
   // };
 
   // const getPlaceIcon = (type) => {
-  //   switch (type) {
-  //     case 'park':
-  //       return '🌳';
-  //     case 'cafe':
-  //       return '☕';
-  //     case 'store':
-  //       return '🛍️';
-  //     default:
-  //       return '📍';
-  //   }
+  // 	switch (type) {
+  // 		case 'park':
+  // 			return '🌳';
+  // 		case 'cafe':
+  // 			return '☕';
+  // 		case 'store':
+  // 			return '🛍️';
+  // 		default:
+  // 			return '📍';
+  // 	}
   // };
 
   // const handleJoinEvent = async (eventId) => {
-  //   setJoiningEvent(eventId);
-  //   try {
-  //     const response = await fetch(`/api/community/events/${eventId}/join`, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //     });
+  // 	setJoiningEvent(eventId);
+  // 	try {
+  // 		const response = await fetch(`/api/community/events/${eventId}/join`, {
+  // 			method: 'POST',
+  // 			headers: {
+  // 				'Content-Type': 'application/json',
+  // 			},
+  // 		});
 
-  //     if (response.ok) {
-  //       // Refresh events to show updated participant count
-  //       const eventsResponse = await fetch('/api/community/events?limit=10');
-  //       if (eventsResponse.ok) {
-  //         const eventsData = await eventsResponse.json();
-  //         // Note: setCommunityEvents is not defined in this component
-  //         // This will be handled by the parent component or removed if not needed
-  //       }
-  //     } else {
-  //       const errorData = await response.json();
-  //       alert(errorData.error || 'Failed to join event');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error joining event:', error);
-  //     alert('Failed to join event');
-  //   } finally {
-  //     setJoiningEvent(null);
-  //   }
+  // 		if (response.ok) {
+  // 			// Refresh events to show updated participant count
+  // 			const eventsResponse = await fetch('/api/community/events?limit=10');
+  // 			if (eventsResponse.ok) {
+  // 				const eventsData = await eventsResponse.json();
+  // 				// Note: setCommunityEvents is not defined in this component
+  // 				// This will be handled by the parent component or removed if not needed
+  // 			}
+  // 		} else {
+  // 			const errorData = await response.json();
+  // 			alert(errorData.error || 'Failed to join event');
+  // 		}
+  // 	} catch (error) {
+  // 		console.error('Error joining event:', error);
+  // 		alert('Failed to join event');
+  // 	} finally {
+  // 		setJoiningEvent(null);
+  // 	}
   // };
 
   const openMessageModal = (recipient, availabilityPost) => {
@@ -612,6 +612,8 @@ export default function CommunityPage() {
                             <Image
                               src={post.allDogs[0].photo_url}
                               alt={post.allDogs[0].name}
+                              width={48}
+                              height={48}
                               className="w-12 h-12 rounded-full object-cover"
                             />
                           ) : (
@@ -635,6 +637,8 @@ export default function CommunityPage() {
                                   <Image
                                     src={dog.photo_url}
                                     alt={dog.name}
+                                    width={32}
+                                    height={32}
                                     className="w-8 h-8 rounded-full object-cover"
                                   />
                                 ) : (
@@ -829,6 +833,8 @@ export default function CommunityPage() {
                       <Image
                         src={post.owner.profile_photo_url}
                         alt={`${post.owner.first_name} ${post.owner.last_name}`}
+                        width={48}
+                        height={48}
                         className="w-12 h-12 rounded-full object-cover"
                       />
                     ) : (
@@ -1005,6 +1011,8 @@ export default function CommunityPage() {
                               <Image
                                 src={post.allDogs[0].photo_url}
                                 alt={post.allDogs[0].name}
+                                width={48}
+                                height={48}
                                 className="w-12 h-12 rounded-full object-cover"
                               />
                             ) : (
@@ -1028,6 +1036,8 @@ export default function CommunityPage() {
                                     <Image
                                       src={dog.photo_url}
                                       alt={dog.name}
+                                      width={32}
+                                      height={32}
                                       className="w-8 h-8 rounded-full object-cover"
                                     />
                                   ) : (

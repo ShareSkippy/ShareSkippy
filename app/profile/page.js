@@ -8,7 +8,7 @@ import DeletionRequestStatus from '@/components/DeletionRequestStatus';
 import { createClient } from '@/libs/supabase/client';
 import { useUser } from '@/components/providers/SupabaseUserProvider';
 import UserReviews from '@/components/UserReviews';
-import formatLocation from '@/libs/utils';
+import { formatLocation } from '@/libs/utils';
 
 export default function ProfilePage() {
   const { user, loading: userLoading } = useUser();
@@ -107,6 +107,8 @@ export default function ProfilePage() {
               src={profile.profile_photo_url}
               alt="Profile"
               className="w-24 h-24 rounded-full mx-auto object-cover"
+              width={96}
+              height={96}
             />
           </div>
         )}

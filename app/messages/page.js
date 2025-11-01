@@ -244,7 +244,7 @@ export default function MessagesPage() {
   };
 
   // const openMessageModal = (recipient, availabilityPost) => {
-  //   setMessageModal({ isOpen: true, recipient, availabilityPost });
+  // 	setMessageModal({ isOpen: true, recipient, availabilityPost });
   // };
 
   const closeMessageModal = () => {
@@ -391,6 +391,8 @@ export default function MessagesPage() {
                       <Image
                         src={conversation.profilePhoto}
                         alt={conversation.displayName}
+                        width={48}
+                        height={48}
                         className="w-12 h-12 rounded-full object-cover"
                       />
                     ) : (
@@ -434,6 +436,8 @@ export default function MessagesPage() {
                       <Image
                         src={selectedConversation.profilePhoto}
                         alt={selectedConversation.displayName}
+                        width={48}
+                        height={48}
                         className="w-12 h-12 rounded-full object-cover"
                       />
                     ) : (
