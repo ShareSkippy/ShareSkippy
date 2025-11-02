@@ -12,5 +12,9 @@ jest.mock('next/image', () => ({
 }));
 
 if (globalThis.window !== undefined) {
-  globalThis.window.scrollTo = jest.fn();
+  globalThis.globalThis.scrollTo = jest.fn();
 }
+
+process.env.RESEND_API_KEY = 'DUMMY_RESEND_KEY';
+process.env.SUPABASE_URL = 'DUMMY_SUPABASE_URL';
+process.env.SUPABASE_SERVICE_KEY = 'DUMMY_SERVICE_KEY';
