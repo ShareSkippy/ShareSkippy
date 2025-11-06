@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, FormEvent } from 'react';
+import { geocodeLocation } from '@/libs/geocoding';
 
 interface LocationFilter {
   type: 'shared-location' | 'zip-city';
@@ -70,7 +71,6 @@ export default function LocationFilter({ onFilterChange }: LocationFilterProps) 
     setError(null);
 
     try {
-      const { geocodeLocation } = await import('@/libs/geocoding');
       const coords = await geocodeLocation(zipCityInput.trim());
 
       if (!coords) {
