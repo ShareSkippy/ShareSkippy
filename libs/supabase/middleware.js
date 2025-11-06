@@ -1,9 +1,14 @@
 import { createServerClient } from '@supabase/ssr';
+import { NextResponse } from 'next/server';
 
-export async function updateSession(request, response) {
+export async function updateSession(request) {
+  let supabaseResponse = NextResponse.next({
+    request,
+  });
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     {
       cookies: {
         getAll() {
@@ -11,21 +16,19 @@ export async function updateSession(request, response) {
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+          supabaseResponse = NextResponse.next({
+            request,
+          });
           cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options)
+            supabaseResponse.cookies.set(name, value, options)
           );
         },
       },
     }
   );
 
-  // IMPORTANT: Avoid writing any logic between createServerClient and
-  // response.cookies.setAll. Writing logic between the two will cause the
-  // response headers to be lost, breaking the authentication flow.
-
-  // Let Supabase handle its own session management
-  // The createServerClient will automatically handle session refresh and cookie management
+  // refreshing the auth token
   await supabase.auth.getUser();
 
-  return response;
+  return supabaseResponse;
 }
