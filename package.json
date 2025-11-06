@@ -20,7 +20,7 @@
     "analyze": "ANALYZE=true next build"
   },
   "dependencies": {
-    "@headlessui/react": "^1.7.18",
+    "@headlessui/react": "^2.1.0",
     "@supabase/ssr": "^0.4.0",
     "@supabase/supabase-js": "^2.45.0",
     "@tailwindcss/postcss": "^4.1.16",
@@ -34,8 +34,8 @@
     "next": "^14.1.4",
     "nextjs-toploader": "^1.6.11",
     "nodemailer": "^6.9.13",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
     "react-hot-toast": "^2.4.1",
     "react-syntax-highlighter": "^15.5.0",
     "react-tooltip": "^5.26.3",
