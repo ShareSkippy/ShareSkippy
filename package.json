@@ -53,7 +53,6 @@
     "@eslint/json": "^0.13.2",
     "@eslint/markdown": "^7.5.0",
     "@jest/globals": "^30.2.0",
-    "@next/bundle-analyzer": "^14.2.5",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "@types/jest": "^30.0.0",
