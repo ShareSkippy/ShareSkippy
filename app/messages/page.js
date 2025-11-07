@@ -40,6 +40,7 @@ export default function MessagesPage() {
     return 'all';
   });
   const abortControllerRef = useRef(null);
+  const recentlyMarkedReadRef = useRef(new Set()); // Track conversations we just marked as read
 
   const selectedConversationKey = useMemo(() => {
     const c = selectedConversation;
@@ -168,6 +169,17 @@ export default function MessagesPage() {
             });
             
             if (markReadResponse.ok) {
+              const responseData = await markReadResponse.json();
+              console.log('Mark read successful:', responseData);
+              
+              // Track that we just marked this conversation as read
+              recentlyMarkedReadRef.current.add(selectedConversation.id);
+              
+              // Clear the flag after 5 seconds (enough time for DB to update)
+              setTimeout(() => {
+                recentlyMarkedReadRef.current.delete(selectedConversation.id);
+              }, 5000);
+              
               // Update local messages state to mark them as read immediately
               setMessages((prevMessages) =>
                 prevMessages.map((msg) =>
@@ -185,11 +197,23 @@ export default function MessagesPage() {
                 return prev;
               });
 
+              // Also update the conversation in the conversations list immediately
+              setConversations((prevConvs) =>
+                prevConvs.map((conv) =>
+                  conv.id === selectedConversation.id
+                    ? { ...conv, unreadCount: 0 }
+                    : conv
+                )
+              );
+
               // Refresh conversations to update unread counts after a delay
               // This allows the database update to propagate and ensures we get fresh counts
               setTimeout(() => {
                 fetchConversations();
-              }, 1000);
+              }, 2000);
+            } else {
+              const errorData = await markReadResponse.json().catch(() => ({}));
+              console.error('Mark read failed:', markReadResponse.status, errorData);
             }
           } catch (markReadError) {
             console.error('Error marking messages as read:', markReadError);
@@ -362,16 +386,41 @@ export default function MessagesPage() {
       setConversations(processedConversations);
       
       // Update selected conversation's unread count if it exists
+      // But preserve unreadCount: 0 if we just marked messages as read
       if (selectedConversation) {
         const updatedSelected = processedConversations.find(
           (c) => c.id === selectedConversation.id
         );
         if (updatedSelected) {
-          // Always update with the fetched count (database is source of truth)
-          // If we just marked as read, the count should be 0 from the database
-          setSelectedConversation(updatedSelected);
+          // If we recently marked this conversation as read, force unreadCount to 0
+          const wasRecentlyMarkedRead = recentlyMarkedReadRef.current.has(selectedConversation.id);
+          
+          if (wasRecentlyMarkedRead) {
+            // Force unread count to 0 for recently marked conversations
+            setSelectedConversation({ ...updatedSelected, unreadCount: 0 });
+            // Also update in the conversations list
+            setConversations((prevConvs) =>
+              prevConvs.map((conv) =>
+                conv.id === selectedConversation.id
+                  ? { ...conv, unreadCount: 0 }
+                  : conv
+              )
+            );
+          } else {
+            // Normal update - use the fetched count
+            setSelectedConversation(updatedSelected);
+          }
         }
       }
+      
+      // Also update conversations list to force unreadCount: 0 for recently marked conversations
+      setConversations((prevConvs) =>
+        prevConvs.map((conv) =>
+          recentlyMarkedReadRef.current.has(conv.id)
+            ? { ...conv, unreadCount: 0 }
+            : conv
+        )
+      );
 
       // Handle URL parameter for deep linking
       const conversationIdFromUrl = searchParams.get('c');

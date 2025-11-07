@@ -37,7 +37,7 @@ export async function POST(request) {
 
     // Mark all unread messages in this conversation as read for the current user
     // Only mark messages where the current user is the recipient
-    const { error: updateError } = await supabase
+    const { data: updatedMessages, error: updateError } = await supabase
       .from('messages')
       .update({ 
         is_read: true,
@@ -45,11 +45,15 @@ export async function POST(request) {
       })
       .eq('conversation_id', conversation_id)
       .eq('recipient_id', user.id)
-      .eq('is_read', false);
+      .eq('is_read', false)
+      .select('id');
 
     if (updateError) {
+      console.error('Error updating messages:', updateError);
       throw updateError;
     }
+
+    console.log(`Marked ${updatedMessages?.length || 0} messages as read for conversation ${conversation_id}`);
 
     // Also mark legacy messages (without conversation_id) as read
     // Match by participant pairs
@@ -69,7 +73,10 @@ export async function POST(request) {
       // Don't fail if legacy update fails
     }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ 
+      success: true,
+      messagesUpdated: updatedMessages?.length || 0
+    });
 
   } catch (error) {
     console.error('Error marking messages as read:', error);
