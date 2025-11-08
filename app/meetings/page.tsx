@@ -111,7 +111,7 @@ export default function MeetingsPage(): ReactElement {
         status,
         message,
       } as UpdateMeetingPayload);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error updating meeting:', error);
       alert(
         `Failed to update meeting: ${error instanceof Error ? error.message : 'Unknown error'}`
@@ -144,7 +144,7 @@ export default function MeetingsPage(): ReactElement {
       } as UpdateMeetingPayload);
 
       await Promise.race([updatePromise, timeoutPromise]);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error cancelling meeting:', error);
 
       let errorMessage = 'Unknown error';
