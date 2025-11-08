@@ -1,3 +1,4 @@
+// #region Imports
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
@@ -8,8 +9,48 @@ import { useUser } from '@/libs/supabase/hooks';
 import { useProfileDraft } from '@/hooks/useProfileDraft';
 import { formatLocation } from '@/libs/utils';
 import PhotoUpload from '@/components/ui/PhotoUpload';
+// #endregion Imports
 
-const initialProfileState = {
+// #region Types
+/**
+ * @typedef {object} ProfileState
+ * @description Defines the comprehensive shape of the profile data used in state and the database.
+ */
+interface ProfileState {
+  first_name: string;
+  last_name: string;
+  phone_number: string;
+  role: string;
+  emergency_contact_name: string;
+  emergency_contact_number: string;
+  emergency_contact_email: string;
+  bio: string;
+  facebook_url: string;
+  instagram_url: string;
+  linkedin_url: string;
+  airbnb_url: string;
+  other_social_url: string;
+  community_support_badge: string;
+  support_preferences: string[];
+  support_story: string;
+  other_support_description: string;
+  profile_photo_url: string;
+  display_lat: number | null;
+  display_lng: number | null;
+  neighborhood: string;
+  city: string;
+  street_address: string;
+  state: string;
+  zip_code: string;
+  // NOTE: Assuming all fields must be present and match the initial state structure.
+}
+
+/**
+ * @constant
+ * @type {Readonly<ProfileState>}
+ * @description Initial state for the profile form with required types.
+ */
+const initialProfileState: Readonly<ProfileState> = {
   first_name: '',
   last_name: '',
   phone_number: '',
@@ -36,9 +77,13 @@ const initialProfileState = {
   state: '',
   zip_code: '',
 };
+// #endregion Types
 
-// --- COMPONENT START ---
-
+// #region Component
+/**
+ * @component
+ * @description Allows the authenticated user to create or edit their profile information.
+ */
 export default function ProfileEditPage() {
   const router = useRouter();
   const { user, loading: userLoading } = useUser();
@@ -47,23 +92,26 @@ export default function ProfileEditPage() {
   const [verifyingAddress, setVerifyingAddress] = useState(false);
   const [addressVerified, setAddressVerified] = useState(false);
 
-  // Use the sessionStorage-based profile draft hook
+  // Type safety applied here: profile state and setProfile must adhere to ProfileState
   const { profile, setProfile, loadDraft, clearDraft, hasDraft, draftSource } =
-    useProfileDraft(initialProfileState); // Use the consistent initial state
+    useProfileDraft<ProfileState>(initialProfileState);
 
-  // --- DATA LOADING LOGIC ---
-
-  const loadProfile = useCallback(async () => {
+  // #region Data Loading Logic
+  /**
+   * @function loadProfile
+   * @description Fetches existing profile data from Supabase and merges it with Google auth metadata.
+   * @returns {Promise<boolean>} - Resolves true on successful load/merge, false otherwise.
+   */
+  const loadProfile = useCallback(async (): Promise<boolean> => {
     // Authentication verification (ensures user object is available)
     if (!user || !user.id) {
-      setLoading(false);
-      return;
+      return false;
     }
 
     try {
       const supabase = createClient();
 
-      // Fetch profile data
+      // Fetch profile data. Type casting the expected data shape.
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -72,20 +120,21 @@ export default function ProfileEditPage() {
 
       // Safely extract Google auth metadata for pre-filling
       const userMetadata = user?.user_metadata || {};
-      const googleGivenName = userMetadata?.given_name || userMetadata?.first_name;
-      const googleFamilyName = userMetadata?.family_name || userMetadata?.last_name;
-      const googlePicture = userMetadata?.picture || userMetadata?.avatar_url;
+      const googleGivenName = userMetadata?.given_name as string | undefined;
+      const googleFamilyName = userMetadata?.family_name as string | undefined;
+      const googlePicture = userMetadata?.picture as string | undefined;
 
-      let loadedProfileData = { ...initialProfileState };
+      let loadedProfileData: ProfileState = { ...initialProfileState };
 
       if (data) {
-        // Merge existing data with pre-fill overrides
+        // Merge existing data (safely typed as ProfileState) with pre-fill overrides
+        const dbData = data as ProfileState;
         loadedProfileData = {
           ...initialProfileState,
-          ...data,
-          first_name: data.first_name || googleGivenName || '',
-          last_name: data.last_name || googleFamilyName || '',
-          profile_photo_url: data.profile_photo_url || googlePicture || '',
+          ...dbData,
+          first_name: dbData.first_name || googleGivenName || '',
+          last_name: dbData.last_name || googleFamilyName || '',
+          profile_photo_url: dbData.profile_photo_url || googlePicture || '',
         };
       } else if (error && error.code === 'PGRST116') {
         // Profile not found, use Google data for initial fields
@@ -100,45 +149,87 @@ export default function ProfileEditPage() {
       }
 
       setProfile(loadedProfileData);
-    } catch (err) {
+
+      // Set addressVerified if location data exists (using null checks)
+      if (loadedProfileData.display_lat !== null && loadedProfileData.display_lng !== null) {
+        setAddressVerified(true);
+      } else {
+        setAddressVerified(false);
+      }
+      return true;
+    } catch (err: any) {
       console.error('Error loading profile:', err);
       toast.error(`Failed to load profile: ${err.message}`);
-    } finally {
-      setLoading(false);
+      return false;
     }
   }, [user, setProfile]);
 
-  // --- EFFECT: AUTHENTICATION & DATA FETCHING ---
-
+  /**
+   * @effect
+   * @description Handles authentication redirect and initial data loading/draft restoring flow.
+   */
   useEffect(() => {
-    if (userLoading) return;
+    // #region Region: Auth & Loading Flow
+    /**
+     * @async
+     * @function initializeProfile
+     * @description Orchestrates the loading sequence: Auth check -> Draft load -> DB load.
+     */
+    const initializeProfile = async () => {
+      if (userLoading) return; // Wait for the auth hook to resolve
 
-    // 1. Authentication Verification: Redirect unauthenticated users
-    if (!user) {
-      router.push('/signin');
-      return;
-    }
+      // 1. Authentication Verification: Redirect unauthenticated users
+      if (!user) {
+        router.push('/signin');
+        setLoading(false); // Auth is resolved, page doesn't need to load, redirecting instead
+        return;
+      }
 
-    // Try to load draft first, then load profile from database
-    const draft = loadDraft();
-    if (draft) {
-      console.log('📂 Restoring profile draft from sessionStorage');
-      setLoading(false);
-      // Merge draft with any missing fields from initialProfileState
-      setProfile((prev) => ({
-        ...initialProfileState,
-        ...prev,
-        ...draft,
-      }));
-    } else {
+      // 2. Try to load draft first
+      const draft = loadDraft();
+      if (draft) {
+        console.log('📂 Restoring profile draft from sessionStorage');
+        // Restore draft, merging with initial state defaults
+        setProfile((prev) => ({
+          ...initialProfileState,
+          ...prev,
+          ...(draft as ProfileState), // Explicitly cast draft content
+        }));
+
+        // Check if the restored draft has verified address fields.
+        if (draft.display_lat !== null && draft.display_lng !== null) {
+          setAddressVerified(true);
+        } else {
+          setAddressVerified(false);
+        }
+        setLoading(false); // Draft loaded, done loading
+        return;
+      }
+
       // 3. Database Load
-      loadProfile();
-    }
-  }, [user, userLoading, router, loadDraft, setProfile, loadProfile]);
+      // Only proceed to database load if no draft was found.
+      await loadProfile();
 
-  const handleSubmit = async (e) => {
+      // 4. Final Loading State Resolution
+      // Note: loadProfile now handles its own internal setProfile and setAddressVerified.
+      setLoading(false);
+    };
+
+    initializeProfile();
+    // #endregion Region: Auth & Loading Flow
+  }, [user, userLoading, router, loadDraft, setProfile, loadProfile]);
+  // #endregion Data Loading Logic
+
+  /**
+   * @function handleSubmit
+   * @description Handles form submission, validation, data preparation, and database upsert.
+   * @param {React.FormEvent} e - The form event.
+   * @returns {Promise<void>}
+   */
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Authentication verification: Prevent form submission if user or ID is missing
+    // Type safety on event parameter
+
     if (!user || !user.id) {
       toast.error('Authentication required to save profile.');
       return;
@@ -149,6 +240,7 @@ export default function ProfileEditPage() {
       const supabase = createClient();
 
       // --- Validation Check (Safely using String() for trim on state values) ---
+      // Type safety ensures profile fields are checked.
       if (
         !String(profile.first_name).trim() ||
         !String(profile.last_name).trim() ||
@@ -168,8 +260,9 @@ export default function ProfileEditPage() {
         return;
       }
 
-      // --- Prepare Profile Data (Safely handling potential nulls) ---
-      const profileData = {
+      // --- Prepare Profile Data (Explicitly typed payload) ---
+      const profileData: Record<string, any> = {
+        // Using Record for upsert payload
         id: user.id,
         // Basic Fields
         first_name: String(profile.first_name).trim(),
@@ -218,21 +311,18 @@ export default function ProfileEditPage() {
         throw new Error(`Database error: ${dbError.message} (Code: ${dbError.code})`);
       }
 
-      // Clear draft after successful save
       clearDraft();
-
       toast.success('Profile saved successfully!');
-      clearDraft(); // Clear the draft since profile is now saved
-      router.push('/onboarding/welcome'); // Use router.push for client-side navigation
-    } catch (err) {
+      router.push('/onboarding/welcome');
+    } catch (err: any) {
       console.error('Error saving profile:', err);
 
       let errorMessage = 'Failed to save profile';
-      if (err.message.includes('Database error:')) {
+      if (err.message?.includes('Database error:')) {
         errorMessage = err.message;
-      } else if (err.message.includes('JWT')) {
+      } else if (err.message?.includes('JWT')) {
         errorMessage = 'Authentication error. Please try logging in again.';
-      } else if (err.message.includes('network')) {
+      } else if (err.message?.includes('network')) {
         errorMessage = 'Network error. Please check your connection and try again.';
       }
 
@@ -242,29 +332,51 @@ export default function ProfileEditPage() {
     }
   };
 
-  const handleInputChange = (e) => {
+  /**
+   * @function handleInputChange
+   * @description Handles changes for standard input/select/textarea elements.
+   * @param {React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>} e - The change event.
+   * @returns {void}
+   */
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
+
+    // Type safety: Explicitly handle number inputs that can be null
     if (name === 'display_lat' || name === 'display_lng') {
       setProfile((prev) => ({
         ...prev,
-        [name]: value === '' ? null : value,
+        [name]: value === '' ? null : parseFloat(value),
       }));
       return;
     }
 
+    // Type safety: Standard string/select inputs
     setProfile((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
-  const handlePhotoUpload = (photoUrl) => {
+  /**
+   * @function handlePhotoUpload
+   * @description Callback for the PhotoUpload component.
+   * @param {string} photoUrl - The URL of the uploaded photo.
+   * @returns {void}
+   */
+  const handlePhotoUpload = (photoUrl: string) => {
     setProfile((prev) => ({
       ...prev,
       profile_photo_url: photoUrl,
     }));
   };
 
+  /**
+   * @function verifyAddress
+   * @description Uses Nominatim to verify the address and retrieve coordinates and standardized neighborhood/city data.
+   * @returns {Promise<void>}
+   */
   const verifyAddress = async () => {
     // --- Safe validation check using String() ---
     if (
@@ -284,35 +396,37 @@ export default function ProfileEditPage() {
       const response = await fetch(
         `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fullAddress)}&limit=1&addressdetails=1`
       );
-      const data = await response.json();
+      // Ensure data is parsed and checked
+      const data: any[] = await response.json(); // Type casting for response
 
       if (data && data.length > 0) {
         const result = data[0];
         const lat = parseFloat(result.lat);
         const lng = parseFloat(result.lon);
 
+        // Type safety: Use optional chaining on result.address properties
         const area =
-          result.address.suburb ||
-          result.address.city_district ||
-          result.address.borough ||
-          result.address.quarter ||
-          result.address.ward ||
-          result.address.district ||
-          result.address.neighborhood ||
-          result.address.neighbourhood ||
-          result.address.locality ||
-          result.address.residential ||
+          result.address?.suburb ||
+          result.address?.city_district ||
+          result.address?.borough ||
+          result.address?.quarter ||
+          result.address?.ward ||
+          result.address?.district ||
+          result.address?.neighborhood ||
+          result.address?.neighbourhood ||
+          result.address?.locality ||
+          result.address?.residential ||
           '';
 
         const city =
-          result.address.city ||
-          result.address.town ||
-          result.address.village ||
-          result.address.municipality ||
-          result.address.hamlet ||
+          result.address?.city ||
+          result.address?.town ||
+          result.address?.village ||
+          result.address?.municipality ||
+          result.address?.hamlet ||
           '';
 
-        const state = result.address.state || '';
+        const state = result.address?.state || '';
 
         const formatted = formatLocation({
           neighborhood: area || '',
@@ -344,25 +458,21 @@ export default function ProfileEditPage() {
     }
   };
 
-  // --- RENDERING ---
-
+  // #region Rendering
   if (loading || userLoading) {
     return (
       <div className="min-h-screen w-full bg-white max-w-md mx-auto p-6 text-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-        <p>Loading...</p>
+        <p>Loading profile data and authentication...</p>
       </div>
     );
   }
-
-  // Rest of the component's JSX goes here (omitted for brevity)
-  // ... (JSX previously provided in the user prompt)
 
   return (
     <div className="min-h-screen w-full bg-white max-w-2xl mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6 text-black">Create Your Profile</h1>
 
-      {/* Draft indicator (restored from previous versions) */}
+      {/* Draft indicator */}
       {hasDraft && (
         <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
           <div className="flex items-center">
@@ -398,7 +508,6 @@ export default function ProfileEditPage() {
                 Profile Photo
               </label>
               <PhotoUpload
-                id="photo_upload"
                 onPhotoUploaded={handlePhotoUpload}
                 initialPhotoUrl={profile.profile_photo_url}
               />
@@ -447,7 +556,7 @@ export default function ProfileEditPage() {
                 type="email"
                 name="email"
                 id="email"
-                value={user?.email || ''}
+                value={profile.email || ''}
                 disabled
                 className="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-gray-900"
               />
@@ -789,4 +898,6 @@ export default function ProfileEditPage() {
       </form>
     </div>
   );
+  // #endregion Rendering
 }
+// #endregion Component
