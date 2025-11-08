@@ -24,11 +24,6 @@ interface Profile {
   role: string | null;
   phone_number: string | null;
 }
-
-interface ProfileUpdateData {
-  profile: Profile;
-  isNewUser: boolean;
-}
 // #endregion TYPES
 
 // #region HELPER_FUNCTIONS
@@ -36,19 +31,25 @@ interface ProfileUpdateData {
 /**
  * @function determineRedirectPath
  * @description Determines the final destination URL based on user status and profile completeness.
+ * Includes a cache-busting parameter to force client-side session refresh.
  */
 function determineRedirectPath(
   finalRedirectBaseUrl: string,
   profile: Profile,
   isNewUser: boolean,
 ): string {
-  // NEW USERS → Always go to profile edit (Complexity: 1)
+  // 🚨 FIX: Add a cache-busting parameter to the redirect path.
+  // This ensures the browser treats the destination as a hard navigation,
+  // forcing the client-side app to read the new session cookies immediately.
+  const cacheBust: string = `_t=${Date.now()}`;
+
+  // NEW USERS → Always go to profile edit
   if (isNewUser) {
     console.log("🆕 NEW USER → Redirecting to /profile/edit");
-    return finalRedirectBaseUrl + "/profile/edit";
+    return `${finalRedirectBaseUrl}/profile/edit?${cacheBust}`;
   }
 
-  // Check profile completeness for existing users (Complexity: 1 + 3 checks)
+  // Check profile completeness for existing users
   const hasCompleteBio: boolean = !!profile.bio &&
     profile.bio.trim().length > 0;
   const hasRole: boolean = !!profile.role && profile.role.trim().length > 0;
@@ -60,13 +61,13 @@ function determineRedirectPath(
   console.log("   ✓ Role:", hasRole ? "✅ Complete" : "❌ Missing");
   console.log("   ✓ Phone:", hasPhone ? "✅ Complete" : "❌ Missing");
 
-  // Existing user logic (Complexity: 1)
+  // Existing user logic
   if (hasCompleteBio && hasRole && hasPhone) {
     console.log("✅ PROFILE COMPLETE → Redirecting to /community");
-    return finalRedirectBaseUrl + "/community";
+    return `${finalRedirectBaseUrl}/community?${cacheBust}`;
   } else {
     console.log("📝 PROFILE INCOMPLETE → Redirecting to /profile/edit");
-    return finalRedirectBaseUrl + "/profile/edit";
+    return `${finalRedirectBaseUrl}/profile/edit?${cacheBust}`;
   }
 }
 
@@ -74,23 +75,21 @@ function determineRedirectPath(
  * @async
  * @function processCodeExchangeAndProfileUpdate
  * @description Executes the core logic: exchange code, update profile, send email, and route.
- * @returns {Promise<NextResponse>} A redirect response, or throws an error.
- * (Cognitive Complexity: ~12-14)
  */
 async function processCodeExchangeAndProfileUpdate(
   requestUrl: URL,
   code: string,
 ): Promise<NextResponse> {
+  // Use createClient() which is configured to default to the secure Anon Key and handles cookies.
   const supabase = await createClient();
 
-  // 1. Exchange Code (Complexity: 1)
+  // 1. Exchange Code
   const { data, error: exchangeError } = await supabase.auth
     .exchangeCodeForSession(code) as {
       data: { session: Session | null; user: User | null };
-      error: any;
+      error: unknown;
     };
 
-  // Guard Clause for exchange error (Complexity: 1)
   if (exchangeError) {
     console.error("Session exchange error:", exchangeError);
     return NextResponse.redirect(
@@ -98,7 +97,6 @@ async function processCodeExchangeAndProfileUpdate(
     );
   }
 
-  // Guard Clause for missing session/user (Complexity: 1)
   if (!data.session || !data.user) {
     console.error("No session or user created after code exchange");
     return NextResponse.redirect(
@@ -109,7 +107,7 @@ async function processCodeExchangeAndProfileUpdate(
   const user: User = data.user;
   const finalRedirectBaseUrl: string = requestUrl.origin;
 
-  // 2. New User Check (Complexity: 1)
+  // 2. New User Check
   const userCreatedAt = new Date(user.created_at);
   const thirtySecondsAgo = new Date(Date.now() - 30 * 1000);
   const isNewUser: boolean = userCreatedAt > thirtySecondsAgo;
@@ -120,7 +118,7 @@ async function processCodeExchangeAndProfileUpdate(
       : "👤 EXISTING USER",
   );
 
-  // 3. Profile Fetch and Data Merge (Complexity: 0)
+  // 3. Profile Fetch and Data Merge
   const userMetadata: UserMetadata = user.user_metadata || {};
   const googleGivenName: string | undefined = userMetadata.given_name ||
     userMetadata.first_name;
@@ -142,7 +140,7 @@ async function processCodeExchangeAndProfileUpdate(
       null,
   };
 
-  // 4. Profile Update (Complexity: 0)
+  // 4. Profile Update
   const { data: updatedProfile } = await supabase
     .from("profiles")
     .update(updateData)
@@ -152,16 +150,14 @@ async function processCodeExchangeAndProfileUpdate(
 
   console.log("✅ Profile updated with Google data");
 
-  // Guard Clause for missing updated profile data (Complexity: 1)
   if (!updatedProfile) {
     console.error("Profile update failed to return data.");
-    // Redirect to signin with a safe error, or fall back to a default route
     return NextResponse.redirect(
       new URL("/signin?error=profile_update_failed", requestUrl.origin),
     );
   }
 
-  // 5. Welcome Email (Complexity: 1)
+  // 5. Welcome Email
   if (isNewUser) {
     try {
       await fetch(`${requestUrl.origin}/api/emails/send-welcome`, {
@@ -175,13 +171,14 @@ async function processCodeExchangeAndProfileUpdate(
     }
   }
 
-  // 6. Routing (Complexity: 1)
+  // 6. Routing
   const redirectPath = determineRedirectPath(
     finalRedirectBaseUrl,
     updatedProfile,
     isNewUser,
   );
 
+  // Use NextResponse.redirect() which sets the status and Location header.
   return NextResponse.redirect(redirectPath);
 }
 // #endregion HELPER_FUNCTIONS
@@ -191,7 +188,6 @@ async function processCodeExchangeAndProfileUpdate(
  * @async
  * @function GET
  * @description Handles the OAuth callback from a provider.
- * (Cognitive Complexity: 5)
  */
 export async function GET(req: NextRequest): Promise<NextResponse> {
   const requestUrl = new URL(req.url);
@@ -212,7 +208,6 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   // 2. Process Authentication Code
   if (code) {
     try {
-      // Logic extracted to dedicated function
       return await processCodeExchangeAndProfileUpdate(requestUrl, code);
     } catch (error) { // Catch unexpected errors
       console.error("Unexpected error during session exchange:", error);
