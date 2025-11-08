@@ -8,74 +8,79 @@ import MessageModal from '@/components/MessageModal';
 import ProfilesList from '@/components/ProfilesList';
 import LocationFilter from '@/components/LocationFilter';
 import { calculateDistance } from '@/libs/distance';
+import { useProtectedRoute } from '@/hooks/useProtectedRoute';
+import { User } from '@supabase/supabase-js';
+
+interface NetworkInfo {
+  userAgent: string;
+  connectionType: string;
+  downlink: number | string;
+  rtt: number | string;
+  saveData: boolean;
+  online: boolean;
+  timestamp: string;
+}
+
+interface LocationFilterType {
+  lat: number;
+  lng: number;
+  radius: number;
+}
 
 export default function CommunityPage() {
-  const [user, setUser] = useState(null);
-  const [dogAvailabilityPosts, setDogAvailabilityPosts] = useState([]);
-  const [petpalAvailabilityPosts, setPetpalAvailabilityPosts] = useState([]);
-  const [myAvailabilityPosts, setMyAvailabilityPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { user, isLoading: authLoading } = useProtectedRoute();
+  const [dataLoading, setDataLoading] = useState(true);
+  const [dogAvailabilityPosts, setDogAvailabilityPosts] = useState<any[]>([]);
+  const [petpalAvailabilityPosts, setPetpalAvailabilityPosts] = useState<any[]>([]);
+  const [myAvailabilityPosts, setMyAvailabilityPosts] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState('dog-availability');
-  // const [joiningEvent, setJoiningEvent] = useState(null);
   const [messageModal, setMessageModal] = useState({
     isOpen: false,
     recipient: null,
     availabilityPost: null,
   });
-  const [deletingPost, setDeletingPost] = useState(null);
+  const [deletingPost, setDeletingPost] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
-  const [networkInfo, setNetworkInfo] = useState(null);
-  const [locationFilter, setLocationFilter] = useState(null); // { type, lat, lng, radius } or null
-  const [allDogPosts, setAllDogPosts] = useState([]); // Store unfiltered posts
-  const [allPetpalPosts, setAllPetpalPosts] = useState([]); // Store unfiltered posts
+  const [networkInfo, setNetworkInfo] = useState<NetworkInfo | null>(null);
+  const [locationFilter, setLocationFilter] = useState<LocationFilterType | null>(null);
+  const [allDogPosts, setAllDogPosts] = useState<any[]>([]);
+  const [allPetpalPosts, setAllPetpalPosts] = useState<any[]>([]);
 
-  // Filter posts by location
-  const filterPostsByLocation = (posts, filter) => {
+  // Filter posts by location (no change)
+  const filterPostsByLocation = (posts: any[], filter: any) => {
     if (!filter || !posts || posts.length === 0) {
       return posts || [];
     }
 
     const filteredPosts = posts.filter((post) => {
-      // Simplified: Always use display_lat/display_lng from availability table
-      // The availability table always has these populated (either from profile or custom location)
       const postLat = post.display_lat;
       const postLng = post.display_lng;
-
-      // If post has no location data, exclude it from filtered results
-      if (!postLat || !postLng) {
-        return false;
-      }
-
-      // Calculate distance from filter location to post location
+      if (!postLat || !postLng) return false;
       const distance = calculateDistance(filter.lat, filter.lng, postLat, postLng);
-
       return distance <= filter.radius;
     });
 
     return filteredPosts;
   };
 
-  // Apply location filter when filter changes
+  // Apply location filter when filter changes (no change)
   useEffect(() => {
     if (locationFilter) {
-      // Apply filter to dog posts
       const filteredDogPosts = filterPostsByLocation(allDogPosts, locationFilter);
       setDogAvailabilityPosts(filteredDogPosts);
-
-      // Apply filter to petpal posts
       const filteredPetpalPosts = filterPostsByLocation(allPetpalPosts, locationFilter);
       setPetpalAvailabilityPosts(filteredPetpalPosts);
     } else {
-      // Reset to unfiltered posts when filter is cleared
       setDogAvailabilityPosts(allDogPosts);
       setPetpalAvailabilityPosts(allPetpalPosts);
     }
   }, [locationFilter, allDogPosts, allPetpalPosts]);
 
-  const formatAvailabilitySchedule = (enabledDays, daySchedules) => {
+  // formatAvailabilitySchedule (no change)
+  const formatAvailabilitySchedule = (enabledDays: string[], daySchedules: any) => {
     if (!enabledDays || !daySchedules) return [];
 
-    const dayNames = {
+    const dayNames: { [key: string]: string } = {
       monday: 'Monday',
       tuesday: 'Tuesday',
       wednesday: 'Wednesday',
@@ -85,15 +90,15 @@ export default function CommunityPage() {
       sunday: 'Sunday',
     };
 
-    const formattedSchedule = [];
+    const formattedSchedule: string[] = [];
 
     enabledDays.forEach((day) => {
       const schedule = daySchedules[day];
-      if (schedule && schedule.enabled && schedule.timeSlots) {
+      if (schedule?.enabled && schedule.timeSlots) {
         const dayName = dayNames[day] || day.charAt(0).toUpperCase() + day.slice(1);
         const timeSlots = schedule.timeSlots
-          .filter((slot) => slot.start && slot.end)
-          .map((slot) => {
+          .filter((slot: any) => slot.start && slot.end)
+          .map((slot: any) => {
             const startTime = new Date(`2000-01-01T${slot.start}`).toLocaleTimeString('en-US', {
               hour: 'numeric',
               minute: '2-digit',
@@ -117,13 +122,13 @@ export default function CommunityPage() {
   };
 
   useEffect(() => {
-    const supabase = createClient();
-
     // Detect network information for debugging
     const detectNetwork = () => {
-      if (typeof window !== 'undefined' && 'navigator' in window) {
+      if (typeof globalThis !== 'undefined' && 'navigator' in globalThis) {
         const connection =
-          navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+          (navigator as any).connection ||
+          (navigator as any).mozConnection ||
+          (navigator as any).webkitConnection;
         const info = {
           userAgent: navigator.userAgent,
           connectionType: connection?.effectiveType || 'unknown',
@@ -136,111 +141,68 @@ export default function CommunityPage() {
         setNetworkInfo(info);
       }
     };
-
     detectNetwork();
 
-    const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      setUser(user);
-      // Always fetch availability data, regardless of login status
+    // Only fetch data if the user is loaded (guaranteed by the hook)
+    if (user) {
       fetchAvailabilityData(user);
+    }
+  }, [user]); // This now only depends on the user from the hook
 
-      // Default to "Dog Availability" tab for all users
-      // (removed the logic that switched to "My Availability" for logged-in users)
-    };
-
-    getUser();
-  }, []);
-
-  const fetchAvailabilityData = async (currentUser) => {
+  const fetchAvailabilityData = async (currentUser: User | null) => {
+    setDataLoading(true); // Use the new state variable
     try {
-      const supabase = await createClient();
+      const supabase = createClient();
 
-      // Add cache-busting parameter to prevent stale data
+      // ... (cache-busting and connection test logic is unchanged)
       const cacheBuster = Date.now();
-
-      // Force fresh data by clearing any cached queries
-      if (typeof window !== 'undefined' && window.location) {
-        // Add cache-busting to URL
-        const url = new URL(window.location);
+      if (typeof globalThis !== 'undefined' && globalThis.location) {
+        const url = new URL(globalThis.location.href);
         url.searchParams.set('_t', cacheBuster.toString());
-        window.history.replaceState({}, '', url);
+        globalThis.history.replaceState({}, '', url);
       }
-
-      // First, let's test if we can fetch any availability posts at all
       const { error: allPostsError } = await supabase
         .from('availability')
         .select('id, title, post_type, status, owner_id')
         .limit(5);
-
-      // If we can't fetch any posts, there might be a database connection issue
       if (allPostsError) {
         console.error('Database connection error:', allPostsError);
         throw new Error(`Database error: ${allPostsError.message}`);
       }
 
-      // Fetch dog availability posts (excluding current user's posts if logged in)
+      // Fetch dog availability posts (unchanged)
       let dogQuery = supabase
         .from('availability')
         .select(
           `
           *,
-          owner:profiles!availability_owner_id_fkey (
-            id,
-            first_name,
-            last_name,
-            profile_photo_url,
-            neighborhood,
-            city
-          ),
-          dog:dogs!availability_dog_id_fkey (
-            id,
-            name,
-            breed,
-            photo_url,
-            size
-          )
+          owner:profiles!availability_owner_id_fkey ( id, first_name, last_name, profile_photo_url, neighborhood, city ),
+          dog:dogs!availability_dog_id_fkey ( id, name, breed, photo_url, size )
           `
         )
         .eq('post_type', 'dog_available')
         .eq('status', 'active');
-
-      // Only exclude current user's posts if they're logged in
       if (currentUser) {
         dogQuery = dogQuery.neq('owner_id', currentUser.id);
       }
-
       const { data: dogPosts, error: dogError } = await dogQuery.order('created_at', {
         ascending: false,
       });
 
-      // Fetch all dogs for each post (handle both single dog_id and dog_ids array)
+      // Fetch all dogs logic (unchanged)
       if (dogPosts) {
         for (let post of dogPosts) {
           let dogIds = [];
-
-          // Collect all dog IDs from both dog_id and dog_ids fields
-          if (post.dog_id) {
-            dogIds.push(post.dog_id);
-          }
-          if (post.dog_ids && post.dog_ids.length > 0) {
-            dogIds = [...dogIds, ...post.dog_ids];
-          }
-
-          // Remove duplicates
+          if (post.dog_id) dogIds.push(post.dog_id);
+          if (post.dog_ids && post.dog_ids.length > 0) dogIds = [...dogIds, ...post.dog_ids];
           dogIds = [...new Set(dogIds)];
-
           if (dogIds.length > 0) {
             const { data: allDogs, error: dogsError } = await supabase
               .from('dogs')
               .select('id, name, breed, photo_url, size')
               .in('id', dogIds);
-
-            if (!dogsError && allDogs) {
-              post.allDogs = allDogs;
-            } else {
+            if (!dogsError && allDogs) post.allDogs = allDogs;
+            else {
               console.error('Error fetching dogs for post:', post.id, dogsError);
               post.allDogs = [];
             }
@@ -249,97 +211,64 @@ export default function CommunityPage() {
           }
         }
       }
-
       if (dogError) {
         console.error('Error fetching dog posts:', dogError);
         throw dogError;
       }
-      // Store unfiltered posts with allDogs attached
-      // Let useEffect handle filtering to avoid duplicate logic
       const postsWithDogs = dogPosts || [];
       setAllDogPosts(postsWithDogs);
 
-      // Fetch petpal availability posts (excluding current user's posts if logged in)
+      // Fetch petpal availability posts (unchanged)
       let petpalQuery = supabase
         .from('availability')
         .select(
           `
           *,
-          owner:profiles!availability_owner_id_fkey (
-            id,
-            first_name,
-            last_name,
-            profile_photo_url,
-            neighborhood,
-            city
-          )
+          owner:profiles!availability_owner_id_fkey ( id, first_name, last_name, profile_photo_url, neighborhood, city )
           `
         )
         .eq('post_type', 'petpal_available')
         .eq('status', 'active');
-
-      // Only exclude current user's posts if they're logged in
       if (currentUser) {
         petpalQuery = petpalQuery.neq('owner_id', currentUser.id);
       }
-
       const { data: petpalPosts, error: petpalError } = await petpalQuery.order('created_at', {
         ascending: false,
       });
-
       if (petpalError) {
         console.error('Error fetching petpal posts:', petpalError);
         throw petpalError;
       }
-      // Store unfiltered posts
-      // Let useEffect handle filtering to avoid duplicate logic
       const postsWithData = petpalPosts || [];
       setAllPetpalPosts(postsWithData);
 
-      // Fetch user's own availability posts
+      // Fetch user's own availability posts (unchanged)
       if (currentUser) {
         const { data: myPosts, error: myError } = await supabase
           .from('availability')
           .select(
             `
               *,
-              dog:dogs!availability_dog_id_fkey (
-                id,
-                name,
-                breed,
-                photo_url,
-                size
-              )
+              dog:dogs!availability_dog_id_fkey ( id, name, breed, photo_url, size )
             `
           )
           .eq('owner_id', currentUser.id)
           .order('created_at', { ascending: false });
 
-        // Fetch all dogs for each post (handle both single dog_id and dog_ids array)
+        // Fetch all dogs for my posts (unchanged)
         if (myPosts) {
           for (let post of myPosts) {
             let dogIds = [];
-
-            // Collect all dog IDs from both dog_id and dog_ids fields
-            if (post.dog_id) {
-              dogIds.push(post.dog_id);
-            }
-            if (post.dog_ids && post.dog_ids.length > 0) {
-              dogIds = [...dogIds, ...post.dog_ids];
-            }
-
-            // Remove duplicates
+            if (post.dog_id) dogIds.push(post.dog_id);
+            if (post.dog_ids && post.dog_ids.length > 0) dogIds = [...dogIds, ...post.dog_ids];
             dogIds = [...new Set(dogIds)];
-
             if (dogIds.length > 0) {
               const { data: allDogs, error: dogsError } = await supabase
                 .from('dogs')
                 .select('id, name, breed, photo_url, size')
                 .in('id', dogIds);
-
-              if (!dogsError && allDogs) {
-                post.allDogs = allDogs;
-              } else {
+              if (!dogsError && allDogs) post.allDogs = allDogs;
+              else {
                 console.error('Error fetching dogs for my post:', post.id, dogsError);
                 post.allDogs = [];
               }
@@ -348,7 +277,6 @@ export default function CommunityPage() {
             }
           }
         }
-
         if (myError) {
           console.error('Error fetching user posts:', myError);
           throw myError;
@@ -358,11 +286,12 @@ export default function CommunityPage() {
     } catch (error) {
       console.error('Error fetching availability data:', error);
     } finally {
-      setLoading(false);
+      setDataLoading(false); // Use the new state variable
     }
   };
 
-  const formatDate = (dateString) => {
+  // formatDate (no change)
+  const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
       weekday: 'long',
@@ -374,84 +303,18 @@ export default function CommunityPage() {
     });
   };
 
-  // const getRoleIcon = (role) => {
-  // 	switch (role) {
-  // 		case 'dog_owner':
-  // 			return '🐕';
-  // 		case 'dog_walker':
-  // 			return '🚶‍♂️';
-  // 		case 'both':
-  // 			return '🐕‍🦺';
-  // 		default:
-  // 			return '👤';
-  // 	}
-  // };
-
-  // const getEventIcon = (eventType) => {
-  // 	switch (eventType) {
-  // 		case 'meetup':
-  // 			return '🤝';
-  // 		case 'workshop':
-  // 			return '📚';
-  // 		case 'outdoor':
-  // 			return '🏔️';
-  // 		default:
-  // 			return '📅';
-  // 	}
-  // };
-
-  // const getPlaceIcon = (type) => {
-  // 	switch (type) {
-  // 		case 'park':
-  // 			return '🌳';
-  // 		case 'cafe':
-  // 			return '☕';
-  // 		case 'store':
-  // 			return '🛍️';
-  // 		default:
-  // 			return '📍';
-  // 	}
-  // };
-
-  // const handleJoinEvent = async (eventId) => {
-  // 	setJoiningEvent(eventId);
-  // 	try {
-  // 		const response = await fetch(`/api/community/events/${eventId}/join`, {
-  // 			method: 'POST',
-  // 			headers: {
-  // 				'Content-Type': 'application/json',
-  // 			},
-  // 		});
-
-  // 		if (response.ok) {
-  // 			// Refresh events to show updated participant count
-  // 			const eventsResponse = await fetch('/api/community/events?limit=10');
-  // 			if (eventsResponse.ok) {
-  // 				const eventsData = await eventsResponse.json();
-  // 				// Note: setCommunityEvents is not defined in this component
-  // 				// This will be handled by the parent component or removed if not needed
-  // 			}
-  // 		} else {
-  // 			const errorData = await response.json();
-  // 			alert(errorData.error || 'Failed to join event');
-  // 		}
-  // 	} catch (error) {
-  // 		console.error('Error joining event:', error);
-  // 		alert('Failed to join event');
-  // 	} finally {
-  // 		setJoiningEvent(null);
-  // 	}
-  // };
-
-  const openMessageModal = (recipient, availabilityPost) => {
+  // openMessageModal (no change)
+  const openMessageModal = (recipient: any, availabilityPost: any) => {
     setMessageModal({ isOpen: true, recipient, availabilityPost });
   };
 
+  // closeMessageModal (no change)
   const closeMessageModal = () => {
     setMessageModal({ isOpen: false, recipient: null, availabilityPost: null });
   };
 
-  const deletePost = async (postId) => {
+  // deletePost (no change, `user` is provided by the hook)
+  const deletePost = async (postId: string) => {
     if (
       !user ||
       !confirm(
@@ -462,7 +325,7 @@ export default function CommunityPage() {
 
     try {
       setDeletingPost(postId);
-      const supabase = await createClient();
+      const supabase = createClient();
       const { error } = await supabase
         .from('availability')
         .update({ status: 'inactive' })
@@ -471,16 +334,25 @@ export default function CommunityPage() {
 
       if (error) {
         console.error('Error hiding post:', error);
-        alert('Failed to hide post: ' + (error.message || 'Unknown error'));
+        alert(
+          'Failed to hide post: ' +
+            (typeof error === 'object' && error !== null && 'message' in error
+              ? (error as { message?: string }).message || 'Unknown error'
+              : 'Unknown error')
+        );
         return;
       }
 
-      // Remove from local state
       setMyAvailabilityPosts(myAvailabilityPosts.filter((post) => post.id !== postId));
       alert('Post hidden successfully');
     } catch (error) {
       console.error('Error hiding post:', error);
-      alert('Failed to hide post: ' + (error.message || 'Unknown error'));
+      alert(
+        'Failed to hide post: ' +
+          (typeof error === 'object' && error !== null && 'message' in error
+            ? (error as { message?: string }).message || 'Unknown error'
+            : 'Unknown error')
+      );
     } finally {
       setDeletingPost(null);
     }
@@ -489,29 +361,21 @@ export default function CommunityPage() {
   const refreshData = async () => {
     setRefreshing(true);
     try {
-      // Clear all caches aggressively
-      if (typeof window !== 'undefined') {
-        // Clear browser cache
-        if ('caches' in window) {
+      // ... (cache clearing logic unchanged)
+      if (typeof globalThis !== 'undefined') {
+        if ('caches' in globalThis) {
           const cacheNames = await caches.keys();
           await Promise.all(cacheNames.map((name) => caches.delete(name)));
         }
-
-        // Clear localStorage and sessionStorage
         localStorage.clear();
         sessionStorage.clear();
-
-        // Force reload of all resources
         if ('serviceWorker' in navigator) {
           const registrations = await navigator.serviceWorker.getRegistrations();
           await Promise.all(registrations.map((reg) => reg.unregister()));
         }
       }
 
-      const supabase = await createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      // No need to call getUser(), just use the user from the hook
       await fetchAvailabilityData(user);
     } catch (error) {
       console.error('Error refreshing data:', error);
@@ -520,7 +384,7 @@ export default function CommunityPage() {
     }
   };
 
-  if (loading) {
+  if (authLoading || dataLoading) {
     return (
       <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
@@ -528,6 +392,7 @@ export default function CommunityPage() {
     );
   }
 
+  // The hook guarantees 'user' is not null here, so we can render
   return (
     <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-purple-50">
       <div className="max-w-7xl mx-auto py-4 sm:py-8 px-3 sm:px-4">
@@ -651,7 +516,7 @@ export default function CommunityPage() {
                         <div>
                           <h4 className="font-medium mb-2">Dogs Available:</h4>
                           <div className="grid grid-cols-2 gap-2">
-                            {post.allDogs.map((dog) => (
+                            {post.allDogs.map((dog: any) => (
                               <div key={dog.id} className="flex items-center space-x-2">
                                 {dog.photo_url ? (
                                   <Image
@@ -703,7 +568,7 @@ export default function CommunityPage() {
                       <div className="text-sm text-gray-600 space-y-1">
                         {formatAvailabilitySchedule(post.enabled_days, post.day_schedules).map(
                           (schedule, index) => (
-                            <div key={index} className="flex items-center">
+                            <div key={schedule} className="flex items-center">
                               <span className="mr-2">📅</span>
                               <span>{schedule}</span>
                             </div>
@@ -718,7 +583,7 @@ export default function CommunityPage() {
                     <div className="mb-4">
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
                         <span className="mr-1">🤝</span>
-                        Community Support
+                        <span>Community Support</span>
                       </span>
                     </div>
                   )}
@@ -732,7 +597,7 @@ export default function CommunityPage() {
                   {post.is_urgent && (
                     <div className="flex items-center text-sm text-red-600 mb-4">
                       <span className="mr-2">🚨</span>
-                      Urgent
+                      <span>Urgent</span>
                     </div>
                   )}
 
@@ -743,19 +608,19 @@ export default function CommunityPage() {
                         {post.can_pick_up_drop_off && (
                           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                             <span className="mr-1">🚗</span>
-                            Can Pick Up & Drop Off
+                            <span>Can Pick Up & Drop Off</span>
                           </span>
                         )}
                         {post.can_pick_up && !post.can_pick_up_drop_off && (
                           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                             <span className="mr-1">📤</span>
-                            Can Pick Up
+                            <span>Can Pick Up</span>
                           </span>
                         )}
                         {post.can_drop_off && !post.can_pick_up_drop_off && (
                           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
                             <span className="mr-1">📥</span>
-                            Can Drop Off
+                            <span>Can Drop Off</span>
                           </span>
                         )}
                       </div>
@@ -780,7 +645,7 @@ export default function CommunityPage() {
                         </button>
                       ) : (
                         <div className="text-xs text-gray-400 px-2 py-1 bg-gray-100 rounded-sm text-center">
-                          {!user ? 'Not logged in' : 'Your post'}
+                          {user ? 'Your post' : 'Not logged in'}
                         </div>
                       )}
                     </div>
@@ -811,10 +676,10 @@ export default function CommunityPage() {
             <div className="mt-8">
               <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">
                 <span className="mr-2">🐕</span>
-                Dog Owners in the Community
+                <span>Dog Owners in the Community</span>
               </h3>
-              <ProfilesList 
-                role="dog_owner" 
+              <ProfilesList
+                role="dog_owner"
                 onMessage={openMessageModal}
                 locationFilter={locationFilter}
               />
@@ -895,7 +760,7 @@ export default function CommunityPage() {
                       <div className="text-sm text-gray-600 space-y-1">
                         {formatAvailabilitySchedule(post.enabled_days, post.day_schedules).map(
                           (schedule, index) => (
-                            <div key={index} className="flex items-center">
+                            <div key={schedule} className="flex items-center">
                               <span className="mr-2">📅</span>
                               <span>{schedule}</span>
                             </div>
@@ -910,7 +775,7 @@ export default function CommunityPage() {
                     <div className="mb-4">
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
                         <span className="mr-1">🤝</span>
-                        Community Support
+                        <span>Community Support</span>
                       </span>
                     </div>
                   )}
@@ -925,7 +790,7 @@ export default function CommunityPage() {
                     {post.can_pick_up_drop_off && (
                       <div className="flex items-center text-sm text-green-600">
                         <span className="mr-2">🚗</span>
-                        Can pick up/drop off
+                        <span>Can pick up/drop off</span>
                       </div>
                     )}
                   </div>
@@ -974,10 +839,10 @@ export default function CommunityPage() {
             <div className="mt-8">
               <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">
                 <span className="mr-2">🤝</span>
-                PetPals in the Community
+                <span>PetPals in the Community</span>
               </h3>
-              <ProfilesList 
-                role="petpal" 
+              <ProfilesList
+                role="petpal"
                 onMessage={openMessageModal}
                 locationFilter={locationFilter}
               />
@@ -1050,7 +915,7 @@ export default function CommunityPage() {
                           <div>
                             <h4 className="font-medium mb-2">Dogs Available:</h4>
                             <div className="grid grid-cols-2 gap-2">
-                              {post.allDogs.map((dog) => (
+                              {post.allDogs.map((dog: any) => (
                                 <div key={dog.id} className="flex items-center space-x-2">
                                   {dog.photo_url ? (
                                     <Image
