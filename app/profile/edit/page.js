@@ -624,7 +624,7 @@ export default function ProfileEditPage() {
                 >
                   Street Address
                 </label>
-                <AddressAutofill accessToken="MAPBOX_TOKEN">
+                <AddressAutofill accessToken="pk.eyJ1Ijoic2hhcmVza2lwcHkiLCJhIjoiY21odGUzM2JyMXFqMjJqcHhqbm5sNjc5eiJ9.8RrmjH8TkKQ92Ja48zKHYg">
                   <input
                     type="text"
                     name="street_address"
