@@ -17,6 +17,8 @@
     "lint:fix": "npm run lint:js --fix && npm run lint:css --fix",
     "typecheck": "tsc --noEmit",
     "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "test:ci": "jest --ci --coverage --maxWorkers=2",
     "analyze": "ANALYZE=true next build"
   },
@@ -77,8 +79,7 @@
     "stylelint-config-standard": "^39.0.1",
     "stylelint-config-tailwindcss": "^1.0.0",
     "supabase": "^2.51.0",
-    "tailwindcss": "^4.1.16",
-    "ts-jest": "^29.4.5"
+    "tailwindcss": "^4.1.16"
   },
   "babel": {
     "presets": [
