@@ -8,7 +8,7 @@ import { useUser } from '@/libs/supabase/hooks';
 import { useProfileDraft } from '@/hooks/useProfileDraft';
 import { formatLocation } from '@/libs/utils';
 import PhotoUpload from '@/components/ui/PhotoUpload';
-import { AddressAutofill } from '@mapbox/search-js-react';
+
 
 const initialProfileState = {
   first_name: '',
