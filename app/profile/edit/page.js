@@ -9,6 +9,7 @@ import { useProfileDraft } from '@/hooks/useProfileDraft';
 import { formatLocation } from '@/libs/utils';
 import PhotoUpload from '@/components/ui/PhotoUpload';
 
+
 const initialProfileState = {
   first_name: '',
   last_name: '',
