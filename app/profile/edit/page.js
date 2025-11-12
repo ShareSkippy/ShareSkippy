@@ -9,6 +9,7 @@ import { useProfileDraft } from '@/hooks/useProfileDraft';
 import { formatLocation } from '@/libs/utils';
 import PhotoUpload from '@/components/ui/PhotoUpload';
 
+
 const initialProfileState = {
   first_name: '',
   last_name: '',
@@ -623,15 +624,18 @@ export default function ProfileEditPage() {
                 >
                   Street Address
                 </label>
-                <input
-                  type="text"
-                  name="street_address"
-                  id="street_address"
-                  value={profile.street_address}
-                  onChange={handleInputChange}
-                  placeholder="123 Main Street"
-                  className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
-                />
+                <AddressAutofill accessToken="pk.eyJ1Ijoic2hhcmVza2lwcHkiLCJhIjoiY21odGUzM2JyMXFqMjJqcHhqbm5sNjc5eiJ9.8RrmjH8TkKQ92Ja48zKHYg">
+                  <input
+                    type="text"
+                    name="street_address"
+                    id="street_address"
+                    value={profile.street_address}
+                    onChange={handleInputChange}
+                    placeholder="123 Main Street"
+                    className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
+                    autoComplete="address-line1"
+                  />
+                </AddressAutofill>
               </div>
 
               <div>
@@ -646,6 +650,7 @@ export default function ProfileEditPage() {
                   onChange={handleInputChange}
                   placeholder="Berkeley"
                   className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
+                  autoComplete="address-level2"
                 />
               </div>
 
@@ -661,6 +666,7 @@ export default function ProfileEditPage() {
                   onChange={handleInputChange}
                   placeholder="CA"
                   className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
+                  autoComplete="address-level1"
                 />
               </div>
 
@@ -676,6 +682,7 @@ export default function ProfileEditPage() {
                   onChange={handleInputChange}
                   placeholder="94704"
                   className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
+                  autoComplete="postal-code"
                 />
               </div>
 
