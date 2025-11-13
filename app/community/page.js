@@ -8,6 +8,7 @@ import MessageModal from '@/components/MessageModal';
 import ProfilesList from '@/components/ProfilesList';
 import LocationFilter from '@/components/LocationFilter';
 import { calculateDistance } from '@/libs/distance';
+import AvailabilityCardButtons from '@/components/ui/AvailabilityCardButtons';
 
 export default function CommunityPage() {
   const [user, setUser] = useState(null);
@@ -762,30 +763,13 @@ export default function CommunityPage() {
                     </div>
                   )}
 
-                  <div className="mt-auto pt-4 border-t border-gray-100">
-                    <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
-                      <Link
-                        href={`/community/availability/${post.id}`}
-                        className="bg-blue-600 text-white px-4 py-2.5 rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base text-center"
-                      >
-                        View Details
-                      </Link>
-
-                      {user && user.id !== post.owner_id ? (
-                        <button
-                          onClick={() => openMessageModal(post.owner, post)}
-                          className="bg-green-600 text-white px-4 py-2.5 rounded-lg hover:bg-green-700 transition-colors text-sm sm:text-base"
-                          aria-label={`Send message to ${post.owner?.first_name} about ${post.title}`}
-                        >
-                          Send Message
-                        </button>
-                      ) : (
-                        <div className="text-xs text-gray-400 px-2 py-1 bg-gray-100 rounded-sm text-center">
-                          {!user ? 'Not logged in' : 'Your post'}
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                  <AvailabilityCardButtons
+                      post={post}
+                      user={user}
+                      onMessage={openMessageModal}
+                      viewDetailsColor="blue"
+                      sendMessageColor="green"
+                    />
                 </div>
               ))}
 
@@ -931,25 +915,13 @@ export default function CommunityPage() {
                     )}
                   </div>
 
-                  <div className="mt-auto pt-4 border-t border-gray-100">
-                    <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
-                      <Link
-                        href={`/community/availability/${post.id}`}
-                        className="bg-blue-600 text-white px-4 py-2.5 rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base text-center"
-                      >
-                        View Details
-                      </Link>
-                      {user && user.id !== post.owner_id && (
-                        <button
-                          onClick={() => openMessageModal(post.owner, post)}
-                          className="bg-green-600 text-white px-4 py-2.5 rounded-lg hover:bg-green-700 transition-colors text-sm sm:text-base"
-                          aria-label={`Send message to ${post.owner?.first_name} about ${post.title}`}
-                        >
-                          Send Message
-                        </button>
-                      )}
-                    </div>
-                  </div>
+                  <AvailabilityCardButtons
+                      post={post}
+                      user={user}
+                      onMessage={openMessageModal}
+                      viewDetailsColor="blue"
+                      sendMessageColor="green"
+                  />
                 </div>
               ))}
 
