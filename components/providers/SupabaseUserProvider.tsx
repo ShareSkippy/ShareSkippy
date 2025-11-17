@@ -101,13 +101,38 @@ export const SupabaseUserProvider: FC<SupabaseUserProviderProps> = ({
 
   const signOut = useCallback(async () => {
     setSaving(true);
-    const { error } = await supabase.auth.signOut();
-    if (!error) {
+    let finalError: Error | null = null;
+
+    try {
+      const logoutResponse = await fetch('/api/auth/logout', {
+        method: 'POST',
+        cache: 'no-store',
+      });
+
+      if (!logoutResponse.ok) {
+        const serverMessage =
+          (await logoutResponse.text()) || 'Failed to revoke session on server.';
+        throw new Error(serverMessage);
+      }
+
+      const { error: authError } = await supabase.auth.signOut();
+      if (authError) {
+        throw authError;
+      }
+    } catch (error) {
+      console.error('Error signing out:', error);
+      const fallback = typeof error === 'string' ? error : 'Unexpected logout error';
+      finalError = error instanceof Error ? error : new Error(fallback);
+    } finally {
+      setSaving(false);
+    }
+
+    if (!finalError) {
       setUser(null);
       setSession(null);
     }
-    setSaving(false);
-    return { error };
+
+    return { error: finalError };
   }, [supabase]); // Supabase client is stable, state setters are stable
 
   const value: UserContextType = useMemo(
