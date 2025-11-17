@@ -97,7 +97,7 @@ export const SupabaseUserProvider: FC<SupabaseUserProviderProps> = ({
     };
 
     // This effect MUST only run once on mount.
-  }, [supabase]);
+  }, [supabase, authLoading]);
 
   const signOut = useCallback(async () => {
     setSaving(true);
