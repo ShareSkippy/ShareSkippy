@@ -1,6 +1,8 @@
 /**
  * @jest-environment jsdom
  */
+
+// #region Imports
 import {
   processScheduledEmails,
   scheduleMeetingReminder,
@@ -10,13 +12,23 @@ import {
   ScheduledEmail,
 } from './scheduler';
 import { sendEmail } from './sendEmail';
+// #endregion Imports
 
+// #region Mocks
+/**
+ * Mock the core sendEmail function to prevent actual email sends
+ * and allow for spying on its calls.
+ */
 jest.mock('./sendEmail', () => ({
   sendEmail: jest.fn(),
 }));
 
-// We chain 'this' (as 'any') to allow for .from().select().eq()...
-const mockSupabase = {
+/**
+ * Create a deep, chainable mock for the Supabase client.
+ * Each method returns `this` (as `any`) to allow for chains like:
+ * .from().select().eq()...
+ */
+const mockSupabase: any = {
   from: jest.fn(() => mockSupabase),
   select: jest.fn(() => mockSupabase),
   insert: jest.fn(() => mockSupabase),
@@ -30,17 +42,34 @@ const mockSupabase = {
   single: jest.fn(() => mockSupabase),
 };
 
+/**
+ * Mock the Supabase server client factory to return our chainable mock.
+ */
 jest.mock('@/libs/supabase/server', () => ({
-  createServiceClient: jest.fn(() => mockSupabase),
+  createClient: jest.fn(() => mockSupabase),
 }));
 
+/**
+ * Silence console.error during tests to keep test output clean,
+ * especially for intentionally thrown errors.
+ */
 jest.spyOn(console, 'error').mockImplementation(() => {});
 
+/**
+ * Create a typed reference to the mocked sendEmail function.
+ */
 const mockedSendEmail = sendEmail as jest.Mock;
+// #endregion Mocks
 
+// #region Test Constants
+/**
+ * A fixed system time for deterministic date-based calculations.
+ */
 const MOCK_DATE = '2025-11-01T10:00:00.000Z';
+// #endregion Test Constants
 
 describe('Scheduled Email Functions', () => {
+  // #region Test Lifecycle
   beforeAll(() => {
     jest.useFakeTimers();
     jest.setSystemTime(new Date(MOCK_DATE));
@@ -53,7 +82,10 @@ describe('Scheduled Email Functions', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    // Reset all mock implementations to return 'this' for chaining
+    /**
+     * Reset all mock implementations to return 'this' for chaining,
+     * ensuring test isolation.
+     */
     mockSupabase.from.mockImplementation(() => mockSupabase);
     mockSupabase.select.mockImplementation(() => mockSupabase);
     mockSupabase.insert.mockImplementation(() => mockSupabase);
@@ -68,7 +100,9 @@ describe('Scheduled Email Functions', () => {
 
     mockedSendEmail.mockResolvedValue(undefined);
   });
+  // #endregion Test Lifecycle
 
+  // #region Test Cases
   describe('processScheduledEmails', () => {
     const mockEmail: ScheduledEmail = {
       id: 1,
@@ -346,4 +380,5 @@ describe('Scheduled Email Functions', () => {
       );
     });
   });
+  // #endregion Test Cases
 });
