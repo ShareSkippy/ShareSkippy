@@ -32,8 +32,8 @@ const mockCreateServerClient = jest.fn(() => mockClient);
 
 const loadLogoutRoutePOST = async (): Promise<LogoutRoutePOST> => {
     // @ts-expect-error NodeNext enforces file extensions, but Jest uses ts-jest to resolve the .ts file.
-    const module: LogoutRouteModule = await import("./route");
-    return module.POST;
+    const routeModule: LogoutRouteModule = await import("./route");
+    return routeModule.POST;
 };
 
 jest.mock("next/headers", () => ({
