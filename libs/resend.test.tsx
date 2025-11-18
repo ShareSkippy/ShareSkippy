@@ -1,7 +1,7 @@
 // 1. Mock external dependencies (Jest hoisting)
 jest.mock('resend');
 // Mock the 'default' export for ESM/CJS interop
-jest.mock('@/config', () => ({
+jest.mock('../config', () => ({
   __esModule: true,
   default: {
     resend: {
@@ -18,7 +18,7 @@ process.env.RESEND_API_KEY = 'mock_api_key';
 // Note: We keep the type import here, but the value is loaded dynamically.
 let resendModule: typeof import('./resend');
 let Resend: jest.Mocked<typeof import('resend').Resend>; // Use typed mock
-let config: { resend: { fromAdmin: string; supportEmail: string } };
+let config: any;
 
 // Mock utilities
 const mockResendSend = jest.fn();
@@ -62,9 +62,9 @@ describe('sendEmail', () => {
 
     // 6. Now, re-import the module under test and its config.
     // Use dynamic import() for both, accessing the default export for config.
-    const configModule = await import('@/config');
+    const configModule = await import('../config.js');
     config = configModule.default;
-    resendModule = await import('./resend');
+    resendModule = await import('./resend.js');
   });
 
   afterAll(() => {
@@ -96,7 +96,7 @@ describe('sendEmail', () => {
     it('should strip HTML tags to create text content if text is missing', async () => {
       const emailWithMissingText = {
         ...mockParams,
-        text: undefined,
+        text: '',
         html: '<h1>Hello, World!</h1> <p>This is **bold** text.</p>',
       };
 
