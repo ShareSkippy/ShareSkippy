@@ -25,10 +25,8 @@ jobs:
         include:
           - language: javascript-typescript
             build-mode: none
-            config-file: ./.github/codeql/codeql-config-javascript.yml
           - language: actions
             build-mode: none
-            config-file: ./.github/codeql/codeql-config-actions.yml
 
     steps:
       - name: Checkout repository
@@ -51,12 +49,7 @@ jobs:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
           queries: security-extended,security-and-quality
-          config-file: ${{ matrix.config-file }}
-
-      - name: Run manual build steps
-        if: matrix.build-mode == 'manual'
-        run: |
-          npm run build --if-present
+          config-file: ./.github/codeql/codeql-config.yml
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4

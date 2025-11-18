@@ -11,4 +11,6 @@ jest.mock('next/image', () => ({
   },
 }));
 
-window.sscrollTo = jest.fn();
+if (globalThis.window !== undefined) {
+  globalThis.window.scrollTo = jest.fn();
+}
