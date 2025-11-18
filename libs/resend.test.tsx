@@ -16,9 +16,17 @@ process.env.RESEND_API_KEY = 'mock_api_key';
 
 // These will be assigned in beforeEach after modules are reset
 // Note: We keep the type import here, but the value is loaded dynamically.
-let resendModule: typeof import('./resend');
+type ResendModule = typeof import('./resend');
+type ConfigType = {
+  resend: {
+    fromAdmin: string;
+    supportEmail: string;
+  };
+};
+
+let resendModule: ResendModule;
 let Resend: jest.Mocked<typeof import('resend').Resend>; // Use typed mock
-let config: any;
+let config: ConfigType;
 
 // Mock utilities
 const mockResendSend = jest.fn();
@@ -63,7 +71,7 @@ describe('sendEmail', () => {
     // 6. Now, re-import the module under test and its config.
     // Use dynamic import() for both, accessing the default export for config.
     const configModule = await import('../config.js');
-    config = configModule.default;
+    config = configModule.default as unknown as ConfigType;
     resendModule = await import('./resend.js');
   });
 
