@@ -98,7 +98,9 @@ describe('PhotoUpload', () => {
     mockGetUser.mockResolvedValue({ data: { user: { id: 'test-user-id' } } });
     mockUpload.mockResolvedValue({ error: null, data: { path: 'test-user-id/12345.jpg' } });
     mockGetPublicUrl.mockReturnValue({
-      data: { publicUrl: 'https://supabase.mock/public/test-user-id/12345.jpg' },
+      data: {
+        publicUrl: 'https://supabase.mock/public/test-bucket/test-user-id/12345.jpg',
+      },
     });
     mockRemove.mockResolvedValue({ error: null });
   });
@@ -106,8 +108,9 @@ describe('PhotoUpload', () => {
   it('renders placeholder when no initial URL is provided', () => {
     render(
       <PhotoUpload
+        id="test-id"
         onPhotoUploaded={mockOnPhotoUploaded}
-        initialPhotoUrl={null}
+        initialPhotoUrl={''}
         bucketName="test-bucket"
       />
     );
@@ -121,6 +124,7 @@ describe('PhotoUpload', () => {
     const initialUrl = 'https://example.com/initial.jpg';
     render(
       <PhotoUpload
+        id="test-id"
         onPhotoUploaded={mockOnPhotoUploaded}
         initialPhotoUrl={initialUrl}
         bucketName="test-bucket"
@@ -131,13 +135,14 @@ describe('PhotoUpload', () => {
     expect(img).toBeInTheDocument();
     expect(img).toHaveAttribute('src', initialUrl);
     expect(screen.getByRole('button', { name: 'Change Photo' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: '×' })).toBeInTheDocument(); // Remove button
+    expect(screen.getByRole('button', { name: 'Remove profile photo' })).toBeInTheDocument(); // Remove button
   });
 
   it('hides upload/remove buttons when disabled', () => {
     const initialUrl = 'https://example.com/initial.jpg';
     render(
       <PhotoUpload
+        id="test-id"
         onPhotoUploaded={mockOnPhotoUploaded}
         initialPhotoUrl={initialUrl}
         disabled={true}
@@ -148,15 +153,16 @@ describe('PhotoUpload', () => {
     expect(screen.getByAltText('Profile')).toBeInTheDocument(); // Buttons are hidden
 
     expect(screen.queryByRole('button', { name: 'Change Photo' })).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: '×' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Remove profile photo' })).not.toBeInTheDocument();
   });
 
   it('handles successful photo upload', async () => {
     const { container } = render(
       <PhotoUpload
+        id="test-id"
         onPhotoUploaded={mockOnPhotoUploaded}
         bucketName="test-bucket"
-        initialPhotoUrl={null}
+        initialPhotoUrl={''}
       />
     );
 
@@ -177,7 +183,7 @@ describe('PhotoUpload', () => {
     expect(mockUpload).toHaveBeenCalledTimes(1);
     expect(mockGetPublicUrl).toHaveBeenCalledTimes(1); // Verify callback
 
-    const newUrl = 'https://supabase.mock/public/test-user-id/12345.jpg';
+    const newUrl = 'https://supabase.mock/public/test-bucket/test-user-id/12345.jpg';
     expect(mockOnPhotoUploaded).toHaveBeenCalledWith(newUrl); // Verify UI update
 
     const img = screen.getByAltText('Profile');
@@ -186,16 +192,17 @@ describe('PhotoUpload', () => {
   });
 
   it('handles photo removal', async () => {
-    const initialUrl = 'https://supabase.mock/public/test-user-id/12345.jpg';
+    const initialUrl = 'https://supabase.mock/public/test-bucket/test-user-id/12345.jpg';
     render(
       <PhotoUpload
+        id="test-id"
         onPhotoUploaded={mockOnPhotoUploaded}
         initialPhotoUrl={initialUrl}
         bucketName="test-bucket"
       />
     );
 
-    const removeButton = screen.getByRole('button', { name: '×' });
+    const removeButton = screen.getByRole('button', { name: 'Remove profile photo' });
 
     await act(async () => {
       fireEvent.click(removeButton);
@@ -214,13 +221,14 @@ describe('PhotoUpload', () => {
     const initialUrl = 'https://example.com/not-supabase.jpg';
     render(
       <PhotoUpload
+        id="test-id"
         onPhotoUploaded={mockOnPhotoUploaded}
         initialPhotoUrl={initialUrl}
         bucketName="test-bucket"
       />
     );
 
-    const removeButton = screen.getByRole('button', { name: '×' });
+    const removeButton = screen.getByRole('button', { name: 'Remove profile photo' });
 
     await act(async () => {
       fireEvent.click(removeButton);
@@ -235,9 +243,10 @@ describe('PhotoUpload', () => {
   it('shows error for non-image file', async () => {
     const { container } = render(
       <PhotoUpload
+        id="test-id"
         onPhotoUploaded={mockOnPhotoUploaded}
         bucketName="test-bucket"
-        initialPhotoUrl={null}
+        initialPhotoUrl={''}
       />
     );
     const fileInput = container.querySelector('input[type="file"]');
@@ -247,7 +256,7 @@ describe('PhotoUpload', () => {
       fireEvent.change(fileInput!, { target: { files: [textFile] } });
     });
 
-    expect(await screen.findByText('Please select an image file')).toBeInTheDocument();
+    expect(await screen.findByText('Please select a valid image file')).toBeInTheDocument();
     expect(mockUpload).not.toHaveBeenCalled();
     expect(mockOnPhotoUploaded).not.toHaveBeenCalled();
   });
@@ -255,9 +264,10 @@ describe('PhotoUpload', () => {
   it('shows error for file size too large', async () => {
     const { container } = render(
       <PhotoUpload
+        id="test-id"
         onPhotoUploaded={mockOnPhotoUploaded}
         bucketName="test-bucket"
-        initialPhotoUrl={null}
+        initialPhotoUrl={''}
       />
     );
     const fileInput = container.querySelector('input[type="file"]'); // Create a file larger than 10MB
@@ -271,7 +281,7 @@ describe('PhotoUpload', () => {
     });
 
     expect(
-      await screen.findByText('File size too large. Please select a smaller image.')
+      await screen.findByText('File size too large. Max allowed is 10MB before compression.')
     ).toBeInTheDocument();
     expect(mockUpload).not.toHaveBeenCalled();
     expect(mockOnPhotoUploaded).not.toHaveBeenCalled();
@@ -283,9 +293,10 @@ describe('PhotoUpload', () => {
 
     const { container } = render(
       <PhotoUpload
+        id="test-id"
         onPhotoUploaded={mockOnPhotoUploaded}
         bucketName="test-bucket"
-        initialPhotoUrl={null}
+        initialPhotoUrl={''}
       />
     );
     const fileInput = container.querySelector('input[type="file"]');
