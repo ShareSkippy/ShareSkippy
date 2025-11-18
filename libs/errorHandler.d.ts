@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 export class APIError extends Error {
     readonly statusCode: number;
     readonly code: string | null;
