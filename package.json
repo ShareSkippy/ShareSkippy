@@ -20,6 +20,7 @@
     "test:ci": "jest --ci --coverage --maxWorkers=2",
     "analyze": "ANALYZE=true next build",
     "playwright:install": "npx playwright install",
+    "seed:test": "ts-node-esm scripts/seed-test-data.ts",
     "prepare": "husky",
     "format": "prettier",
     "format:write": "prettier --write"
