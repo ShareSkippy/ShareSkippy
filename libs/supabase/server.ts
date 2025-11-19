@@ -1,8 +1,18 @@
-import { createServerClient, type CookieMethodsServer } from '@supabase/ssr';
+import { CookieOptions, createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { getCookieOptions } from '@/libs/cookieOptions';
+import { ensureEnvDefaults } from '@/libs/loadEnv.mjs';
 
 type SupabaseKeyType = 'anon' | 'service_role';
+
+/**
+ * Represents a cookie to be set in the cookie store.
+ */
+interface CookieToSet {
+  name: string;
+  value: string;
+  options?: CookieOptions;
+}
 
 /**
  * @async
@@ -19,21 +29,21 @@ export async function createClient(type: SupabaseKeyType = 'anon') {
       ? process.env.SUPABASE_SERVICE_ROLE_KEY!
       : process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-  const cookieMethods: CookieMethodsServer = {
-    getAll() {
-      return cookieStore.getAll();
-    },
-    setAll(cookiesToSet) {
-      try {
-        cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
-      } catch {
-        // Safe to ignore in Server Components/Middleware if session refresh is handled.
-      }
-    },
-  };
-
   return createServerClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, supabaseKey, {
     cookieOptions: getCookieOptions(),
-    cookies: cookieMethods,
+    cookies: {
+      getAll() {
+        return cookieStore.getAll();
+      },
+      setAll(cookiesToSet: CookieToSet[]) {
+        try {
+          for (const { name, value, options } of cookiesToSet) {
+            cookieStore.set(name, value, options);
+          }
+        } catch {
+          // Safe to ignore in Server Components/Middleware if session refresh is handled.
+        }
+      },
+    },
   });
 }
