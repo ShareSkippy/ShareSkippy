@@ -59,9 +59,9 @@ const mockRemoveEventListener = jest.fn((event, callback) => {
 });
 
 // Helper to simulate a storage event from another tab
-const dispatchStorageEvent = (key: string, newValue: string | null) => {
+const dispatchStorageEvent = (newValue: string | null) => {
   const event = new StorageEvent('storage', {
-    key,
+    key: 'profileDraft',
     newValue,
   });
   if (storageEventListeners.storage) {
@@ -315,7 +315,7 @@ describe('useProfileDraft', () => {
 
     // Simulate event from another tab
     act(() => {
-      dispatchStorageEvent('profileDraft', newDraftFromTab);
+      dispatchStorageEvent(newDraftFromTab);
     });
 
     // Check if the hook's state updated
