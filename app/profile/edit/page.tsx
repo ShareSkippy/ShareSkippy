@@ -93,13 +93,15 @@ const initialProfileState: Readonly<ProfileState> = {
   state: '',
   zip_code: '',
 };
-// #endregion Types
 
-// #region Component
-/**
- * @component
- * @description Allows the authenticated user to create or edit their profile information.
- */
+// disable server-side rendering to prevent prerendering error
+const DynamicAutoComplete = dynamic(
+  () => import("@mapbox/search-js-react").then((mod) => mod.AddressAutofill),
+  { ssr: false }
+);
+
+// --- COMPONENT START ---
+
 export default function ProfileEditPage() {
   const router = useRouter();
   const { user, isLoading: isAuthLoading } = useProtectedRoute();
@@ -761,10 +763,10 @@ export default function ProfileEditPage() {
                 >
                   Street Address
                 </label>
-                <DynamicAutoComplete accessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}>
+                <DynamicAutoComplete accessToken={MAPBOX_TOKEN}>
                   <input
                     type="text"
-                    name="street_address"
+                    name="street_address"npm
                     id="street_address"
                     value={profile.street_address}
                     onChange={handleInputChange}
