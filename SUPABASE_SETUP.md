@@ -22,7 +22,7 @@ Edit `.env.local` with your actual values:
 ```env
 # Supabase Configuration
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-remote-anon-key
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-remote-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-remote-service-role-key
 
 # Resend API Key
@@ -45,7 +45,7 @@ OPENAI_API_KEY=your-openai-api-key
 2. Navigate to Settings → API
 3. Copy the following values:
    - **Project URL** → `NEXT_PUBLIC_SUPABASE_URL`
-   - **anon public** → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - **anon public** → `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
    - **service_role** → `SUPABASE_SERVICE_ROLE_KEY`
 
 ### 3. Start Development Server
