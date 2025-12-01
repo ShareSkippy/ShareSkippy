@@ -1,4 +1,5 @@
 'use client';
+import Image from 'next/image';
 import { createClient } from '@/libs/supabase/client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -571,9 +572,11 @@ export default function Home() {
                             style={{ minHeight: '400px' }}
                           >
                             <div className="flex items-center mb-4">
-                              <img
+                              <Image
                                 src={testimonial.image}
                                 alt={'pic'}
+                                width={300}
+                                height={300}
                                 className="w-20 h-20 rounded-full object-cover mr-3 mt-5"
                               />
                               <div>
@@ -597,7 +600,7 @@ export default function Home() {
 
                             {/* Content */}
                             <p className="text-gray-700 text-[20px] grow mt-5">
-                              "{testimonial.quote}"
+                              &quot;{testimonial.quote}&quot;
                             </p>
 
                             <hr className="border-gray-200 " />

@@ -64,6 +64,10 @@ const nextConfig = {
         pathname: '/storage/v1/object/public/**',
         search: '',
       },
+      {
+        protocol: 'https',
+        hostname: 'encrypted-tbn0.gstatic.com',
+      },
     ],
     dangerouslyAllowLocalIP: process.env.NODE_ENV === 'development', // Enable for local development only. Returns to false for production.
     formats: ['image/webp', 'image/avif'],
