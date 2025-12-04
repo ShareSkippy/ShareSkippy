@@ -62,7 +62,7 @@ export default function Login() {
 
     try {
       const { type, provider } = options;
-      const redirectURL = 'http://localhost:3000/app/auth/callback/page';
+      const redirectURL = `${process.env.NEXT_PUBLIC_BASE_URL}/app/auth/callback/page`;
       if (type === 'oauth') {
         // Use Supabase's built-in OAuth but with custom branding
         const { error } = await supabase.auth.signInWithOAuth({
