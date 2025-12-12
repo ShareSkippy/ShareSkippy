@@ -260,8 +260,7 @@ describe('createClient', () => {
    * @test Tests that the cookies() function is properly awaited.
    */
   it('should await the cookies() function', async () => {
-    const cookiesPromise = Promise.resolve(mockCookieStore);
-    (cookies as jest.Mock).mockReturnValue(cookiesPromise);
+    (cookies as jest.Mock).mockResolvedValue(mockCookieStore);
 
     await createClient();
 
