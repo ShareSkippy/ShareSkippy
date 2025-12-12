@@ -47,7 +47,7 @@
     "@supabase/supabase-js": "^2.87.1",
     "@tailwindcss/postcss": "^4.1.16",
     "@tanstack/react-query": "^5.90.12",
-    "@vercel/analytics": "^1.5.0",
+    "@vercel/analytics": "^1.6.1",
     "axios": "^1.6.8",
     "crisp-sdk-web": "^1.0.22",
     "eslint-plugin-jest": "^29.2.1",
