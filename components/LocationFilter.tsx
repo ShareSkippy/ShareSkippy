@@ -284,4 +284,3 @@ export default function LocationFilter({ onFilterChange }: LocationFilterProps):
   );
   // #endregion
 }
-// #endregion
