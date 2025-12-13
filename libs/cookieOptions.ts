@@ -10,18 +10,17 @@
  * Vercel previews and local testing to work.
  */
 export const getCookieOptions = () => {
-  const isProduction = process.env.VERCEL_ENV === "production";
+  const isProduction = process.env.VERCEL_ENV === 'production';
 
   // Check if the site URL is HTTPS (Vercel previews are)
   // This is safer for localhost http testing
-  const isSecure = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost")
-    .startsWith("https");
+  const isSecure = (process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost').startsWith('https');
 
   if (isProduction) {
     return {
-      domain: ".shareskippy.com",
-      path: "/",
-      sameSite: "lax",
+      domain: '.shareskippy.com',
+      path: '/',
+      sameSite: 'lax' as const,
       secure: true,
     };
   }
@@ -29,8 +28,8 @@ export const getCookieOptions = () => {
   // For Vercel previews and local development
   return {
     domain: undefined,
-    path: "/",
-    sameSite: "lax",
+    path: '/',
+    sameSite: 'lax' as const,
     secure: isSecure,
   };
 };
