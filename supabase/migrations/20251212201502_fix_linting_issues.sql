@@ -486,7 +486,7 @@ CREATE POLICY "Users can update their own dogs" ON "public"."dogs" FOR UPDATE US
 
 -- Email Events
 -- Unified policy to handle all SELECT access for email_events
-CREATE POLICY "Unified view access for email_events" ON "public"."email_events" FOR SELECT TO authenticated, authenticator, dashboard_user USING (
+CREATE POLICY "Unified view access for email_events" ON "public"."email_events" FOR SELECT TO authenticated, authenticator, dashboard_user, service_role USING (
   ((SELECT auth.uid()) = "user_id") 
   OR 
   (EXISTS ( SELECT 1 FROM "public"."profiles" WHERE (("profiles"."id" = (SELECT auth.uid())) AND ("profiles"."role" = 'admin'::"text"))))
@@ -540,7 +540,7 @@ CREATE POLICY "Users can update their own reviews" ON "public"."reviews" FOR UPD
 
 -- Scheduled Emails
 -- Unified policy to handle all SELECT access for scheduled_emails
-CREATE POLICY "Unified view access for scheduled_emails" ON "public"."scheduled_emails" FOR SELECT TO authenticated, authenticator, dashboard_user USING (
+CREATE POLICY "Unified view access for scheduled_emails" ON "public"."scheduled_emails" FOR SELECT TO authenticated, authenticator, dashboard_user, service_role USING (
   ((SELECT auth.uid()) = "user_id")
   OR
   (EXISTS ( SELECT 1 FROM "public"."profiles" WHERE (("profiles"."id" = (SELECT auth.uid())) AND ("profiles"."role" = 'admin'::"text"))))
@@ -555,7 +555,7 @@ CREATE POLICY "Users can update their own settings" ON "public"."user_settings" 
 
 -- User Activity
 CREATE POLICY "Users can view their own activity" ON "public"."user_activity" FOR SELECT TO authenticated, authenticator USING (((SELECT auth.uid()) = "user_id"));
-CREATE POLICY "Service role can manage user activity" ON "public"."user_activity" FOR SELECT TO dashboard_user USING (((SELECT auth.role()) = 'service_role'::"text"));
+CREATE POLICY "Service role can manage user activity" ON "public"."user_activity" FOR SELECT TO dashboard_user, service_role USING (((SELECT auth.role()) = 'service_role'::"text"));
 
 -- Conversations
 CREATE POLICY "Users can create conversations" ON "public"."conversations" FOR INSERT WITH CHECK ((((SELECT auth.uid()) = "participant1_id") OR ((SELECT auth.uid()) = "participant2_id")));
