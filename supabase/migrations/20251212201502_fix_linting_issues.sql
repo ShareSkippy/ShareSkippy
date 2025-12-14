@@ -522,7 +522,18 @@ CREATE POLICY "Allow anonymous read access to profiles" ON "public"."profiles" F
 -- This supersedes "Users can view their own profile" for SELECT.
 CREATE POLICY "Authenticated users can view profiles" ON "public"."profiles" FOR SELECT TO authenticated, authenticator, dashboard_user USING (((SELECT auth.uid()) IS NOT NULL));
 CREATE POLICY "Users can insert their own profile" ON "public"."profiles" FOR INSERT WITH CHECK (((SELECT auth.uid()) = "id"));
-CREATE POLICY "Users can update their own profile" ON "public"."profiles" FOR UPDATE USING (((SELECT auth.uid()) = "id"));
+-- Prevent privilege escalation: users can only update their own profile, but cannot change their role
+CREATE POLICY "Users can update their own profile" ON "public"."profiles"
+  FOR UPDATE
+  USING (((SELECT auth.uid()) = "id"))
+  WITH CHECK (
+    ((SELECT auth.uid()) = "id")
+    AND (
+      -- Only allow changing role if the user is a privileged actor (e.g., service role)
+      "role" = old."role"
+      OR (current_user = 'service_role' OR current_user = 'postgres')
+    )
+  );
 
 -- Profile Views
 CREATE POLICY "Users can view their own profile views" ON "public"."profile_views" FOR SELECT TO authenticated, authenticator, dashboard_user USING (((SELECT auth.uid()) = "viewed_user_id"));
