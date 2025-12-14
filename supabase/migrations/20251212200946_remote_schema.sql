@@ -34,7 +34,7 @@ using ((bucket_id = 'profile-photos'::text));
   as permissive
   for delete
   to public
-using (((bucket_id = 'dog-photos'::text) AND ((auth.uid())::text = (storage.foldername(name))[1])));
+using (((bucket_id = 'dog-photos'::text) AND (((SELECT auth.uid()))::text = (storage.foldername(name))[1])));
 
 
 
@@ -43,7 +43,7 @@ using (((bucket_id = 'dog-photos'::text) AND ((auth.uid())::text = (storage.fold
   as permissive
   for delete
   to public
-using (((bucket_id = 'profile-photos'::text) AND ((auth.uid())::text = (storage.foldername(name))[1])));
+using (((bucket_id = 'profile-photos'::text) AND (((SELECT auth.uid()))::text = (storage.foldername(name))[1])));
 
 
 
@@ -52,7 +52,7 @@ using (((bucket_id = 'profile-photos'::text) AND ((auth.uid())::text = (storage.
   as permissive
   for update
   to public
-using (((bucket_id = 'profile-photos'::text) AND ((auth.uid())::text = (storage.foldername(name))[1])));
+using (((bucket_id = 'profile-photos'::text) AND (((SELECT auth.uid()))::text = (storage.foldername(name))[1])));
 
 
 
@@ -61,7 +61,7 @@ using (((bucket_id = 'profile-photos'::text) AND ((auth.uid())::text = (storage.
   as permissive
   for insert
   to public
-with check (((bucket_id = 'dog-photos'::text) AND ((auth.uid())::text = (storage.foldername(name))[1])));
+with check (((bucket_id = 'dog-photos'::text) AND (((SELECT auth.uid()))::text = (storage.foldername(name))[1])));
 
 
 
@@ -70,7 +70,7 @@ with check (((bucket_id = 'dog-photos'::text) AND ((auth.uid())::text = (storage
   as permissive
   for insert
   to public
-with check (((bucket_id = 'profile-photos'::text) AND ((auth.uid())::text = (storage.foldername(name))[1])));
+with check (((bucket_id = 'profile-photos'::text) AND (((SELECT auth.uid()))::text = (storage.foldername(name))[1])));
 
 
 
