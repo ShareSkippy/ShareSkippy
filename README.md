@@ -89,6 +89,14 @@ task db:reset   # optional; useful before seeding or migrations
 npm run test
 ```
 
+## Deployment
+
+Database migrations and application deployments follow specific approval processes. See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for details on:
+- Migration approval workflow
+- Environment protection setup
+- Deployment best practices
+- Emergency procedures
+
 ## Contributing & support
 
 Community contributions are welcome! Make sure the above setup works locally, run the verification commands, describe your changes in the PR, and request a review once automated checks pass.
