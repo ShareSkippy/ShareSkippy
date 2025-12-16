@@ -1,10 +1,9 @@
 'use client';
-'use client';
 
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams, usePathname } from 'next/navigation';
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import logo from '@/app/icon.png';
 import { useUser } from '@/components/providers/SupabaseUserProvider';
 import config from '@/config';
@@ -42,7 +41,7 @@ const LoggedInNav = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { signOut } = useUser();
 
-  const handleNavigation = useCallback((event) => {
+  const handleNavigation = useCallback((event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
       return;
     }
