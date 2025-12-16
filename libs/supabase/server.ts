@@ -1,7 +1,6 @@
 import { CookieOptions, createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { getCookieOptions } from '@/libs/cookieOptions';
-import { ensureEnvDefaults } from '@/libs/loadEnv.mjs';
 
 type SupabaseKeyType = 'anon' | 'service_role';
 
