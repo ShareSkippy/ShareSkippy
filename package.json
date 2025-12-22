@@ -45,6 +45,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^2.1.0",
+    "@hookform/resolvers": "^5.2.2",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.87.1",
     "@tailwindcss/postcss": "^4.1.18",
@@ -57,10 +58,13 @@
     "prop-types": "^15.8.1",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
+    "react-hook-form": "^7.69.0",
     "react-hot-toast": "^2.4.1",
+    "react-icons": "^5.5.0",
     "react-tooltip": "^5.26.3",
     "resend": "^4.0.1",
     "stripe": "^13.11.0",
+    "yup": "^1.7.1",
     "zod": "^4.2.0"
   },
   "devDependencies": {
