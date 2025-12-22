@@ -61,7 +61,7 @@
     "react-tooltip": "^5.26.3",
     "resend": "^4.0.1",
     "stripe": "^13.11.0",
-    "zod": "^4.2.0"
+    "zod": "^4.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",
@@ -73,7 +73,7 @@
     "@eslint/markdown": "^7.5.0",
     "@jest/globals": "^30.2.0",
     "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.0",
+    "@testing-library/react": "^16.3.1",
     "@testing-library/user-event": "^14.6.1",
     "@types/jest": "^30.0.0",
     "@types/react": "19.2.7",
@@ -93,7 +93,7 @@
     "stylelint": "^16.26.1",
     "stylelint-config-standard": "^39.0.1",
     "stylelint-config-tailwindcss": "^1.0.0",
-    "supabase": "^2.67.1",
+    "supabase": "^2.67.3",
     "tailwindcss": "^4.1.16"
   },
   "babel": {
