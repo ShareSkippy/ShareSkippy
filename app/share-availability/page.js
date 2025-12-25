@@ -1,14 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui';
 import CommunitySupportSection from '@/components/CommunitySupportSection';
 import { useUserProfile, useUserDogs } from '@/hooks/useProfile';
 import { createClient } from '@/libs/supabase/client';
 import { formatLocation } from '@/libs/utils';
 import { useProtectedRoute } from '@/hooks/useProtectedRoute';
+import { saveAvailability } from '@/libs/supabase/saveAvailability';
 
 // #region Component
 /**
@@ -21,6 +23,182 @@ export default function ShareAvailability() {
   const { user, isLoading: authLoading } = useProtectedRoute();
   const router = useRouter();
   const supabase = createClient();
+
+  const times = [
+    '00:00',
+    '01:00',
+    '02:00',
+    '03:00',
+    '04:00',
+    '05:00',
+    '06:00',
+    '07:00',
+    '08:00',
+    '09:00',
+    '10:00',
+    '11:00',
+    '12:00',
+    '13:00',
+    '14:00',
+    '15:00',
+    '16:00',
+    '17:00',
+    '18:00',
+    '19:00',
+    '20:00',
+    '21:00',
+    '22:00',
+  ];
+
+  const [availability, setAvailability] = useState({});
+  const draggingRef = useRef(false); // ref instead of state
+
+  const isValidTimeInterval = (time) => {
+    if (!time) return false;
+    const [, min] = time.split(':').map(Number);
+    return [0, 15, 30, 45].includes(min);
+  };
+
+  // Mouse down on a cell (start of selection)
+  const handleMouseDown = (dayKey, time) => {
+    toggleCell(dayKey, time);
+  };
+
+  // Mouse enter a cell while holding mouse button (drag)
+  const handleMouseEnter = (dayKey, time, e) => {
+    if (e.buttons !== 1) return; // Only when left mouse button is pressed
+    toggleCell(dayKey, time);
+  };
+
+  // Helper function to toggle a single cell
+  const toggleCell = (dayKey, time) => {
+    setAvailability((prev) => {
+      const dayTimes = prev[dayKey] || [];
+      const selected = dayTimes.includes(time);
+
+      const updatedTimes = selected ? dayTimes.filter((t) => t !== time) : [...dayTimes, time];
+
+      // Update daySchedules immediately
+      setDaySchedules((ds) => {
+        const updatedSlots = updatedTimes
+          .sort((a, b) => a.localeCompare(b))
+          .map((t) => {
+            const existing = ds[dayKey]?.timeSlots.find((s) => s.id === t);
+            if (existing) return existing;
+
+            const [hour, min] = t.split(':').map(Number);
+            let endHour = hour + 1;
+            if (endHour > 23) endHour = 0;
+
+            const pad = (n) => n.toString().padStart(2, '0');
+            return {
+              id: t,
+              start: `${pad(hour)}:${pad(min)}`,
+              end: `${pad(endHour)}:${pad(min)}`,
+            };
+          });
+
+        // ✅ Update selectedDays
+        setSelectedDays((prevDays) => {
+          if (updatedSlots.length === 0) {
+            // Remove day if no time slots left
+            return prevDays.filter((d) => d !== dayKey);
+          } else {
+            // Add day if not already included
+            return prevDays.includes(dayKey) ? prevDays : [...prevDays, dayKey];
+          }
+        });
+
+        return {
+          ...ds,
+          [dayKey]: {
+            ...ds[dayKey],
+            enabled: updatedSlots.length > 0, // enable day if at least one cell selected
+            timeSlots: updatedSlots,
+          },
+        };
+      });
+
+      return { ...prev, [dayKey]: updatedTimes };
+    });
+  };
+
+  const handleMouseUp = () => {
+    draggingRef.current = false;
+  };
+
+  const [hasSaved, setHasSaved] = useState(false);
+
+  const saveAllAvailability = async () => {
+    try {
+      setSubmitting(true);
+      setError(false);
+      const newSchedules = {};
+
+      Object.keys(availability).forEach((dayKey) => {
+        const selectedTimes = (availability[dayKey] || []).filter(isValidTimeInterval);
+
+        if (selectedTimes.length === 0) return;
+
+        // Sort times
+        const sorted = [...selectedTimes].sort();
+
+        const ranges = [];
+        let start = sorted[0];
+        let prev = sorted[0];
+
+        for (let i = 1; i < sorted.length; i++) {
+          const current = sorted[i];
+
+          const [startHour, startMin] = prev.split(':').map(Number);
+          const [currHour, currMin] = current.split(':').map(Number);
+
+          // Check if consecutive hour (1 hour apart)
+          if (currHour * 60 + currMin !== startHour * 60 + startMin + 60) {
+            ranges.push([start, prev]);
+            start = current;
+          }
+          prev = current;
+        }
+
+        ranges.push([start, prev]);
+
+        newSchedules[dayKey] = {
+          enabled: true,
+          timeSlots: ranges.map(([s, e], idx) => ({
+            id: `${dayKey}-${idx}`,
+            start: s,
+            end: (() => {
+              const [hour, min] = e.split(':').map(Number);
+              const endHour = (hour + 1) % 24;
+              return `${String(endHour).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
+            })(),
+          })),
+        };
+      });
+
+      setHasSaved(true);
+      alert('Availability saved! Only 0, 15, 30, 45 minutes were kept.');
+
+      const flatDayData = Object.entries(newSchedules).flatMap(([dayKey, day]) =>
+        (day.timeSlots || []).map((slot) => ({
+          day: dayKey,
+          start_time: slot.start,
+          end_time: slot.end,
+        }))
+      );
+
+      await saveAvailability(flatDayData);
+
+      if (flatDayData.length == 0) {
+        throw new Error('Availability not selected');
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   // --- Data Fetching Hooks ---
   const { data: userProfile, isLoading: profileLoading } = useUserProfile();
@@ -49,6 +227,38 @@ export default function ShareAvailability() {
     saturday: { enabled: false, timeSlots: [{ start: '', end: '' }] },
     sunday: { enabled: false, timeSlots: [{ start: '', end: '' }] },
   });
+  const [manualTimeInputs, setManualTimeInputs] = useState({
+    monday: '',
+    tuesday: '',
+    wednesday: '',
+    thursday: '',
+    friday: '',
+    saturday: '',
+    sunday: '',
+  });
+  const handleManualTimeInput = (dayKey, value) => {
+    setManualTimeInputs((prev) => ({
+      ...prev,
+      [dayKey]: value,
+    }));
+  };
+  const handleManualTimeSubmit = async (dayKey) => {
+    const time = manualTimeInputs[dayKey];
+
+    if (!time) return;
+
+    // Validate minutes
+    const [, min] = time.split(':').map(Number);
+    if (![0, 15, 30, 45].includes(min)) {
+      alert('Please enter a time with minutes 0, 15, 30, or 45.');
+      return;
+    }
+
+    toggleCell(dayKey, time); // Add to availability and update grid
+
+    // Clear input
+    setManualTimeInputs((prev) => ({ ...prev, [dayKey]: '' }));
+  };
 
   // --- Form Data State ---
   const [formData, setFormData] = useState({
@@ -258,30 +468,31 @@ export default function ShareAvailability() {
   /**
    * @description Adds a new empty time slot to a specific day.
    */
-  const addTimeSlot = (day) => {
-    setDaySchedules((prev) => ({
-      ...prev,
-      [day]: {
-        ...prev[day],
-        timeSlots: [...prev[day].timeSlots, { start: '', end: '' }],
-      },
-    }));
-  };
 
   /**
    * @description Removes a time slot from a day by its index.
    */
-  const removeTimeSlot = (day, index) => {
-    // Keep at least one time slot
-    if (daySchedules[day].timeSlots.length <= 1) return;
+  const removeTimeSlot = (dayKey, index) => {
+    setDaySchedules((prev) => {
+      const updatedSlots = [...prev[dayKey].timeSlots];
+      updatedSlots.splice(index, 1); // remove the specific slot
 
-    setDaySchedules((prev) => ({
-      ...prev,
-      [day]: {
-        ...prev[day],
-        timeSlots: prev[day].timeSlots.filter((_, i) => i !== index),
-      },
-    }));
+      return {
+        ...prev,
+        [dayKey]: {
+          ...prev[dayKey],
+          timeSlots: updatedSlots,
+          enabled: updatedSlots.length > 0, // disable day if no slots left
+        },
+      };
+    });
+
+    // Also update availability to keep them in sync
+    setAvailability((prev) => {
+      const dayTimes = [...(prev[dayKey] || [])];
+      dayTimes.splice(index, 1); // remove corresponding time
+      return { ...prev, [dayKey]: dayTimes };
+    });
   };
 
   /**
@@ -584,10 +795,10 @@ export default function ShareAvailability() {
 
             <div className="grid md:grid-cols-2 gap-6">
               {/* Dog Availability Option */}
-              <button
+              <Button
                 type="button"
-                className={`border-2 rounded-lg p-6 cursor-pointer transition-all ${
-                  postType === 'petpal_available'
+                className={`w-full text-left border-2 rounded-lg p-6 transition-all ${
+                  postType === 'dog_available'
                     ? 'border-blue-500 bg-blue-50'
                     : 'border-gray-200 hover:border-gray-300'
                 }`}
@@ -600,7 +811,7 @@ export default function ShareAvailability() {
                 </p>
                 {dogs.length === 0 && (
                   <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-3 py-2 rounded-sm text-sm">
-                    ⚠️ No dog found in your profile
+                    ⚠️ You need to add a dog to your profile first
                     <div className="mt-2">
                       <Link
                         href="/my-dogs/add"
@@ -616,9 +827,9 @@ export default function ShareAvailability() {
                     You have {dogs.length} dog{dogs.length !== 1 ? 's' : ''} in your profile
                   </div>
                 )}
-              </button>
+              </Button>
               {/* Pet Sitter Availability Option */}
-              <button
+              <Button
                 type="button"
                 className={`border-2 rounded-lg p-6 cursor-pointer transition-all ${
                   postType === 'petpal_available'
@@ -633,7 +844,7 @@ export default function ShareAvailability() {
                   Share when you&apos;re available to get some puppy love.
                 </p>
                 <div className="text-sm text-gray-500">Help others in your neighborhood</div>
-              </button>
+              </Button>
             </div>
           </div>
         )}
@@ -662,7 +873,7 @@ export default function ShareAvailability() {
                 <h3 className="text-lg font-semibold mb-4">Select Dog(s)</h3>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {dogs.map((dog) => (
-                    <button
+                    <Button
                       key={dog.id}
                       type="button"
                       className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
@@ -687,7 +898,6 @@ export default function ShareAvailability() {
                               className="w-full h-full object-cover rounded-full"
                               width={48}
                               height={48}
-                              unoptimized
                             />
                           ) : (
                             <span className="text-2xl">🐕</span>
@@ -698,7 +908,7 @@ export default function ShareAvailability() {
                           <div className="text-sm text-gray-500">{dog.breed}</div>
                         </div>
                       </div>
-                    </button>
+                    </Button>
                   ))}
                 </div>
               </div>
@@ -733,6 +943,77 @@ export default function ShareAvailability() {
                 Please propose times that you tend to be available to meet. We understand schedules
                 may change, but providing your general availability helps match you with others.
               </p>
+              {/* --- Compact Drag-and-Click Grid --- */}
+              <div className="overflow-auto border border-gray-200 rounded-xl shadow-sm">
+                <table className="table-auto border-collapse w-full text-center">
+                  <thead className="bg-[#F8F9FA] sticky top-0 z-10 border-b border-gray-200">
+                    <tr>
+                      <th className="border border-gray-200 p-2 sticky left-0 bg-[#F8F9FA] text-center text-sm font-semibold text-gray-700 rounded-l-lg">
+                        Day & Time
+                      </th>
+
+                      {times.map((time) => (
+                        <th
+                          key={time}
+                          className="border border-gray-200 p-2 text-xs font-medium text-gray-600 tracking-wide"
+                        >
+                          {time}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {days.map((dayObj) => (
+                      <tr key={dayObj.key} className="hover:bg-gray-50 transition-colors">
+                        {/* Day label */}
+                        <td className="border border-gray-200 p-2 font-medium sticky left-0 bg-white text-left text-sm text-gray-700 shadow-sm">
+                          {dayObj.label}
+                        </td>
+
+                        {/* Time cells */}
+                        {times.map((time) => {
+                          const selected = availability[dayObj.key]?.includes(time);
+                          return (
+                            <td key={time} className="border border-gray-200 p-0">
+                              <div
+                                className={`
+                                  w-full h-9 flex items-center justify-center text-[11px] font-medium 
+                                  cursor-pointer select-none transition-all duration-150 rounded
+                                  ${
+                                    selected
+                                      ? 'bg-[#1A73E8] text-white shadow-sm'
+                                      : 'bg-white hover:bg-[#E8F0FE] text-gray-700'
+                                  }
+                                `}
+                                onMouseDown={() => handleMouseDown(dayObj.key, time)}
+                                onMouseEnter={(e) => handleMouseEnter(dayObj.key, time, e)}
+                                onMouseUp={handleMouseUp}
+                              />
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="flex flex-col items-center justify-center pt-5 pb-5">
+                <button
+                  onClick={saveAllAvailability}
+                  disabled={Object.keys(availability).length === 0} // disables if no updates
+                  className={`
+                    px-5 py-2 rounded-lg shadow text-white
+                    ${
+                      Object.keys(availability).length === 0
+                        ? 'bg-gray-400 cursor-not-allowed'
+                        : 'bg-blue-600 hover:bg-blue-700'
+                    }
+                  `}
+                >
+                  Save All Days All Times
+                </button>
+              </div>
 
               {/* Day Selection */}
               <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2 mb-6">
@@ -757,69 +1038,71 @@ export default function ShareAvailability() {
               </div>
 
               {/* Time Slots for Selected Days */}
-              {selectedDays.length > 0 && (
-                <div className="space-y-6">
-                  {selectedDays
-                    .sort(
-                      (a, b) =>
-                        days.findIndex((d) => d.key === a) - days.findIndex((d) => d.key === b)
-                    )
-                    .map((day) => (
-                      <div key={day} className="border border-gray-200 rounded-lg p-4">
-                        <div className="flex justify-between items-center mb-4">
-                          <h4 className="font-semibold capitalize">{day}</h4>
-                          <button
-                            type="button"
-                            onClick={() => addTimeSlot(day)}
-                            className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                          >
-                            + Add Time Slot
-                          </button>
-                        </div>
 
-                        <div className="space-y-3">
-                          {daySchedules[day].timeSlots.map((slot, index) => (
-                            <div
-                              key={slot.id}
-                              className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-3"
+              {days
+                .filter((d) => daySchedules[d.key]?.enabled)
+                .map((day) => (
+                  <div key={day.key} className="border border-gray-200 rounded-lg p-4 mb-4">
+                    <div className="flex justify-between items-center mb-4">
+                      <h4 className="font-semibold capitalize">{day.label}</h4>
+                    </div>
+                    <div className="flex items-center space-x-2 mb-3">
+                      <input
+                        type="time"
+                        step="900" // 15 min intervals
+                        value={manualTimeInputs[day.key] || ''}
+                        onChange={(e) => handleManualTimeInput(day.key, e.target.value)}
+                        className="px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleManualTimeSubmit(day.key)}
+                        className="px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                      >
+                        Add Time
+                      </button>
+                    </div>
+                    <div className="space-y-3">
+                      {daySchedules[day.key].timeSlots.map((slot, index) => (
+                        <div
+                          key={slot.id}
+                          className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-3"
+                        >
+                          <div className="flex items-center space-x-2 w-full sm:w-auto">
+                            <input
+                              type="time"
+                              value={slot.start}
+                              onChange={(e) =>
+                                updateTimeSlot(day.key, index, 'start', e.target.value)
+                              }
+                              className="px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+                              required
+                            />
+                            <span className="text-gray-500 text-sm sm:text-base">to</span>
+                            <input
+                              type="time"
+                              value={slot.end}
+                              onChange={(e) =>
+                                updateTimeSlot(day.key, index, 'end', e.target.value)
+                              }
+                              className="px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+                              required
+                            />
+                          </div>
+                          {daySchedules[day.key].timeSlots.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => removeTimeSlot(day.key, index)}
+                              className="text-red-600 hover:text-red-800 text-sm px-2 py-1 border border-red-300 rounded-sm hover:bg-red-50 transition-colors w-full sm:w-auto"
                             >
-                              <div className="flex items-center space-x-2 w-full sm:w-auto">
-                                <input
-                                  type="time"
-                                  value={slot.start}
-                                  onChange={(e) =>
-                                    updateTimeSlot(day, index, 'start', e.target.value)
-                                  }
-                                  className="px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
-                                  required
-                                />
-                                <span className="text-gray-500 text-sm sm:text-base">to</span>
-                                <input
-                                  type="time"
-                                  value={slot.end}
-                                  onChange={(e) =>
-                                    updateTimeSlot(day, index, 'end', e.target.value)
-                                  }
-                                  className="px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
-                                  required
-                                />
-                              </div>
-                              {daySchedules[day].timeSlots.length > 1 && (
-                                <button
-                                  type="button"
-                                  onClick={() => removeTimeSlot(day, index)}
-                                  className="text-red-600 hover:text-red-800 text-sm px-2 py-1 border border-red-300 rounded-sm hover:bg-red-50 transition-colors w-full sm:w-auto"
-                                >
-                                  Remove
-                                </button>
-                              )}
-                            </div>
-                          ))}
+                              Remove
+                            </button>
+                          )}
                         </div>
-                      </div>
-                    ))}
-                </div>
-              )}
+                      ))}
+                    </div>
+                  </div>
+                ))}
             </div>
 
             {/* Description */}
@@ -1139,8 +1422,13 @@ export default function ShareAvailability() {
               </button>
               <button
                 type="submit"
-                disabled={submitting}
-                className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base order-1 sm:order-2"
+                disabled={submitting || !hasSaved} // disabled until availability is saved
+                className={`px-6 py-2 rounded-md transition-colors text-sm sm:text-base order-1 sm:order-2
+                  ${
+                    submitting || !hasSaved
+                      ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                      : 'bg-blue-600 text-white hover:bg-blue-700'
+                  }`}
               >
                 {submitting ? 'Creating...' : 'Share Availability'}
               </button>
