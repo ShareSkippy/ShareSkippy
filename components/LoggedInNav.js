@@ -1,5 +1,4 @@
 'use client';
-'use client';
 
 import Image from 'next/image';
 import Link from 'next/link';
@@ -7,6 +6,8 @@ import { useSearchParams, usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import logo from '@/app/icon.png';
 import { useUser } from '@/components/providers/SupabaseUserProvider';
+import { NotificationBadge } from '@/components/NotificationBadge';
+import { useUnreadMessages } from '@/hooks/useUnreadMessages';
 import config from '@/config';
 
 const navigationItems = [
@@ -21,6 +22,7 @@ const navigationItems = [
   {
     href: '/messages',
     label: 'Messages',
+    hasNotifications: true, // Flag to show this item has notifications
   },
   {
     href: '/meetings',
@@ -40,7 +42,10 @@ const LoggedInNav = () => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const { signOut } = useUser();
+  const { user, signOut } = useUser();
+
+  // Get unread message counts
+  const { totalUnread, isLoading } = useUnreadMessages(user);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -84,7 +89,32 @@ const LoggedInNav = () => {
         </div>
 
         {/* Burger button to open menu on small and medium screens */}
-        <div className="flex xl:hidden">
+        <div className="flex xl:hidden items-center gap-4">
+          {/* Messages Icon (Mobile) - Only show if user is logged in */}
+          {user && (
+            <Link
+              href="/messages"
+              className="relative p-2 hover:bg-indigo-700 rounded-lg transition-colors"
+              title="Messages"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"
+                />
+              </svg>
+              {!isLoading && <NotificationBadge count={totalUnread} />}
+            </Link>
+          )}
+
           <button
             type="button"
             className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5"
@@ -114,12 +144,16 @@ const LoggedInNav = () => {
             <Link
               href={item.href}
               key={item.href}
-              className={`px-2 py-2 rounded-lg transition-colors text-white hover:text-indigo-100 text-sm whitespace-nowrap ${
+              className={`relative px-2 py-2 rounded-lg transition-colors text-white hover:text-indigo-100 text-sm whitespace-nowrap ${
                 pathname === item.href ? 'bg-white/20 text-white' : ''
               }`}
               title={item.label}
             >
               {item.label}
+              {/* Show notification badge for Messages */}
+              {item.hasNotifications && !isLoading && (
+                <NotificationBadge count={totalUnread} className="absolute -top-1 -right-1" />
+              )}
             </Link>
           ))}
         </div>
@@ -188,12 +222,18 @@ const LoggedInNav = () => {
                   <Link
                     href={item.href}
                     key={item.href}
-                    className={`w-full px-3 py-2 rounded-lg transition-colors text-white hover:text-indigo-100 ${
+                    className={`relative w-full px-3 py-2 rounded-lg transition-colors text-white hover:text-indigo-100 flex items-center justify-between ${
                       pathname === item.href ? 'bg-white/20 text-white' : ''
                     }`}
                     title={item.label}
                   >
-                    {item.label}
+                    <span>{item.label}</span>
+                    {/* Show unread count for Messages in mobile menu */}
+                    {item.hasNotifications && !isLoading && totalUnread > 0 && (
+                      <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full font-bold min-w-[24px] text-center">
+                        {totalUnread}
+                      </span>
+                    )}
                   </Link>
                 ))}
               </div>
