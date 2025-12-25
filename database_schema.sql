@@ -159,6 +159,7 @@ CREATE TABLE IF NOT EXISTS messages (
   subject TEXT,
   content TEXT NOT NULL,
   is_read BOOLEAN DEFAULT false,
+  read_at TIMESTAMP WITH TIME ZONE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -243,6 +244,7 @@ CREATE INDEX IF NOT EXISTS idx_messages_recipient_id ON messages(recipient_id);
 CREATE INDEX IF NOT EXISTS idx_messages_availability_id ON messages(availability_id);
 CREATE INDEX IF NOT EXISTS idx_messages_conversation_id ON messages(conversation_id);
 CREATE INDEX IF NOT EXISTS idx_messages_created_at ON messages(created_at);
+CREATE INDEX IF NOT EXISTS idx_messages_unread ON messages(recipient_id, is_read) WHERE is_read = FALSE;
 CREATE INDEX IF NOT EXISTS idx_conversations_participant1_id ON conversations(participant1_id);
 CREATE INDEX IF NOT EXISTS idx_conversations_participant2_id ON conversations(participant2_id);
 CREATE INDEX IF NOT EXISTS idx_conversations_availability_id ON conversations(availability_id);
@@ -336,8 +338,8 @@ CREATE POLICY "Users can view messages they sent or received" ON messages
   FOR SELECT USING (auth.uid() = sender_id OR auth.uid() = recipient_id);
 CREATE POLICY "Users can create messages" ON messages
   FOR INSERT WITH CHECK (auth.uid() = sender_id);
-CREATE POLICY "Users can update their own messages" ON messages
-  FOR UPDATE USING (auth.uid() = sender_id);
+CREATE POLICY "Users can update messages they sent or received" ON messages
+  FOR UPDATE USING (auth.uid() = sender_id OR auth.uid() = recipient_id);
 CREATE POLICY "Users can delete their own messages" ON messages
   FOR DELETE USING (auth.uid() = sender_id);
 

@@ -61,11 +61,13 @@ export async function POST(request) {
     const { data: message, error: messageError } = await supabase
       .from('messages')
       .insert({
-        sender_id: user.id,
-        recipient_id: recipient_id,
-        availability_id: null, // Always null for new messages
-        subject: null, // Subject is no longer used
+        sender_id: user.id, // YOU are sending
+        recipient_id: recipient_id, // THEY are receiving
+        conversation_id: conversationId,
+        availability_id: null,
+        subject: null,
         content: content,
+        is_read: false, // ✅ CORRECT - The RECIPIENT hasn't read it yet
       })
       .select()
       .single();
