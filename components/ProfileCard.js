@@ -23,7 +23,7 @@ export default function ProfileCard({ profile, onMessage }) {
       case 'petpal':
         return '🤝';
       case 'both':
-        return '🐶🤝';
+        return '🐕‍🦺';
       default:
         return '👤';
     }
