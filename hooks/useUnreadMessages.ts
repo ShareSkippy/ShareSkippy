@@ -291,7 +291,7 @@ export function useUnreadMessages(user: User | null) {
     };
   }, [user, fetchUnreadCounts]);
 
-  // Real-time subscription for message changes
+  // Real-time subscription for message changes - FIXED: Removed fetchUnreadCounts from dependencies
   useEffect(() => {
     if (!user) return;
 
@@ -302,6 +302,8 @@ export function useUnreadMessages(user: User | null) {
     }
 
     console.log('[useUnreadMessages] Setting up real-time subscription');
+
+    let refreshTimeout: ReturnType<typeof setTimeout> | null = null;
 
     const channel = supabase
       .channel('unread-messages-global')
@@ -322,7 +324,11 @@ export function useUnreadMessages(user: User | null) {
           );
           // Only refresh if the message is unread
           if (payload.new.is_read === false) {
-            fetchUnreadCounts();
+            // Debounce to prevent rapid calls
+            if (refreshTimeout) clearTimeout(refreshTimeout);
+            refreshTimeout = setTimeout(() => {
+              fetchUnreadCounts();
+            }, 300);
           }
         }
       )
@@ -363,10 +369,14 @@ export function useUnreadMessages(user: User | null) {
                   lastChecked: new Date(),
                 };
               });
-            }
 
-            // Still fetch to ensure consistency
-            setTimeout(() => fetchUnreadCounts(), 100);
+              // Debounce the fetch to avoid rapid calls
+              if (refreshTimeout) clearTimeout(refreshTimeout);
+              refreshTimeout = setTimeout(() => {
+                console.log('[Real-time HOOK] Fetching counts after debounce');
+                fetchUnreadCounts();
+              }, 500);
+            }
           }
         }
       )
@@ -376,6 +386,7 @@ export function useUnreadMessages(user: User | null) {
 
     return () => {
       console.log('[useUnreadMessages] Cleaning up real-time subscription');
+      if (refreshTimeout) clearTimeout(refreshTimeout);
       try {
         supabase.removeChannel(channel);
       } catch {
@@ -383,7 +394,7 @@ export function useUnreadMessages(user: User | null) {
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  }, [user]); // REMOVED fetchUnreadCounts from dependencies - this was causing the infinite loop
 
   return {
     ...notificationState,

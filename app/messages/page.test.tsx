@@ -1,13 +1,79 @@
 import { render, screen, waitFor, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { supabase } from '@/libs/supabase';
-// Import the hook so we can cast the mock
 import { useProtectedRoute } from '@/hooks/useProtectedRoute';
 import MessagesPage from './page';
 
-// Mocks
+// Mock createClient FIRST
+jest.mock('@/libs/supabase/client', () => ({
+  createClient: jest.fn(() => ({
+    from: jest.fn(() => ({
+      select: jest.fn(() => ({
+        eq: jest.fn(() => ({
+          order: jest.fn(() => Promise.resolve({ data: [], error: null })),
+        })),
+      })),
+    })),
+    channel: jest.fn(() => ({
+      on: jest.fn().mockReturnThis(),
+      subscribe: jest.fn((callback) => {
+        if (typeof callback === 'function') {
+          callback('SUBSCRIBED');
+        }
+        return { unsubscribe: jest.fn() };
+      }),
+    })),
+    removeChannel: jest.fn(),
+  })),
+}));
+
+jest.mock('@/components/WelcomeNotification', () => ({
+  WelcomeNotification: () => <div data-testid="welcome-notification" />,
+}));
+
+jest.mock('@/components/MessageToast', () => ({
+  MessageToast: () => <div data-testid="message-toast" />,
+}));
+
+jest.mock('@/utils/browserNotifications', () => ({
+  BrowserNotifications: {
+    requestPermission: jest.fn(),
+    showNotification: jest.fn(),
+  },
+}));
+
+// In your test file, update the mock for useUnreadMessages:
+jest.mock('@/hooks/useUnreadMessages', () => {
+  const mockUnreadMap = new Map(); // Create stable map instance
+
+  return {
+    useUnreadMessages: jest.fn(() => ({
+      totalUnread: 0,
+      unreadByConversation: mockUnreadMap, // Use stable instance
+      hasNewMessages: false,
+      lastChecked: null,
+      isLoading: false,
+      fetchUnreadCounts: jest.fn().mockResolvedValue(undefined),
+      markConversationAsRead: jest.fn().mockResolvedValue(undefined),
+      markAllAsRead: jest.fn().mockResolvedValue(undefined),
+    })),
+  };
+});
+
 jest.mock('@/hooks/useProtectedRoute', () => ({
   useProtectedRoute: jest.fn(),
+}));
+
+jest.mock('next/navigation', () => ({
+  useRouter: jest.fn(() => ({
+    push: jest.fn(),
+    replace: jest.fn(),
+    prefetch: jest.fn(),
+  })),
+  useSearchParams: jest.fn(() => ({
+    get: jest.fn(() => null),
+  })),
+  usePathname: jest.fn(() => '/messages'),
 }));
 
 jest.mock(
@@ -33,15 +99,22 @@ jest.mock('@/libs/supabase', () => ({
         or: jest.fn(() => ({
           order: jest.fn(),
         })),
-        limit: jest.fn(), // Keep for old test compatibility, though new code uses .or().order()
+        limit: jest.fn(),
+      })),
+      update: jest.fn(() => ({
+        eq: jest.fn(() => ({
+          eq: jest.fn(() => Promise.resolve({ data: [], error: null })),
+        })),
       })),
     })),
     channel: jest.fn(() => ({
-      on: jest.fn(() => ({
-        subscribe: jest.fn(() => ({
-          unsubscribe: jest.fn(),
-        })),
-      })),
+      on: jest.fn().mockReturnThis(),
+      subscribe: jest.fn((callback) => {
+        if (typeof callback === 'function') {
+          callback('SUBSCRIBED');
+        }
+        return { unsubscribe: jest.fn() };
+      }),
     })),
     removeChannel: jest.fn(),
   },
@@ -50,6 +123,8 @@ jest.mock('@/libs/supabase', () => ({
 // Cast the mocked hooks
 const mockedUseProtectedRoute = useProtectedRoute as jest.Mock;
 const mockedFrom = supabase.from as jest.Mock;
+
+// Rest of your tests...
 
 describe('MessagesPage', () => {
   beforeEach(() => {

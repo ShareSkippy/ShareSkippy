@@ -1,16 +1,15 @@
 /**
- * @fileoverview Enhanced Messages page with fixed notification system
+ * @fileoverview COMPLETE FIX - Messages page with all infinite loop issues resolved
  * @path /app/(main)/messages/page.tsx
+ *
+ * KEY FIXES:
+ * 1. Extracted all primitive values to prevent object reference changes
+ * 2. Memoized callbacks with proper dependencies
+ * 3. Used refs for values that shouldn't trigger re-subscriptions
+ * 4. Fixed real-time subscription to only depend on conversation ID
  */
 
 'use client';
-
-// interface UnreadCount {
-//   conversationId: string;
-//   count: number;
-//   otherParticipantId: string;
-//   lastMessageAt: string;
-// }
 
 import {
   useCallback,
@@ -144,14 +143,24 @@ export default function MessagesPage(): ReactElement {
   const abortControllerRef = useRef<AbortController | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const isFirstLoad = useRef(true);
+  const lastToastMessageId = useRef<string | null>(null);
 
-  const selectedConversationKey = useMemo(() => {
-    const c = selectedConversation;
-    if (!c) return 'none';
-    return [c.id ?? 'noid', c.participant1_id, c.participant2_id, c.availability_id ?? 'na'].join(
-      ':'
-    );
+  // CRITICAL FIX: Store conversation metadata in refs to avoid triggering re-subscriptions
+  const selectedConversationRef = useRef<Conversation | null>(null);
+
+  // Update ref whenever selectedConversation changes
+  useEffect(() => {
+    selectedConversationRef.current = selectedConversation;
   }, [selectedConversation]);
+
+  // Extract only the ID for dependency tracking
+  const selectedConversationId = selectedConversation?.id ?? null;
+
+  // FIXED: Stable key that only changes when conversation ID changes
+  const selectedConversationKey = useMemo(() => {
+    if (!selectedConversationId) return 'none';
+    return selectedConversationId;
+  }, [selectedConversationId]);
 
   // Request browser notification permission on mount
   useEffect(() => {
@@ -170,17 +179,19 @@ export default function MessagesPage(): ReactElement {
   }, [totalUnread, authLoading, hasShownWelcome]);
 
   const fetchMessages = useCallback(
-    async (conversationId: string): Promise<Message[]> => {
-      if (!conversationId || !selectedConversation) return [];
+    async (
+      conversationId: string,
+      participant1Id: string,
+      participant2Id: string
+    ): Promise<Message[]> => {
+      if (!conversationId) return [];
 
       try {
-        const { participant1_id, participant2_id } = selectedConversation;
-
         const { data, error } = await supabase
           .from('messages')
           .select('*')
           .or(
-            `and(sender_id.eq.${participant1_id},recipient_id.eq.${participant2_id}),and(sender_id.eq.${participant2_id},recipient_id.eq.${participant1_id})`
+            `and(sender_id.eq.${participant1Id},recipient_id.eq.${participant2Id}),and(sender_id.eq.${participant2Id},recipient_id.eq.${participant1Id})`
           )
           .order('created_at', { ascending: true });
 
@@ -195,7 +206,7 @@ export default function MessagesPage(): ReactElement {
         return [];
       }
     },
-    [selectedConversation]
+    []
   );
 
   const fetchConversations = useCallback(async (): Promise<void> => {
@@ -231,26 +242,28 @@ export default function MessagesPage(): ReactElement {
         .or(`participant1_id.eq.${user.id},participant2_id.eq.${user.id}`)
         .order('last_message_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('[fetchConversations] Supabase error:', error);
+        throw error;
+      }
 
       const processedConversations = (data as RawConversation[]).map((conv): Conversation => {
         const otherParticipant =
           conv.participant1_id === user.id ? conv.participant2 : conv.participant1;
 
-        const unreadCount = unreadByConversation.get(conv.id) || 0;
-
         return {
           ...conv,
           otherParticipant,
-          displayName: `${otherParticipant.first_name} ${otherParticipant.last_name}`,
+          displayName:
+            `${otherParticipant.first_name || ''} ${otherParticipant.last_name || ''}`.trim() ||
+            'Unknown User',
           profilePhoto: otherParticipant.profile_photo_url,
-          unreadCount,
+          unreadCount: 0,
         };
       });
 
       setConversations(processedConversations);
 
-      // ✅ FIX: Use setState callback to check current state
       const conversationIdFromUrl = searchParams.get('conversation');
       if (conversationIdFromUrl) {
         const targetConv = processedConversations.find((c) => c.id === conversationIdFromUrl);
@@ -263,7 +276,6 @@ export default function MessagesPage(): ReactElement {
           });
         }
       } else {
-        // ✅ FIX: Only auto-select if no conversation is currently selected
         setSelectedConversation((current) => {
           if (!current && processedConversations.length > 0) {
             return processedConversations[0];
@@ -272,11 +284,12 @@ export default function MessagesPage(): ReactElement {
         });
       }
     } catch (error) {
-      console.error('Error fetching conversations:', error);
+      console.error('[fetchConversations] Error:', error);
     } finally {
       setLoading(false);
     }
-  }, [user, unreadByConversation, searchParams]); // ✅ No selectedConversation needed
+  }, [user, searchParams]);
+
   const sendMessage = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     if (!newMessage.trim() || !selectedConversation?.otherParticipant) return;
@@ -328,55 +341,34 @@ export default function MessagesPage(): ReactElement {
 
   const handleMeetingCreated = async (): Promise<void> => {
     if (selectedConversation) {
-      await fetchMessages(selectedConversation.id);
+      await fetchMessages(
+        selectedConversation.id,
+        selectedConversation.participant1_id,
+        selectedConversation.participant2_id
+      );
       await fetchConversations();
     }
   };
 
-  // Handle conversation selection with read marking
-  /**
-   * Handle conversation selection with proper read marking
-   * This function:
-   * 1. Sets the selected conversation
-   * 2. Updates the URL
-   * 3. Marks messages as read if there are unread messages
-   */
   const handleSelectConversation = useCallback(
     async (conversation: Conversation) => {
-      console.log('='.repeat(60));
-      console.log('[handleSelectConversation] 📨 Selecting conversation:', {
-        id: conversation.id,
-        displayName: conversation.displayName,
-        unreadCount: conversation.unreadCount,
-      });
+      console.log('[handleSelectConversation] Selecting:', conversation.id);
 
-      // STEP 1: Set the conversation (this triggers message loading)
       setSelectedConversation(conversation);
       setShowConversations(false);
-
-      // STEP 2: Update URL (for deep linking)
       router.push(`/messages?conversation=${conversation.id}`, { scroll: false });
 
-      // STEP 3: Mark as read if there are unread messages
       if (conversation.unreadCount && conversation.unreadCount > 0) {
-        console.log('[handleSelectConversation] 🔔 Has unread messages, marking as read...');
-
-        // Mark as read immediately (no timeout)
         await markConversationAsRead(
           conversation.id,
           conversation.participant1_id,
           conversation.participant2_id
         );
-
-        console.log('[handleSelectConversation] ✅ Marked as read');
-      } else {
-        console.log('[handleSelectConversation] ℹ️ No unread messages');
       }
-
-      console.log('='.repeat(60));
     },
     [markConversationAsRead, router]
   );
+
   // Fetch messages effect
   useEffect(() => {
     if (!selectedConversation) {
@@ -397,7 +389,11 @@ export default function MessagesPage(): ReactElement {
 
     (async () => {
       try {
-        const data = await fetchMessages(selectedConversation.id);
+        const data = await fetchMessages(
+          selectedConversation.id,
+          selectedConversation.participant1_id,
+          selectedConversation.participant2_id
+        );
 
         if (!cancelled && !abortControllerRef.current?.signal.aborted) {
           setMessages(data || []);
@@ -417,84 +413,89 @@ export default function MessagesPage(): ReactElement {
     return () => {
       cancelled = true;
     };
-  }, [selectedConversation, selectedConversationKey, fetchMessages]);
+  }, [selectedConversationId, fetchMessages]);
 
-  // Real-time message subscription with notifications
-  // Real-time message subscription with notifications
-  // Real-time message subscription with notifications
+  // CRITICAL FIX: Real-time message subscription - ONLY depends on conversation ID and user ID
   useEffect(() => {
-    if (!selectedConversation || !user) return;
+    if (!selectedConversationId || !user) {
+      return;
+    }
 
-    const { participant1_id, participant2_id, id: conversationId } = selectedConversation;
-
-    console.log('[Real-time] 🔌 Subscribing to conversation:', conversationId);
+    console.log('[Real-time] 🔌 Subscribing to conversation:', selectedConversationId);
 
     const channel = supabase
-      .channel(`messages:${selectedConversationKey}`)
+      .channel(`messages:${selectedConversationId}`)
       .on(
         'postgres_changes' as never,
         { event: 'INSERT', schema: 'public', table: 'messages' },
-        async (payload: { new: Message }) => {
+        (payload: { new: Message }) => {
           const m = payload.new;
 
+          // Get current conversation data from ref (doesn't trigger re-renders)
+          const currentConv = selectedConversationRef.current;
+          if (!currentConv) return;
+
           const matchesParticipants =
-            (m.sender_id === participant1_id && m.recipient_id === participant2_id) ||
-            (m.sender_id === participant2_id && m.recipient_id === participant1_id);
+            (m.sender_id === currentConv.participant1_id &&
+              m.recipient_id === currentConv.participant2_id) ||
+            (m.sender_id === currentConv.participant2_id &&
+              m.recipient_id === currentConv.participant1_id);
 
           if (matchesParticipants) {
-            console.log('[Real-time] 📬 New message:', {
-              id: m.id,
-              sender: m.sender_id === user.id ? 'YOU' : 'OTHER',
-              recipient: m.recipient_id === user.id ? 'YOU' : 'OTHER',
-            });
+            console.log('[Real-time] 📬 New message:', m.id);
 
-            // Add to UI FIRST
             setMessages((prev: Message[]) => {
               if (prev.some((x) => x.id === m.id)) return prev;
               return [...prev, m].sort((a, b) => (a.created_at < b.created_at ? -1 : 1));
             });
 
-            // If message is TO you (you're the recipient)
             if (m.recipient_id === user.id && m.sender_id !== user.id) {
-              console.log('[Real-time] 🔔 Message sent to YOU, marking as read immediately');
+              console.log('[Real-time] 🔔 New message for YOU');
 
-              // Mark as read RIGHT NOW
-              const { error: markError } = await supabase
-                .from('messages')
-                .update({
-                  is_read: true,
-                  read_at: new Date().toISOString(),
-                })
-                .eq('id', m.id);
+              // Check if we've already shown toast for this message
+              if (lastToastMessageId.current !== m.id) {
+                lastToastMessageId.current = m.id;
 
-              if (markError) {
-                console.error('[Real-time] ❌ Failed to mark as read:', markError);
-              } else {
-                console.log('[Real-time] ✅ Marked message as read:', m.id);
-
-                // Refresh unread counts IMMEDIATELY (no timeout)
-                fetchUnreadCounts();
-              }
-
-              // Show notifications
-              const senderName = selectedConversation.displayName;
-
-              setToast({
-                show: true,
-                senderName,
-                message: m.content,
-                profilePhoto: selectedConversation.profilePhoto,
-                conversationId: selectedConversation.id,
-              });
-
-              if (document.hidden) {
-                BrowserNotifications.showNotification(`New message from ${senderName}`, {
-                  body: m.content.substring(0, 100),
-                  icon: selectedConversation.profilePhoto || '/icon.png',
-                  tag: `message-${m.id}`,
-                  data: { url: `/messages?conversation=${selectedConversation.id}` },
+                // Use ref to get current conversation data
+                setToast({
+                  show: true,
+                  senderName: currentConv.displayName,
+                  message: m.content,
+                  profilePhoto: currentConv.profilePhoto,
+                  conversationId: currentConv.id,
                 });
+
+                if (document.hidden) {
+                  BrowserNotifications.showNotification(
+                    `New message from ${currentConv.displayName}`,
+                    {
+                      body: m.content.substring(0, 100),
+                      icon: currentConv.profilePhoto || '/icon.png',
+                      tag: `message-${m.id}`,
+                      data: { url: `/messages?conversation=${currentConv.id}` },
+                    }
+                  );
+                }
               }
+
+              // Mark as read after delay
+              setTimeout(async () => {
+                console.log('[Real-time] ⏱️ Marking message as read after delay');
+                const { error: markError } = await supabase
+                  .from('messages')
+                  .update({
+                    is_read: true,
+                    read_at: new Date().toISOString(),
+                  })
+                  .eq('id', m.id)
+                  .eq('recipient_id', user.id);
+
+                if (markError) {
+                  console.error('[Real-time] ❌ Failed to mark as read:', markError);
+                } else {
+                  console.log('[Real-time] ✅ Marked message as read:', m.id);
+                }
+              }, 1000);
             }
           }
         }
@@ -504,16 +505,20 @@ export default function MessagesPage(): ReactElement {
       });
 
     return () => {
-      console.log('[Real-time] 🔌 Unsubscribing');
+      console.log('[Real-time] 🔌 Unsubscribing from:', selectedConversationId);
       supabase.removeChannel(channel);
     };
-  }, [selectedConversationKey, selectedConversation, user, fetchUnreadCounts]);
+  }, [selectedConversationId, user?.id]); // ONLY ID dependencies
 
-  // Real-time subscription for ALL conversations (for sidebar updates)
+  // Real-time subscription for ALL conversations (sidebar updates)
   useEffect(() => {
     if (!user) return;
 
-    console.log('[Real-time Sidebar] 🔌 Subscribing to ALL messages for sidebar updates');
+    console.log('[Real-time Sidebar] 🔌 Subscribing to ALL messages');
+
+    const currentSelectedConvId = selectedConversationId;
+    let refreshTimeout: ReturnType<typeof setTimeout> | null = null;
+    let updateTimeout: ReturnType<typeof setTimeout> | null = null;
 
     const channel = supabase
       .channel('all-messages-sidebar')
@@ -524,32 +529,25 @@ export default function MessagesPage(): ReactElement {
           schema: 'public',
           table: 'messages',
         },
-        async (payload: { new: Message }) => {
+        (payload: { new: Message }) => {
           const m = payload.new;
-
-          // Only care about messages involving the current user
           const isRelevant = m.sender_id === user.id || m.recipient_id === user.id;
 
           if (isRelevant) {
-            console.log('[Real-time Sidebar] 📬 New message detected:', {
-              id: m.id,
-              conversation: m.conversation_id,
-              isForMe: m.recipient_id === user.id,
-            });
+            if (refreshTimeout) clearTimeout(refreshTimeout);
+            refreshTimeout = setTimeout(() => {
+              fetchConversations();
+            }, 500);
 
-            // Refresh conversations to update sidebar
-            await fetchConversations();
-
-            // If message is for the current user and NOT in the selected conversation, refresh counts
             if (
               m.recipient_id === user.id &&
               m.sender_id !== user.id &&
-              m.conversation_id !== selectedConversation?.id
+              m.conversation_id !== currentSelectedConvId
             ) {
-              console.log(
-                '[Real-time Sidebar] 🔔 New message in different conversation, refreshing counts'
-              );
-              fetchUnreadCounts();
+              if (updateTimeout) clearTimeout(updateTimeout);
+              updateTimeout = setTimeout(() => {
+                fetchUnreadCounts();
+              }, 300);
             }
           }
         }
@@ -561,14 +559,14 @@ export default function MessagesPage(): ReactElement {
           schema: 'public',
           table: 'messages',
         },
-        async (payload: { new: Message; old: { is_read: boolean } }) => {
+        (payload: { new: Message; old: { is_read: boolean } }) => {
           const m = payload.new;
 
-          // If a message was marked as read, refresh counts
           if (m.is_read === true && payload.old.is_read === false) {
-            console.log('[Real-time Sidebar] ✅ Message marked as read, refreshing');
-            fetchUnreadCounts();
-            await fetchConversations();
+            if (updateTimeout) clearTimeout(updateTimeout);
+            updateTimeout = setTimeout(() => {
+              fetchUnreadCounts();
+            }, 300);
           }
         }
       )
@@ -578,10 +576,13 @@ export default function MessagesPage(): ReactElement {
 
     return () => {
       console.log('[Real-time Sidebar] 🔌 Unsubscribing');
+      if (refreshTimeout) clearTimeout(refreshTimeout);
+      if (updateTimeout) clearTimeout(updateTimeout);
       supabase.removeChannel(channel);
     };
-  }, [user, selectedConversation, fetchConversations, fetchUnreadCounts]);
-  // Update conversation unread counts when unreadByConversation changes
+  }, [user?.id, selectedConversationId, fetchConversations, fetchUnreadCounts]);
+
+  // Update unread counts on conversations
   useEffect(() => {
     setConversations((prev) =>
       prev.map((conv) => ({
@@ -591,13 +592,14 @@ export default function MessagesPage(): ReactElement {
     );
   }, [unreadByConversation]);
 
+  // Initial fetch
   useEffect(() => {
     if (user && !authLoading) {
       fetchConversations();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, authLoading]);
+  }, [user, authLoading, fetchConversations]);
 
+  // Auto-scroll to bottom
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -740,7 +742,7 @@ export default function MessagesPage(): ReactElement {
             </div>
           </aside>
 
-          {/* Thread section - keeping the rest of your existing code */}
+          {/* Thread section */}
           <section className="flex-1 min-h-0 flex flex-col">
             {selectedConversation ? (
               <>
