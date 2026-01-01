@@ -330,7 +330,6 @@ export default function MessagesPage(): ReactElement {
         throw new Error(errorData.error || 'Failed to send message');
       }
 
-
       setNewMessage('');
 
       await fetchConversations();
@@ -466,15 +465,12 @@ export default function MessagesPage(): ReactElement {
             console.log('[Real-time] 📬 New message:', m.id);
 
             setMessages((prev: Message[]) => {
-
-              if (prev.some((x) => x.id === m.id)) return prev;
-              return [...prev, m].sort((a, b) => (a.created_at < b.created_at ? -1 : 1));
-
-              //delete mapped tempMessage
+              // First, remove any temp messages that match this real message
               const withoutTemps = prev.filter((x) => {
                 const isTemp = x.id.startsWith('temp-');
-                if (!isTemp) return true;
+                if (!isTemp) return true; // Keep non-temp messages
 
+                // Remove temp messages that match sender, recipient, and content
                 return !(
                   x.sender_id === m.sender_id &&
                   x.recipient_id === m.recipient_id &&
@@ -482,11 +478,11 @@ export default function MessagesPage(): ReactElement {
                 );
               });
 
-              // Avoid duplicates
+              // Avoid adding duplicate real messages
               if (withoutTemps.some((x) => x.id === m.id)) return withoutTemps;
-              // Add new message and re-sort
-              return [...withoutTemps, m].sort((a, b) => (a.created_at < b.created_at ? -1 : 1));
 
+              // Add new message and sort
+              return [...withoutTemps, m].sort((a, b) => (a.created_at < b.created_at ? -1 : 1));
             });
 
             if (m.recipient_id === user.id && m.sender_id !== user.id) {
@@ -751,12 +747,12 @@ export default function MessagesPage(): ReactElement {
                             unoptimized
                           />
                         ) : (
-                          <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center text-lg font-medium text-gray-600">
+                          <div className="w-12 h-12 bg-linear-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center text-lg font-medium text-gray-600">
                             {conversation.displayName?.[0] || '👤'}
                           </div>
                         )}
                         {conversation.unreadCount && conversation.unreadCount > 0 && (
-                          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full font-bold min-w-[20px] text-center">
+                          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full font-bold min-w-5 text-center">
                             {conversation.unreadCount}
                           </span>
                         )}
@@ -805,7 +801,7 @@ export default function MessagesPage(): ReactElement {
                           unoptimized
                         />
                       ) : (
-                        <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center text-lg font-medium text-gray-600">
+                        <div className="w-12 h-12 bg-linear-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center text-lg font-medium text-gray-600">
                           {selectedConversation.displayName?.[0] || '👤'}
                         </div>
                       )}
@@ -881,7 +877,11 @@ export default function MessagesPage(): ReactElement {
                         onClick={() => {
                           setError(null);
                           if (selectedConversation) {
-                            fetchMessages(selectedConversation.id);
+                            fetchMessages(
+                              selectedConversation.id,
+                              selectedConversation.participant1_id,
+                              selectedConversation.participant2_id
+                            );
                           }
                         }}
                         className="mt-2 px-3 py-1 bg-red-600 text-white text-sm rounded-sm hover:bg-red-700 transition-colors"
