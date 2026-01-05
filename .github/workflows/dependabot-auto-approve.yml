@@ -71,7 +71,7 @@ jobs:
             # Approved Patterns: Root package manifests or GitHub Actions workflows
             if [[ ! "$file" =~ ^package\.json$ ]] && \
                [[ ! "$file" =~ ^package-lock\.json$ ]] && \
-               [[ ! "$file" =~ ^\.github/workflows/.*\.yml$ ]]; then
+               [[ ! "$file" =~ ^\.github/workflows/.*\.(yml|yaml)$ ]]; then
               echo "Error: Unapproved file modification detected: $file"
               echo "eligible=false" >> $GITHUB_OUTPUT
               exit 0
