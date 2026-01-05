@@ -3,6 +3,14 @@
 
 const rateLimitMap = new Map();
 
+/**
+ * Helper to get current time that respects Jest fake timers.
+ * When Jest's useFakeTimers() is active, this function will return the mocked time
+ * instead of the actual system time. This abstraction ensures our rate limiter
+ * works correctly in both production and test environments.
+ */
+const getCurrentTime = () => Date.now();
+
 export const rateLimit = (options = {}) => {
   const {
     windowMs = 15 * 60 * 1000, // 15 minutes
@@ -20,7 +28,7 @@ export const rateLimit = (options = {}) => {
 
   return (request) => {
     const key = keyGenerator(request);
-    const now = Date.now();
+    const now = getCurrentTime();
     const windowStart = now - windowMs;
 
     // Get or create rate limit data for this key
