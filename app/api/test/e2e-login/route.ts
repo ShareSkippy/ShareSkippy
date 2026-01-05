@@ -19,6 +19,12 @@ export async function GET(request: NextRequest) {
   const providedSecret = url.searchParams.get('secret');
   const redirectParam = url.searchParams.get('redirect') ?? '/';
 
+  // Validate redirect to prevent open redirect vulnerability
+  const isValidRedirect = redirectParam.startsWith('/') && !redirectParam.startsWith('//');
+  if (!isValidRedirect) {
+    return NextResponse.json({ error: 'Invalid redirect parameter' }, { status: 400 });
+  }
+
   if (!AUTH_SECRET || !providedSecret || providedSecret !== AUTH_SECRET) {
     return NextResponse.json({ error: 'Missing or invalid secret' }, { status: 401 });
   }
