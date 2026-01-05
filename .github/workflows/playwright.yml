@@ -46,8 +46,10 @@ jobs:
             ${{ runner.os }}-playwright-browsers-
       - name: Install dependencies
         run: npm ci
+      - name: Use CI config for Supabase
+        run: cp supabase/config.ci.toml supabase/config.toml
       - name: Start Supabase
-        run: npx supabase start --config supabase/config.ci.toml
+        run: npx supabase start --exclude realtime,studio,edge-runtime,logflare
       - name: Build the project
         run: npm run build
       - name: Install Playwright Browsers
