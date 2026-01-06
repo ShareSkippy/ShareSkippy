@@ -17,15 +17,20 @@ type E2EUser = {
   };
 };
 
-// Default to local Supabase demo credentials if not specified
+// Default to local Supabase demo URL if not specified
 const supabaseUrl =
   process.env.SUPABASE_URL?.trim() ||
   process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() ||
   'http://localhost:54321';
 
-const serviceRoleKey =
-  process.env.SUPABASE_SERVICE_ROLE_KEY ||
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU';
+/**
+ * Service role key used for seeding test data.
+ *
+ * This value must be provided via the SUPABASE_SERVICE_ROLE_KEY environment
+ * variable. A hardcoded fallback is intentionally not provided to avoid
+ * encouraging use of demo keys or leaking secrets in version control.
+ */
+const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
 
 if (!supabaseUrl || !serviceRoleKey) {
   console.error(
