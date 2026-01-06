@@ -2,9 +2,15 @@ import 'dotenv/config';
 import { createClient } from '@supabase/supabase-js';
 import { randomUUID } from 'node:crypto';
 
+/**
+ * Represents a Playwright E2E user used for seeding test data.
+ */
 type E2EUser = {
+  /** User email address used for sign-in. */
   email: string;
+  /** Plaintext password for the test account. */
   password: string;
+  /** Minimal user metadata required by the application. */
   metadata: {
     first_name: string;
     last_name: string;
@@ -41,6 +47,15 @@ const e2eUser: E2EUser = {
   },
 };
 
+/**
+ * Delete any existing users that match the given email.
+ *
+ * This keeps the seeding operation idempotent by removing previously created
+ * test accounts before re-creating them.
+ *
+ * @param email - The email address to remove from the Auth user list.
+ * @throws If the Supabase admin API returns an error.
+ */
 async function deleteExistingUser(email: string) {
   const { data, error } = await supabase.auth.admin.listUsers();
 
@@ -57,6 +72,16 @@ async function deleteExistingUser(email: string) {
   await Promise.all(matchingUsers.map((user) => supabase.auth.admin.deleteUser(user.id)));
 }
 
+/**
+ * Create the Playwright E2E user and ensure a matching `profiles` row exists.
+ *
+ * The function first removes any existing users with the same email to
+ * keep the operation idempotent. It uses the Supabase Admin API to create
+ * the user and then upserts a profile record matching the new user's id.
+ *
+ * @returns The created Supabase user object.
+ * @throws If user creation or profile upsert fails.
+ */
 async function seedUser() {
   await deleteExistingUser(e2eUser.email);
 
@@ -94,6 +119,15 @@ async function seedUser() {
   return data.user;
 }
 
+/**
+ * Seed a dog record for the provided owner id.
+ *
+ * Any existing dogs for the owner are deleted first to keep seeding idempotent.
+ *
+ * @param ownerId - Supabase user id of the dog owner.
+ * @returns The `id` of the newly inserted dog row.
+ * @throws If the insert operation fails or returns no data.
+ */
 async function seedDog(ownerId: string) {
   await supabase.from('dogs').delete().eq('owner_id', ownerId);
 
@@ -120,6 +154,16 @@ async function seedDog(ownerId: string) {
   return data.id;
 }
 
+/**
+ * Insert a single availability post for the seeded user and dog.
+ *
+ * This removes existing availability posts for the owner before inserting a
+ * predictable test availability entry (today → tomorrow).
+ *
+ * @param ownerId - Supabase user id of the owner.
+ * @param dogId - The id of the dog's row to associate with the availability.
+ * @throws If deletion or insertion returns an error.
+ */
 async function seedAvailability(ownerId: string, dogId: string) {
   const { error: cleanupError } = await supabase
     .from('availability')
@@ -153,6 +197,15 @@ async function seedAvailability(ownerId: string, dogId: string) {
   }
 }
 
+/**
+ * Top-level seeding routine.
+ *
+ * - Creates the E2E user
+ * - Inserts a dog for that user
+ * - Adds a single availability post for testing
+ *
+ * Throws on any error encountered during the seeding steps.
+ */
 async function main() {
   console.log('Seeding Playwright E2E data...');
   const user = await seedUser();
