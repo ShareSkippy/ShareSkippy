@@ -48,8 +48,7 @@ export async function createClient(type: SupabaseKeyType = 'anon') {
         }
 
         if (errors.length > 0) {
-          // Surface a generic error so callers can detect that cookie setting failed.
-          throw new Error('Failed to set one or more cookies in server createClient');
+          console.error('Failed to set one or more cookies in server createClient', errors);
         }
       },
     },
