@@ -24,25 +24,81 @@ test.describe('Authenticated profile flow', () => {
     const session = body?.session;
 
     if (session && session.access_token) {
+      // Determine origin for cookies. Prefer PLAYWRIGHT_BASE_URL (overridable),
+      // otherwise try the response URL, and finally fall back to localhost.
+      let origin: string | undefined;
+      try {
+        if (process.env.PLAYWRIGHT_BASE_URL) {
+          origin = new URL(process.env.PLAYWRIGHT_BASE_URL).origin;
+        }
+      } catch {
+        origin = undefined;
+      }
+
+      if (!origin) {
+        // APIResponse may expose `url()`; guard for both function and property.
+        try {
+          const reqWithUrl = request as unknown as { url?: string | (() => string) };
+          const maybeUrl = typeof reqWithUrl.url === 'function' ? reqWithUrl.url() : reqWithUrl.url;
+          if (typeof maybeUrl === 'string' && maybeUrl) origin = new URL(maybeUrl).origin;
+        } catch {
+          origin = undefined;
+        }
+      }
+
+      if (!origin) {
+        origin = 'http://127.0.0.1:3000';
+      }
+
       // Attach cookies for the app origin so server-side code sees them.
-      await page.context().addCookies([
-        {
-          name: 'sb-access-token',
-          value: String(session.access_token),
-          domain: '127.0.0.1',
-          path: '/',
-          httpOnly: true,
-          sameSite: 'Lax',
-        },
-        {
-          name: 'sb-refresh-token',
-          value: String(session.refresh_token || ''),
-          domain: '127.0.0.1',
-          path: '/',
-          httpOnly: true,
-          sameSite: 'Lax',
-        },
-      ]);
+      // Playwright's addCookies accepts either a `url` or `domain`+`path`.
+      // Using `domain`+`path` derived from the origin is more reliable across configs.
+      try {
+        const parsed = new URL(origin);
+        const domain = parsed.hostname;
+        const secure = parsed.protocol === 'https:';
+
+        await page.context().addCookies([
+          {
+            name: 'sb-access-token',
+            value: String(session.access_token),
+            domain,
+            path: '/',
+            httpOnly: true,
+            sameSite: 'Lax',
+            secure,
+          },
+          {
+            name: 'sb-refresh-token',
+            value: String(session.refresh_token || ''),
+            domain,
+            path: '/',
+            httpOnly: true,
+            sameSite: 'Lax',
+            secure,
+          },
+        ]);
+      } catch {
+        // Fallback to localhost domain
+        await page.context().addCookies([
+          {
+            name: 'sb-access-token',
+            value: String(session.access_token),
+            domain: '127.0.0.1',
+            path: '/',
+            httpOnly: true,
+            sameSite: 'Lax',
+          },
+          {
+            name: 'sb-refresh-token',
+            value: String(session.refresh_token || ''),
+            domain: '127.0.0.1',
+            path: '/',
+            httpOnly: true,
+            sameSite: 'Lax',
+          },
+        ]);
+      }
     }
 
     await page.goto('/community');
