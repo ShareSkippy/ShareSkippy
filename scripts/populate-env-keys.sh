@@ -9,8 +9,9 @@ SUPABASE_STATUS=$(npx supabase status -o env)
 
 extract_key_value() {
   echo "$SUPABASE_STATUS" | \
-    grep "$1" | \
-    sed -E 's/.*: (sb_.*)/\1/' | \
+    grep -E "^${1}:" | \
+    sed -E 's/^[^:]+:\s*//' | \
+    sed -E 's/^[A-Z0-9_]+=//' | \
     tr -d '[:space:]"'
 }
 
