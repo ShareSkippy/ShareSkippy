@@ -46,14 +46,14 @@ ShareSkippy makes it easy for dog owners to find trusted community members who c
    This performs:
    - `task setup:init` → installs dependencies and initializes Supabase (say `n` when asked about telemetry)
    - `task services:start` → boots the local Supabase services
-   - `task setup:env` → copies `.env.example` to `.env.local`, populates Supabase keys via `scripts/populate-env-keys.{ps1,sh}`, and prints guidance for the required `RESEND_API_KEY`
+   - `task setup:env` → copies `.env.example` to `.env`, populates Supabase keys via `scripts/populate-env-keys.{ps1,sh}`, and prints guidance for the required `RESEND_API_KEY`
    - `npm run dev` → launches the Next.js dev server
 
    `task dev` defers `task services:stop`, so Supabase stops automatically once you exit the session.
 
 3. **Edit secrets**
 
-   Update `.env.local` with:
+   Update `.env` with:
    - Verify Supabase connection values (URL, anon key, service role key)
    - Optional `RESEND_API_KEY` for sending emails
    - Optional `CRON_SECRET_TOKEN` for the deletion cron job (`scripts/setup-deletion-cron.sh` explains how to use this)
@@ -78,7 +78,7 @@ ShareSkippy makes it easy for dog owners to find trusted community members who c
   task setup:env:supabase:populate
   npm run e2e
   ```
-- `task setup:env`: ensure `.env.local` exists and remind you to add `RESEND_API_KEY`.
+- `task setup:env`: ensure `.env` exists and remind you to add `RESEND_API_KEY`.
 - `task setup:env:supabase:populate`: refresh Supabase keys from `npx supabase status -o env` (Windows uses PowerShell, macOS/Linux run the shell script).
 - `task services:start` / `task services:stop`: manually control the local Supabase stack.
 - `task db:reset`: reset the database if migrations are out of sync.
