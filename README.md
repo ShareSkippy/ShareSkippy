@@ -71,6 +71,13 @@ ShareSkippy makes it easy for dog owners to find trusted community members who c
 ## Helpful commands
 
 - `task dev`: full setup, Supabase start, env generation, and `npm run dev`.
+- `task setup:e2e`: install Playwright system dependencies and browsers needed for E2E tests.
+  After running `task setup:e2e`, start Supabase and populate env keys before running the tests:
+  ```bash
+  task services:start
+  task setup:env:supabase:populate
+  npm run e2e
+  ```
 - `task setup:env`: ensure `.env.local` exists and remind you to add `RESEND_API_KEY`.
 - `task setup:env:supabase:populate`: refresh Supabase keys from `npx supabase status -o env` (Windows uses PowerShell, macOS/Linux run the shell script).
 - `task services:start` / `task services:stop`: manually control the local Supabase stack.
