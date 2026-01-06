@@ -25,6 +25,7 @@ tasks:
     interactive: true
     cmds:
       - cmd: npm install
+      - cmd: npm run prepare
       - cmd: test -f supabase/config.toml || npx supabase init
 
   setup:env:
@@ -49,7 +50,7 @@ tasks:
         platforms: [windows]
       - cmd: chmod +x scripts/populate-env-keys.sh
         platforms: [linux, darwin]
-      - cmd: populate-env-keys.sh
+      - cmd: scripts/populate-env-keys.sh
         platforms: [linux, darwin]
 
   setup:env:resend_info:
