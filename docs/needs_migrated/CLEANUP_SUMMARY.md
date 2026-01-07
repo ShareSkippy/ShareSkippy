@@ -141,7 +141,7 @@ components/
 ├── FeaturesListicle.js  # Features listicle
 ├── FAQ.js               # FAQ component
 ├── CommunitySupportSection.js # Community support
-├── LoggedInNav.tsx      # Navigation for logged-in users
+├── LoggedInNav.js       # Navigation for logged-in users
 └── DeleteAccountModal.js # Account deletion modal
 ```
 
