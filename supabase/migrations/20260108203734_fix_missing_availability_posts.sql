@@ -39,9 +39,11 @@ CREATE POLICY "Users can view their own dogs or dogs in active posts" ON dogs
     OR EXISTS (
       SELECT 1
       FROM availability a
-      JOIN availability_dogs ad ON ad.availability_id = a.id
-      WHERE ad.dog_id = dogs.id
-        AND a.status = 'active'
+      WHERE a.status = 'active'
+        AND (
+          a.dog_id = dogs.id
+          OR dogs.id = ANY(a.dog_ids)
+        )
     )
   );
 
