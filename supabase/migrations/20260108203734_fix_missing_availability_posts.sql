@@ -30,7 +30,6 @@ CREATE POLICY "Profiles are viewable by everyone" ON profiles
 DROP POLICY IF EXISTS "Users can view their own dogs" ON dogs;
 DROP POLICY IF EXISTS "Users can view dogs in active availability posts" ON dogs;
 DROP POLICY IF EXISTS "Public dogs are viewable by everyone" ON dogs;
-DROP POLICY IF EXISTS "Dogs are viewable if they belong to a post" ON dogs;
 
 -- Policy: users can see their own dogs, or dogs that appear in active availability posts
 -- This maintains privacy for unrelated dogs while keeping joins performant.
