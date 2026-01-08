@@ -18,7 +18,14 @@ export interface ScheduledEmail {
 }
 
 /**
- * Process scheduled emails that are due to be sent
+ * Process scheduled emails that are due to be sent.
+ *
+ * Picks up due records from `scheduled_emails`, marks them as picked,
+ * resolves recipient data, attempts delivery via `sendEmail`, and updates
+ * per-event status. Returns a summary of processed count and any errors.
+ *
+ * @returns An object containing `processed` count and an `errors` array
+ * @throws Propagates unexpected errors encountered during processing
  */
 export async function processScheduledEmails(): Promise<{
   processed: number;
@@ -39,7 +46,6 @@ export async function processScheduledEmails(): Promise<{
       console.info('Scheduled emails table not found; skipping processing');
       return { processed: 0, errors: [] };
     }
-    // Get due scheduled emails that haven't been picked up yet
     const { data: scheduledEmails, error: fetchError } = await supabase
       .from('scheduled_emails')
       .select('*')
@@ -59,10 +65,9 @@ export async function processScheduledEmails(): Promise<{
 
     console.info('Processing scheduled emails', { count: scheduledEmails.length });
 
-    // Process each scheduled email
     for (const scheduledEmail of scheduledEmails) {
       try {
-        // Mark as picked up to prevent duplicate processing
+        // Mark as picked to prevent duplicate processing
         const { error: pickupError } = await supabase
           .from('scheduled_emails')
           .update({ picked_at: new Date().toISOString() })
@@ -77,7 +82,7 @@ export async function processScheduledEmails(): Promise<{
           continue;
         }
 
-        // Get user email
+        // Resolve recipient
         const { data: user, error: userError } = await supabase
           .from('profiles')
           .select('email, first_name')
@@ -93,7 +98,7 @@ export async function processScheduledEmails(): Promise<{
           continue;
         }
 
-        // Send the email
+        // Deliver
         await sendEmail({
           userId: scheduledEmail.user_id,
           to: user.email,
@@ -129,7 +134,14 @@ export async function processScheduledEmails(): Promise<{
 }
 
 /**
- * Schedule a meeting reminder email
+ * Schedule a meeting reminder email to be sent one day before `startsAt`.
+ *
+ * @param params.userId - Recipient user id
+ * @param params.meetingId - Meeting identifier
+ * @param params.meetingTitle - Meeting title for the email payload
+ * @param params.startsAt - Meeting start timestamp
+ * @param params.payload - Optional extra payload merged into the email payload
+ * @throws When the DB insert fails
  */
 export async function scheduleMeetingReminder({
   userId,
@@ -145,7 +157,7 @@ export async function scheduleMeetingReminder({
   payload?: EmailPayload;
 }): Promise<void> {
   const reminderTime = new Date(startsAt);
-  reminderTime.setDate(reminderTime.getDate() - 1); // 1 day before
+  reminderTime.setDate(reminderTime.getDate() - 1);
 
   const supabase = await createClient();
   const { error } = await supabase.from('scheduled_emails').insert({
@@ -167,7 +179,10 @@ export async function scheduleMeetingReminder({
 }
 
 /**
- * Schedule nurture email for 3 days after signup
+ * Schedule a nurture email to be sent 3 days after scheduling.
+ *
+ * @param userId - Recipient user id
+ * @throws When the DB insert fails
  */
 export async function scheduleNurtureEmail(userId: string): Promise<void> {
   const nurtureTime = new Date();
@@ -215,7 +230,11 @@ export async function scheduleCommunityGrowthEmail(userId: string): Promise<void
 }
 
 /**
- * Get scheduled emails for a user
+ * Retrieve scheduled emails for a user ordered by run time.
+ *
+ * @param userId - User identifier
+ * @returns Array of scheduled email records (may be empty)
+ * @throws When the DB query fails
  */
 export async function getUserScheduledEmails(userId: string): Promise<ScheduledEmail[]> {
   const supabase = await createClient();
