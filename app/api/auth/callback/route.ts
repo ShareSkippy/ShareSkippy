@@ -2,15 +2,10 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/libs/supabase/server';
 import { type Session, type User, type UserMetadata } from '@supabase/supabase-js';
 
-// #region CONFIGURATION
-/**
- * @description Force dynamic rendering to prevent caching of this server-side function.
- */
+// Prevent this server function from being cached.
 export const dynamic = 'force-dynamic';
-// #endregion CONFIGURATION
 
-// #region TYPES
-// NOTE: Use your actual schema types (e.g., from database.types.ts) here for safety.
+// Profile shape for server-side logic. Replace with generated DB types if available.
 interface Profile {
   id: string;
   first_name: string | null;
@@ -22,59 +17,51 @@ interface Profile {
   display_lat: number | null;
   display_lng: number | null;
 }
-// #endregion TYPES
-
-// #region HELPER_FUNCTIONS
 
 /**
- * @function determineRedirectPath
- * @description Determines the final destination URL based on user status and profile completeness.
- * Includes a cache-busting parameter to force client-side session refresh.
+ * Determine where to send the user after authentication.
+ *
+ * @param finalRedirectBaseUrl - Origin used to build absolute redirect URLs
+ * @param profile - User's profile row
+ * @param isNewUser - True when a profile row did not previously exist
+ * @returns Absolute URL string for redirect
  */
 function determineRedirectPath(
   finalRedirectBaseUrl: string,
   profile: Profile,
   isNewUser: boolean
 ): string {
-  // 🚨 FIX: Add a cache-busting parameter to the redirect path.
-  // This ensures the browser treats the destination as a hard navigation,
-  // forcing the client-side app to read the new session cookies immediately.
-  const cacheBust: string = `_t=${Date.now()}`;
+  const cacheBust = `_t=${Date.now()}`;
 
-  // NEW USERS → Always go to profile edit
   if (isNewUser) {
-    console.log('🆕 NEW USER → Redirecting to /profile/edit');
+    console.info('Redirect: /profile/edit (new user)');
     return `${finalRedirectBaseUrl}/profile/edit?${cacheBust}`;
   }
 
-  // Check profile completeness for existing users
-  // Treat bio as optional; require role, phone, and a verified location
-  const hasRole: boolean = !!profile.role && profile.role.trim().length > 0;
-  const hasPhone: boolean = !!profile.phone_number && profile.phone_number.trim().length > 0;
-  const hasLocation: boolean = profile.display_lat !== null && profile.display_lng !== null;
+  const hasRole = !!profile.role && profile.role.trim().length > 0;
+  const hasPhone = !!profile.phone_number && profile.phone_number.trim().length > 0;
+  const hasLocation = profile.display_lat !== null && profile.display_lng !== null;
 
-  console.log('📊 Profile completeness check:');
-  console.log('   ✓ Role:', hasRole ? '✅ Complete' : '❌ Missing');
-  console.log('   ✓ Phone:', hasPhone ? '✅ Complete' : '❌ Missing');
-  console.log(
-    '   ✓ Location:',
-    hasLocation ? '✅ Verified (display_lat/lng present)' : '❌ Missing'
-  );
+  // Diagnostic: booleans only
+  console.debug('Profile completeness', { hasRole, hasPhone, hasLocation });
 
-  // Existing user logic
   if (hasRole && hasPhone && hasLocation) {
-    console.log('✅ PROFILE COMPLETE → Redirecting to /community');
+    console.info('Redirect: /community (profile complete)');
     return `${finalRedirectBaseUrl}/community?${cacheBust}`;
-  } else {
-    console.log('📝 PROFILE INCOMPLETE → Redirecting to /profile/edit');
-    return `${finalRedirectBaseUrl}/profile/edit?${cacheBust}`;
   }
+
+  console.info('Redirect: /profile/edit (profile incomplete)');
+  return `${finalRedirectBaseUrl}/profile/edit?${cacheBust}`;
 }
 
 /**
- * @async
- * @function processCodeExchangeAndProfileUpdate
- * @description Executes the core logic: exchange code, update profile, send email, and route.
+ * Exchange the OAuth code for a Supabase session, ensure the user's profile
+ * row exists or is updated, optionally queue a welcome email, and return a
+ * redirect response for the client.
+ *
+ * @param requestUrl - The incoming request URL (used to build absolute redirects)
+ * @param code - OAuth authorization code received from the provider
+ * @returns A `NextResponse` that redirects the client
  */
 async function processCodeExchangeAndProfileUpdate(
   requestUrl: URL,
@@ -90,7 +77,10 @@ async function processCodeExchangeAndProfileUpdate(
   };
 
   if (exchangeError) {
-    console.error('Session exchange error:', exchangeError);
+    console.error('Session exchange error during auth code exchange.');
+    if (exchangeError instanceof Error) {
+      console.error('  message:', exchangeError.message);
+    }
     return NextResponse.redirect(
       new URL('/signin?error=session_exchange_failed', requestUrl.origin)
     );
@@ -118,7 +108,8 @@ async function processCodeExchangeAndProfileUpdate(
 
   // 2. New User Check: based on whether a profile row already existed
   const isNewUser: boolean = !existingProfile;
-  console.log(isNewUser ? '🆕 NEW USER DETECTED (no existing profile)' : '👤 EXISTING USER');
+  // Informational: high-level event for production logs
+  console.info(isNewUser ? 'New user detected' : 'Existing user');
 
   // Build the upsert payload. Include `id` to allow insert-if-missing
   const upsertData: Partial<Profile> & { id: string } = {
@@ -136,9 +127,12 @@ async function processCodeExchangeAndProfileUpdate(
     .single<Profile>();
 
   if (profileError) {
-    console.error('❌ Profile upsert error:', profileError);
+    console.error('Profile upsert error (details omitted for privacy).');
+    if (profileError instanceof Error) {
+      console.error('  message:', profileError.message);
+    }
   } else {
-    console.log('✅ Profile upserted with Google data');
+    console.debug('Profile upserted with Google data');
   }
 
   if (!updatedProfile) {
@@ -154,9 +148,10 @@ async function processCodeExchangeAndProfileUpdate(
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: user.id }),
       });
-      console.log('✅ Welcome email queued');
+      console.debug('Welcome email queued');
     } catch (emailError) {
-      console.error('❌ Error sending welcome email:', emailError);
+      console.error('Error sending welcome email (details omitted).');
+      if (emailError instanceof Error) console.error('  message:', emailError.message);
     }
   }
 
@@ -178,15 +173,16 @@ function sanitizeForLog(value: string | null): string {
 
 // #region HANDLER
 /**
- * @async
- * @function GET
- * @description Handles the OAuth callback from a provider.
+ * Handle OAuth callback requests: validate params, perform session exchange,
+ * and redirect the user.
+ *
+ * @param req - Incoming Next.js request
+ * @returns A `NextResponse` redirecting the client
  */
 export async function GET(req: NextRequest): Promise<NextResponse> {
   const requestUrl = new URL(req.url);
   const code: string | null = requestUrl.searchParams.get('code');
   const error: string | null = requestUrl.searchParams.get('error');
-  const errorDescription: string | null = requestUrl.searchParams.get('error_description');
 
   // 1. Handle OAuth Errors (Guard Clause)
   if (error) {
@@ -205,13 +201,16 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       return await processCodeExchangeAndProfileUpdate(requestUrl, code);
     } catch (error) {
       // Catch unexpected errors
-      console.error('Unexpected error during session exchange:', error);
+      if (error instanceof Error) {
+        console.error('Unexpected error during session exchange:', error.message);
+      } else {
+        console.error('Unexpected error during session exchange.');
+      }
       return NextResponse.redirect(new URL('/signin?error=unexpected_error', requestUrl.origin));
     }
   }
 
-  // 3. Fallback: No Code Present
-  console.log('⚠️ No code present - Redirecting to signin');
+  // 3. Fallback: No code present — redirect to signin
+  console.debug('No code present - redirecting to signin');
   return NextResponse.redirect(new URL('/signin', requestUrl.origin));
 }
-// #endregion HANDLER
