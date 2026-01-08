@@ -10,10 +10,21 @@ DROP POLICY IF EXISTS "Allow anonymous read access to profiles" ON profiles;
 DROP POLICY IF EXISTS "Public profiles are viewable by everyone" ON profiles;
 DROP POLICY IF EXISTS "Authenticated users can view all profiles" ON profiles;
 
--- Create one clean, universal read policy for profiles
--- (Necessary so visitors can see the name/photo of the post owner)
+-- Create a clean, restricted read policy for profiles
+-- Allow:
+--   - Each authenticated user to view their own profile.
+--   - Anyone (including anonymous visitors) to view profiles that own at least one
+--     active availability post, so availability listings can show the owner's name/photo.
 CREATE POLICY "Profiles are viewable by everyone" ON profiles
-  FOR SELECT USING (true);
+  FOR SELECT USING (
+    auth.uid() = id
+    OR EXISTS (
+      SELECT 1
+      FROM availability a
+      WHERE a.owner_id = profiles.id
+        AND a.status = 'active'
+    )
+  );
 
 
 -- 2. CLEAN UP DOGS
