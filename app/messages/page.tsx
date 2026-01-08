@@ -166,6 +166,19 @@ export default function MessagesPage(): ReactElement {
       ':'
     );
   }, [selectedConversation]);
+  /**
+   * @description Dynamically filters conversations based on the search query.
+   */
+  const filteredConversations = useMemo(() => {
+    if (!searchQuery.trim()) return conversations;
+
+    const lowerQuery = searchQuery.toLowerCase();
+    return conversations.filter(
+      (conv) =>
+        conv.displayName.toLowerCase().includes(lowerQuery) ||
+        (conv.availability?.title?.toLowerCase().includes(lowerQuery) ?? false)
+    );
+  }, [searchQuery, conversations]);
   // #endregion
 
   // #region Handlers
@@ -611,15 +624,24 @@ export default function MessagesPage(): ReactElement {
                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mx-auto"></div>
               </div>
             )}
-            {!loading && conversations.length === 0 && (
+            {!loading && filteredConversations.length === 0 && (
               <div className="p-6 text-center text-gray-500">
-                <p>No conversations yet</p>
-                <p className="text-sm mt-2">Start messaging someone from the community!</p>
+                {searchQuery ? (
+                  <>
+                    <p>No conversations found</p>
+                    <p className="text-sm mt-2">Try a different search term</p>
+                  </>
+                ) : (
+                  <>
+                    <p>No conversations yet</p>
+                    <p className="text-sm mt-2">Start messaging someone from the community!</p>
+                  </>
+                )}
               </div>
             )}
             {!loading &&
-              conversations.length > 0 &&
-              conversations.map((conversation) => (
+              filteredConversations.length > 0 &&
+              filteredConversations.map((conversation) => (
                 <button
                   key={conversation.id}
                   onClick={() => {
