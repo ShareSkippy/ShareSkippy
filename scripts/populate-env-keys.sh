@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-ENV_FILE="${1:-.env}"
+ENV_FILE=".env.local"
 
 command -v npx >/dev/null 2>&1 || { echo >&2 "Error: npx is required but not found. Please run 'npm install'."; exit 1; }
 
@@ -9,9 +9,8 @@ SUPABASE_STATUS=$(npx supabase status -o env)
 
 extract_key_value() {
   echo "$SUPABASE_STATUS" | \
-    grep -E "^${1}:" | \
-    sed -E 's/^[^:]+:\s*//' | \
-    sed -E 's/^[A-Z0-9_]+=//' | \
+    grep "$1" | \
+    sed -E 's/.*: (sb_.*)/\1/' | \
     tr -d '[:space:]"'
 }
 

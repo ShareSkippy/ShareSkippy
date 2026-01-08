@@ -1,7 +1,7 @@
 version: '3'
 
 vars:
-  ENV_FILE: .env
+  ENV_FILE: .env.local
   ENV_EXAMPLE: .env.example
 
 tasks:
@@ -29,9 +29,9 @@ tasks:
       - cmd: test -f supabase/config.toml || npx supabase init
 
   setup:env:
-    desc: 'Ensures .env exists and is populated with local Supabase variables.'
+    desc: 'Ensures .env.local exists and is populated with local Supabase variables.'
     cmds:
-      # Idempotent .env creation
+      # Idempotent .env.local creation
       - cmd: |
           if [ ! -f {{.ENV_FILE}} ]; then
             cp {{.ENV_EXAMPLE}} {{.ENV_FILE}}
