@@ -31,7 +31,7 @@ export async function processScheduledEmails(): Promise<{
       .limit(1);
 
     if (tableCheckError?.message.includes('Could not find the table')) {
-      console.log('Scheduled emails table does not exist yet. Skipping processing.');
+      console.info('Scheduled emails table not found; skipping processing');
       return { processed: 0, errors: [] };
     }
     // Get due scheduled emails that haven't been picked up yet
@@ -48,11 +48,11 @@ export async function processScheduledEmails(): Promise<{
     }
 
     if (!scheduledEmails || scheduledEmails.length === 0) {
-      console.log('No scheduled emails to process');
+      console.debug('No scheduled emails to process');
       return { processed: 0, errors: [] };
     }
 
-    console.log(`Processing ${scheduledEmails.length} scheduled emails`);
+    console.info('Processing scheduled emails', { count: scheduledEmails.length });
 
     // Process each scheduled email
     for (const scheduledEmail of scheduledEmails) {
@@ -64,8 +64,11 @@ export async function processScheduledEmails(): Promise<{
           .eq('id', scheduledEmail.id);
 
         if (pickupError) {
-          console.error(`Failed to mark email ${scheduledEmail.id} as picked up:`, pickupError);
-          errors.push({ id: scheduledEmail.id, error: pickupError.message });
+          console.error('Failed to mark scheduled email as picked', {
+            eventId: scheduledEmail.id,
+            error: pickupError instanceof Error ? pickupError.message : String(pickupError),
+          });
+          errors.push({ id: scheduledEmail.id, error: pickupError?.message ?? 'Pickup failed' });
           continue;
         }
 
@@ -77,7 +80,10 @@ export async function processScheduledEmails(): Promise<{
           .single();
 
         if (userError || !user) {
-          console.error(`User not found for scheduled email ${scheduledEmail.id}:`, userError);
+          console.error('User not found for scheduled email', {
+            eventId: scheduledEmail.id,
+            error: userError instanceof Error ? userError.message : String(userError),
+          });
           errors.push({ id: scheduledEmail.id, error: 'User not found' });
           continue;
         }
@@ -91,11 +97,15 @@ export async function processScheduledEmails(): Promise<{
         });
 
         processed++;
-        console.log(
-          `Successfully processed scheduled email ${scheduledEmail.id} (${scheduledEmail.email_type})`
-        );
+        console.info('Processed scheduled email', {
+          eventId: scheduledEmail.id,
+          emailType: scheduledEmail.email_type,
+        });
       } catch (error) {
-        console.error(`Error processing scheduled email ${scheduledEmail.id}:`, error);
+        console.error('Error processing scheduled email', {
+          eventId: scheduledEmail.id,
+          error: error instanceof Error ? error.message : String(error),
+        });
         errors.push({
           id: scheduledEmail.id,
           error: error instanceof Error ? error.message : 'Unknown error',
@@ -105,7 +115,10 @@ export async function processScheduledEmails(): Promise<{
 
     return { processed, errors };
   } catch (error) {
-    console.error('Error in processScheduledEmails:', error);
+    console.error(
+      'Error in processScheduledEmails',
+      error instanceof Error ? error.message : String(error)
+    );
     throw error;
   }
 }
@@ -142,9 +155,7 @@ export async function scheduleMeetingReminder({
     },
   });
 
-  if (error) {
-    throw new Error(`Failed to schedule meeting reminder: ${error.message}`);
-  }
+  if (error) throw new Error(`Failed to schedule meeting reminder: ${error.message}`);
 
   const safeUserId = String(userId).replace(/[\r\n]/g, '');
   console.log(`Meeting reminder scheduled for user ${safeUserId} at ${reminderTime.toISOString()}`);
@@ -165,11 +176,9 @@ export async function scheduleNurtureEmail(userId: string): Promise<void> {
     payload: {},
   });
 
-  if (error) {
-    throw new Error(`Failed to schedule nurture email: ${error.message}`);
-  }
+  if (error) throw new Error(`Failed to schedule nurture email: ${error.message}`);
 
-  console.log(`Nurture email scheduled for user ${userId} at ${nurtureTime.toISOString()}`);
+  console.info('Scheduled nurture email', { runAfter: nurtureTime.toISOString() });
 }
 
 /**
@@ -183,9 +192,7 @@ export async function getUserScheduledEmails(userId: string): Promise<ScheduledE
     .eq('user_id', userId)
     .order('run_after', { ascending: true });
 
-  if (error) {
-    throw new Error(`Failed to get scheduled emails: ${error.message}`);
-  }
+  if (error) throw new Error(`Failed to get scheduled emails: ${error.message}`);
 
   return data || [];
 }
@@ -204,9 +211,8 @@ export async function cancelUserScheduledEmails(userId: string, emailType?: stri
 
   const { error } = await query;
 
-  if (error) {
-    throw new Error(`Failed to cancel scheduled emails: ${error.message}`);
-  }
+  if (error) throw new Error(`Failed to cancel scheduled emails: ${error.message}`);
 
-  console.log(`Cancelled scheduled emails for user ${userId}${emailType ? ` (${emailType})` : ''}`);
+  // Do not log user-provided identifiers; log the outcome for tracing instead.
+  console.info('Cancelled scheduled emails', { emailTypeProvided: !!emailType });
 }
