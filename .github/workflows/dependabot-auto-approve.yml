@@ -1,0 +1,136 @@
+# ==============================================================================
+# WORKFLOW: Dependabot Automerge
+# ==============================================================================
+# 
+# PURPOSE:
+#   Automatically approves and enables auto-merge for low-risk Dependabot PRs 
+#   to reduce maintenance overhead and PR clutter.
+# 
+# SECURITY MODEL (pull_request_target):
+#   - Uses 'pull_request_target' to allow the workflow to access repository 
+#     secrets and write permissions (required for 'gh pr review' and 
+#     'gh pr merge').
+#   - Safety: This trigger always runs the workflow code from the base branch 
+#     (main), preventing malicious PRs from altering the merge logic.
+# 
+# ELIGIBILITY CRITERIA:
+#   - Patches: All patch updates (semver-patch) are automatically approved.
+#   - Minor Updates: Approved only for 'devDependencies' and 'github-actions' 
+#     to prevent breaking changes in core framework logic or UI components.
+#   - File Safety: Restricted to modifying only package.json, package-lock.json, 
+#     or .github/workflows/*.yml.
+# 
+# SECURITY CONSIDERATIONS:
+#   - Filter: Strictly restricted to 'dependabot[bot]' via 'if' condition.
+#   - Path Validation: Ensures that updates don't touch application code, 
+#     Supabase migrations, or sensitive logic.
+#   - Metadata Validation: Includes explicit error handling for missing or 
+#     unexpected metadata from the 'fetch-metadata' action to avoid 
+#     undefined behavior or unauthorized merges.
+#   - Validation: Relies on required status checks (CI build/integration tests) 
+#     defined in branch protection rules to block broken updates.
+# ==============================================================================
+
+name: Dependabot Automerge
+
+on: pull_request_target
+
+permissions: 
+  pull-requests: write
+  contents: write
+
+jobs:
+  dependabot:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    steps:
+      - name: Fetch Dependabot Metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@7d590d1f6c6419e97a707c1d273efcef1242c5ec
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Validate Changed Files
+        id: path-check
+        shell: bash
+        run: |
+          # Fetch the list of changed files in the PR using the GitHub CLI
+          CHANGED_FILES=$(gh pr view "$PR_URL" --json files --template '{{range .files}}{{.path}}{{"\n"}}{{end}}')
+          
+          if [[ -z "$CHANGED_FILES" ]]; then
+            echo "Error: Could not retrieve the list of changed files."
+            echo "eligible=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          echo "Checking changed files..."
+          # Use a whitelist approach for security to ensure only expected files are touched
+          while read -r file; do
+            if [[ -z "$file" ]]; then continue; fi
+            
+            # Approved Patterns: Root package manifests or GitHub Actions workflows
+            if [[ ! "$file" =~ ^package\.json$ ]] && \
+               [[ ! "$file" =~ ^package-lock\.json$ ]] && \
+               [[ ! "$file" =~ ^\.github/workflows/.*\.(yml|yaml)$ ]]; then
+              echo "Error: Unapproved file modification detected: $file"
+              echo "eligible=false" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+          done <<< "$CHANGED_FILES"
+          
+          echo "eligible=true" >> $GITHUB_OUTPUT
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Determine Automerge Eligibility
+        id: decision
+        if: steps.path-check.outputs.eligible == 'true'
+        run: |
+          # Error Handling: Validate that required metadata outputs are not empty
+          UPDATE_TYPE="${{ steps.metadata.outputs.update-type }}"
+          DEP_TYPE="${{ steps.metadata.outputs.dependency-type }}"
+          ECOSYSTEM="${{ steps.metadata.outputs.package-ecosystem }}"
+
+          if [[ -z "$UPDATE_TYPE" ]]; then
+            echo "Error: Dependabot metadata 'update-type' is missing or empty."
+            echo "eligible=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # 1. Always automerge patches
+          if [[ "$UPDATE_TYPE" == "version-update:semver-patch" ]]; then
+            echo "eligible=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # 2. Automerge minor updates for non-production impact areas
+          if [[ "$UPDATE_TYPE" == "version-update:semver-minor" ]]; then
+            # Validate additional metadata required for minor update logic
+            if [[ -z "$DEP_TYPE" ]] || [[ -z "$ECOSYSTEM" ]]; then
+              echo "Error: Required metadata for minor update validation (dependency-type/ecosystem) is missing."
+              echo "eligible=false" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+
+            if [[ "$DEP_TYPE" == "development" ]] || [[ "$ECOSYSTEM" == "github_actions" ]]; then
+              echo "eligible=true" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+          fi
+          
+          echo "eligible=false" >> $GITHUB_OUTPUT
+
+      - name: Approve PR
+        if: steps.path-check.outputs.eligible == 'true' && steps.decision.outcome == 'success' && steps.decision.outputs.eligible == 'true'
+        run: gh pr review --approve "$PR_URL" || echo "Already approved"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Enable Auto-merge
+        if: steps.path-check.outputs.eligible == 'true' && steps.decision.outcome == 'success' && steps.decision.outputs.eligible == 'true'
+        run: gh pr merge --auto --squash "$PR_URL" || echo "Auto-merge already enabled"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
