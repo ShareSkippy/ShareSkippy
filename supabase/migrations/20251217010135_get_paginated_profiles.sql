@@ -1,11 +1,19 @@
-/**
- * RECOMENDED INDEXES FOR OPTIMAL PERFORMANCE:
- * 1. CREATE INDEX idx_profiles_pagination ON profiles (updated_at DESC, id ASC);
- * 2. CREATE INDEX idx_profiles_role ON profiles (role) WHERE bio IS NOT NULL AND bio <> '';
- * 3. CREATE INDEX idx_user_activity_recent ON user_activity (user_id, at DESC);
- * 4. (Optional) If using PostGIS: CREATE INDEX idx_profiles_geo ON profiles USING GIST (geography(ST_MakePoint(display_lng, display_lat)));
- */
--- ADD PRIVACY COLUMN
+CREATE INDEX IF NOT EXISTS idx_profiles_pagination 
+ON profiles (updated_at DESC, id ASC);
+
+-- Optimizes filtered profile searches (only indexes users with bios)
+CREATE INDEX IF NOT EXISTS idx_profiles_role 
+ON profiles (role) 
+WHERE bio IS NOT NULL AND bio <> '';
+
+-- Optimizes the recent activity JOIN
+CREATE INDEX IF NOT EXISTS idx_user_activity_recent 
+ON user_activity (user_id, at DESC);
+
+CREATE INDEX IF NOT EXISTS idx_availability_owner_active 
+ON availability (owner_id) 
+WHERE status = 'active';
+
 ALTER TABLE profiles 
 ADD COLUMN IF NOT EXISTS is_discoverable BOOLEAN DEFAULT true;
 
@@ -49,6 +57,10 @@ BEGIN
     -- Security check: Ensure the caller is authenticated via Supabase Auth
     IF auth.uid() IS NULL THEN
         RAISE EXCEPTION 'Not authenticated';
+    END IF;
+    
+    IF p_role IS NOT NULL AND p_role NOT IN ('dog_owner', 'petpal', 'both', 'all-members') THEN
+        RAISE EXCEPTION 'Invalid role parameter';
     END IF;
 
     IF (SELECT COUNT(*) FROM profile_access_log 
@@ -119,6 +131,11 @@ BEGIN
         AND d.is_discoverable = true
         AND (p_role IS NULL OR p_role = 'all-members' OR d.role = p_role OR d.role = 'both')
         AND (p_lat IS NULL OR (d.distance_miles IS NOT NULL AND d.distance_miles <= p_radius))
+        AND NOT EXISTS (
+            SELECT 1 FROM availability a 
+            WHERE a.owner_id = d.id 
+            AND a.status = 'active'
+        )
         -- Stable Keyset Pagination Logic
         AND (
             p_last_online_at IS NULL

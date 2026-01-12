@@ -11,8 +11,11 @@ export default function ProfilesList({ role, onMessage, locationFilter }) {
   const [hasMore, setHasMore] = useState(true);
   const sentinelRef = useRef(null);
 
+  const isFetchingRef = useRef(false);
+
   const fetchProfiles = useCallback(
     async (cursor = null, isReset = false) => {
+      isFetchingRef.current = true;
       setLoading(true);
       setError(null);
 
@@ -46,6 +49,7 @@ export default function ProfilesList({ role, onMessage, locationFilter }) {
         setError('Could not load profiles. Please try again.');
       } finally {
         setLoading(false);
+        isFetchingRef.current = false;
       }
     },
     [role, locationFilter]
@@ -59,7 +63,7 @@ export default function ProfilesList({ role, onMessage, locationFilter }) {
     const observer = new IntersectionObserver(
       ([entry]) => {
         // Only trigger if not already loading
-        if (entry.isIntersecting && hasMore && !loading) {
+        if (entry.isIntersecting && hasMore && !loading && !isFetchingRef.current) {
           fetchProfiles(nextCursor);
         }
       },
