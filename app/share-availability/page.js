@@ -51,7 +51,6 @@ export default function ShareAvailability() {
 
   const [availability, setAvailability] = useState({});
   const draggingRef = useRef(false); // ref instead of state
-  const dragModeRef = useRef(true);
 
 
 const isValidTimeInterval = (time) => {
