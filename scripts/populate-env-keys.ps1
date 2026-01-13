@@ -38,9 +38,13 @@ if (-not $AnonKeyRawValue -or -not $ServiceKeyRawValue) {
 $NewContent = @(
     Get-Content -Path $ENV_FILE | ForEach-Object {
         
-        # Check and replace the Anon Key
-        if ($_ -match '^NEXT_PUBLIC_SUPABASE_ANON_KEY=') {
-            "NEXT_PUBLIC_SUPABASE_ANON_KEY=$AnonKeyRawValue"
+        # Check and replace the publishable key line (or legacy anon var)
+        if ($_ -match '^NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=') {
+            "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$PublishableKeyRawValue"
+        }
+        elseif ($_ -match '^NEXT_PUBLIC_SUPABASE_ANON_KEY=') {
+            # Replace legacy ANON var with publishable key value for compatibility
+            "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$PublishableKeyRawValue"
         }
         # Check and replace the Service Key
         elseif ($_ -match '^SUPABASE_SERVICE_ROLE_KEY=') {
@@ -60,4 +64,4 @@ $NewContent = @(
 
 $NewContent | Set-Content -Path $ENV_FILE;
 
-Write-Host "✅ Supabase ANONYMOUS_KEY and SERVICE_ROLE_KEY successfully updated in $ENV_FILE.";
+Write-Host "✅ Supabase publishable and service role keys successfully updated in $ENV_FILE.";
