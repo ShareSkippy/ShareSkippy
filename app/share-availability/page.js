@@ -487,7 +487,7 @@ export default function ShareAvailability() {
   // environment so unit tests can render the page without real env vars.
   if (
     process.env.NODE_ENV !== 'test' &&
-    (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
+    (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY)
   ) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -501,7 +501,7 @@ export default function ShareAvailability() {
             <p className="font-medium mb-2">Required environment variables:</p>
             <ul className="space-y-1">
               <li>• NEXT_PUBLIC_SUPABASE_URL</li>
-              <li>• NEXT_PUBLIC_SUPABASE_ANON_KEY</li>
+              <li>• NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY</li>
             </ul>
           </div>
         </div>
