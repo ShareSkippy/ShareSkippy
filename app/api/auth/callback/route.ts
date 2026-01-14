@@ -172,11 +172,13 @@ async function processCodeExchangeAndProfileUpdate(
 function sanitizeForLog(value: string | null): string {
   if (value == null) return '';
 
-  // Remove ASCII control characters, including \r, \n, \t, etc.
-  const withoutControlChars = value.replace(/[\x00-\x1F\x7F]/g, ' ');
+  /** @type {RegExp} - Matches Unicode Control characters (C0 and C1 sets) */
+  const controlCharsRegex: RegExp = /\p{Cc}/gu;
 
-  // Collapse consecutive whitespace to a single space and trim ends.
-  return withoutControlChars.replace(/\s+/g, ' ').trim();
+  /** @type {RegExp} - Matches one or more whitespace characters */
+  const whitespaceNormalizationRegex: RegExp = /\s+/g;
+
+  return value.replace(controlCharsRegex, ' ').replace(whitespaceNormalizationRegex, ' ').trim();
 }
 
 // #region HANDLER
