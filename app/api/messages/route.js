@@ -135,7 +135,11 @@ export async function GET(request) {
           first_name,
           last_name,
           profile_photo_url
-        )
+        ),
+         reads:message_reads (
+      read_at,
+      user_id
+    )
       `
       )
       .eq('availability_id', conversationId)

@@ -88,6 +88,11 @@ export interface Message {
   content: string;
   conversation_id?: string | null;
   availability_id?: string | null;
+  // ADDED: read receipts
+
+  reads?: {
+    user_id: string;
+  }[];
 }
 
 /**
@@ -313,6 +318,22 @@ export default function MessagesPage(): ReactElement {
       alert('Failed to send message. Please try again');
     } finally {
       setSending(false);
+    }
+  };
+
+  // mark message as read
+  const markAsRead = async (messageId: string, conversationId: string): Promise<void> => {
+    try {
+      await fetch('/api/messages/read', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message_id: messageId,
+          conversation_id: conversationId,
+        }),
+      });
+    } catch (error) {
+      console.error('Failed to mark message as read', error);
     }
   };
 
@@ -705,33 +726,40 @@ export default function MessagesPage(): ReactElement {
                   max-w-full
                 "
               >
-                {messages.map((message) => (
-                  <div
-                    key={message.id}
-                    className={`flex ${
-                      message.sender_id === user.id ? 'justify-end' : 'justify-start'
-                    } message-container`}
-                  >
+                {messages.map((message) => {
+                  // check if current user has read this message
+                  const isReadByMe = message.reads?.some((read) => read.user_id === user.id);
+
+                  return (
                     <div
-                      className={`message-bubble px-4 py-3 rounded-2xl wrap-break-word shadow-xs max-w-full ${
-                        message.sender_id === user.id
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-white text-gray-900 border border-gray-200'
-                      }`}
+                      key={message.id}
+                      className={`flex ${
+                        message.sender_id === user.id ? 'justify-end' : 'justify-start'
+                      } message-container`}
                     >
-                      <p className="text-sm leading-relaxed whitespace-pre-wrap">
-                        {message.content}
-                      </p>
-                      <p
-                        className={`text-xs mt-2 ${
-                          message.sender_id === user.id ? 'text-blue-100' : 'text-gray-500'
+                      <div
+                        className={`message-bubble px-4 py-3 rounded-2xl wrap-break-word shadow-xs max-w-full ${
+                          message.sender_id === user.id
+                            ? 'bg-blue-600 text-white'
+                            : 'bg-white text-gray-900 border border-gray-200'
                         }`}
                       >
-                        {formatTime(message.created_at)}
-                      </p>
+                        <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                          {message.content}
+                        </p>
+                        <p
+                          className={`text-xs mt-2 ${
+                            message.sender_id === user.id ? 'text-blue-100' : 'text-gray-500'
+                          }`}
+                        >
+                          {formatTime(message.created_at)}
+                          {/* Optionally display a read indicator */}
+                          {message.sender_id === user.id && isReadByMe && ' ✓'}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
 
                 {/* Error Display */}
                 {error && (
