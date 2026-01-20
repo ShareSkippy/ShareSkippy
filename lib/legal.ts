@@ -4,7 +4,7 @@
  * and easy updates when 501(c)(3) status changes.
  */
 
-export const LEGAL = {
+const LEGAL = {
   umbrellaName: 'ShareVita',
   shortDisclosurePending:
     'ShareSkippy is a community program of ShareVita, a California nonprofit public benefit corporation (501(c)(3) determination pending).',
