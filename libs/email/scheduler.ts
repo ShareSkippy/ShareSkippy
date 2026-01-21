@@ -2,6 +2,11 @@ import { createClient } from "@/libs/supabase/server";
 import { sendEmail } from "./sendEmail";
 import { EmailPayload } from "./templates";
 
+function sanitizeForLog(value: unknown): string {
+  const str = String(value);
+  return str.replace(/[\r\n]/g, "");
+}
+
 export interface ScheduledEmail {
   id: number;
   user_id: string;
@@ -183,8 +188,10 @@ export async function scheduleNurtureEmail(userId: string): Promise<void> {
     throw new Error(`Failed to schedule nurture email: ${error.message}`);
   }
 
+  const safeUserId = sanitizeForLog(userId);
+
   console.log(
-    `Nurture email scheduled for user ${userId} at ${nurtureTime.toISOString()}`,
+    `Nurture email scheduled for user ${safeUserId} at ${nurtureTime.toISOString()}`,
   );
 }
 
@@ -211,8 +218,10 @@ export async function scheduleCommunityGrowthEmail(
     );
   }
 
+  const safeUserId = sanitizeForLog(userId);
+
   console.log(
-    `Community growth email scheduled for user ${userId} at ${growthEmailTime.toISOString()}`,
+    `Community growth email scheduled for user ${safeUserId} at ${growthEmailTime.toISOString()}`,
   );
 }
 
@@ -257,9 +266,12 @@ export async function cancelUserScheduledEmails(
     throw new Error(`Failed to cancel scheduled emails: ${error.message}`);
   }
 
+  const safeUserId = sanitizeForLog(userId);
+  const safeEmailType = emailType !== undefined ? sanitizeForLog(emailType) : "";
+
   console.log(
-    `Cancelled scheduled emails for user ${userId}${
-      emailType ? ` (${emailType})` : ""
+    `Cancelled scheduled emails for user ${safeUserId}${
+      emailType ? ` (${safeEmailType})` : ""
     }`,
   );
 }
