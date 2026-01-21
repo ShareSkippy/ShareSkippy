@@ -7,9 +7,11 @@
     "lib/**/*.{ts,tsx}!",
     "libs/**/*.{ts,tsx}!",
     "types/**/*.ts!",
+    "next-sitemap.config.js",
+    "config.js!",
     "next-sitemap.config.js"
   ],
-  "project": ["**/*.{ts,tsx}"],
+  "project": ["**/*.{js,jsx,ts,tsx,css}"],
   "ignore": [
     "scripts/**",
     "**/*.test.ts",
@@ -19,6 +21,6 @@
     "**/*.spec.tsx",
     "**/*.integration.tsx"
   ],
-  "ignoreDependencies": ["daisyui"],
+  "ignoreBinaries": ["tsc"],
   "tags": ["lintignore"]
 }
