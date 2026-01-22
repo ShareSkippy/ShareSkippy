@@ -173,8 +173,28 @@ export function getRoleLabel(role?: string | null): string {
       return 'Community Member';
   }
 }
+
 /**
- * Formats a participant's location into comma-seperated string
+ * Get different CSS patterns for roles based on the role type
+ * @param {string | null | undefined} role - contains role type
+ * @returns {string} - The CSS pattern of badge
+ */
+
+export function getRoleBadgePattern(role?: string | null | undefined): string {
+  switch (role) {
+    case 'dog_owner':
+      return 'bg-blue-100 text-blue-800';
+    case 'petpal':
+      return 'bg-green-100 text-green-800';
+    case 'both':
+      return 'bg-purple-100 text-purple-800';
+    default:
+      return 'bg-gray-100 text-gray-800';
+  }
+}
+
+/**
+ * Formats a participant's location into comma-separated string
  * @param {LocationFields | null | undefined} participant - contains location fields
  * @returns {string | null} - The readable location
  */

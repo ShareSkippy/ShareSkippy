@@ -30,7 +30,13 @@ import { supabase } from '@/libs/supabase';
 import MessageModal from '@/components/MessageModal';
 import MeetingModal from '@/components/MeetingModal';
 import { useProtectedRoute } from '@/hooks/useProtectedRoute'; // Assumed path
-import { getRoleLabel, formatParticipantLocation, formatTime, formatDate } from '@/libs/utils';
+import {
+  getRoleLabel,
+  formatParticipantLocation,
+  formatTime,
+  formatDate,
+  getRoleBadgePattern,
+} from '@/libs/utils';
 
 // --- Supabase Types ---
 import { User } from '@supabase/supabase-js';
@@ -570,6 +576,7 @@ export default function MessagesPage(): ReactElement {
               conversations.length > 0 &&
               conversations.map((conversation) => (
                 <button
+                  aria-label="Show the basic information of another people"
                   key={conversation.id}
                   onClick={() => {
                     setSelectedConversation(conversation);
@@ -651,12 +658,21 @@ export default function MessagesPage(): ReactElement {
                       <h3 className="font-semibold text-gray-900 text-lg">
                         {selectedConversation.displayName}
                       </h3>
-                      <p className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mt-1">
-                        {selectedConversation.otherParticipant?.role
-                          ? getRoleLabel(selectedConversation.otherParticipant.role)
-                          : selectedConversation.availability?.post_type === 'dog_available'
-                            ? 'Dog Owner'
-                            : 'PetPal'}
+                      <p
+                        className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium border mt-1 ${getRoleBadgePattern(
+                          selectedConversation.otherParticipant?.role ||
+                            (selectedConversation.availability?.post_type === 'dog_available'
+                              ? 'dog_owner'
+                              : 'petpal')
+                        )}`}
+                      >
+                        <span>
+                          {selectedConversation.otherParticipant?.role
+                            ? getRoleLabel(selectedConversation.otherParticipant.role)
+                            : selectedConversation.availability?.post_type === 'dog_available'
+                              ? 'Dog Owner'
+                              : 'PetPal'}
+                        </span>
                       </p>
                       {formatParticipantLocation(selectedConversation.otherParticipant) && (
                         <p className="text-xs text-gray-500 mt-0.5">
@@ -670,13 +686,26 @@ export default function MessagesPage(): ReactElement {
                       {selectedConversation.availability?.title}
                     </div>
                     <div className="flex flex-wrap gap-2">
-                      <Link
-                        href={`/profile/${selectedConversation.otherParticipant?.id}`}
-                        className="inline-flex items-center gap-2 px-3 py-2 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg hover:bg-gray-200 transition-colors whitespace-nowrap font-medium"
-                      >
-                        <CgProfile className="text-lg" />
-                        View Profile
-                      </Link>
+                      {selectedConversation.otherParticipant?.id ? (
+                        <Link
+                          href={`/profile/${selectedConversation.otherParticipant.id}`}
+                          className="inline-flex items-center gap-2 px-3 py-2 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg hover:bg-gray-200 transition-colors whitespace-nowrap font-medium"
+                        >
+                          <CgProfile className="text-lg" />
+                          View Profile
+                        </Link>
+                      ) : (
+                        <button
+                          type="button"
+                          className="inline-flex items-center gap-2 px-3 py-2 bg-white border border-gray-300 text-gray-400 text-sm rounded-lg cursor-not-allowed opacity-60 whitespace-nowrap font-medium"
+                          disabled
+                          aria-disabled="true"
+                        >
+                          <CgProfile className="text-lg" />
+                          View Profile
+                        </button>
+                      )}
+
                       {(selectedConversation.availability?.id ||
                         selectedConversation.availability_id) && (
                         <Link
@@ -690,6 +719,7 @@ export default function MessagesPage(): ReactElement {
                       <button
                         onClick={openMeetingModal}
                         className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors whitespace-nowrap font-medium"
+                        aria-label="Schedule a meeting with participant"
                       >
                         <FaCalendarAlt /> Schedule Meeting
                       </button>
@@ -759,6 +789,7 @@ export default function MessagesPage(): ReactElement {
                         }
                       }}
                       className="mt-2 px-3 py-1 bg-red-600 text-white text-sm rounded-sm hover:bg-red-700 transition-colors"
+                      aria-label="Retry loading messages"
                     >
                       Retry
                     </button>
@@ -798,6 +829,7 @@ export default function MessagesPage(): ReactElement {
                     type="submit"
                     disabled={sending || !newMessage.trim()}
                     className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap font-medium text-sm self-end"
+                    aria-label="Message sending and status"
                   >
                     {sending ? 'Sending...' : 'Send'}
                   </button>
@@ -813,6 +845,7 @@ export default function MessagesPage(): ReactElement {
                 <button
                   onClick={() => setShowConversations(true)}
                   className="lg:hidden px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                  aria-label="Open conversations list"
                 >
                   View Conversations
                 </button>
