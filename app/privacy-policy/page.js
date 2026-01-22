@@ -3,29 +3,6 @@ import { getSEOTags } from '@/libs/seo';
 import config from '@/config';
 import { LEGAL } from '@/lib/legal';
 
-// CHATGPT PROMPT TO GENERATE YOUR PRIVACY POLICY — replace with your own data 👇
-
-// 1. Go to https://chat.openai.com/
-// 2. Copy paste bellow
-// 3. Replace the data with your own (if needed)
-// 4. Paste the answer from ChatGPT directly in the <pre> tag below
-
-// You are an excellent lawyer.
-
-// I need your help to write a simple privacy policy for my website. Here is some context:
-// - Website: https://shipfa.st
-// - Name: ShipFast
-// - Description: A JavaScript code boilerplate to help entrepreneurs launch their startups faster
-// - User data collected: name, email and payment information
-// - Non-personal data collection: web cookies
-// - Purpose of Data Collection: Order processing
-// - Data sharing: we do not share the data with any other parties
-// - Children's Privacy: we do not collect any data from children
-// - Updates to the Privacy Policy: users will be updated by email
-// - Contact information: support@shareskippy.com
-
-// Please write a simple privacy policy for my site. Add the current date.  Do not add or explain your reasoning. Answer:
-
 export const metadata = getSEOTags({
   title: `Privacy Policy | ${config.appName}`,
   canonicalUrlRelative: '/privacy-policy',
@@ -50,104 +27,116 @@ const PrivacyPolicy = () => {
           </svg>{' '}
           Back
         </Link>
+
         <h1 className="text-3xl font-extrabold pb-6">Privacy Policy for {config.appName}</h1>
 
         <pre className="leading-relaxed whitespace-pre-wrap" style={{ fontFamily: 'sans-serif' }}>
-          {`Last Updated: September 8, 2025
+          {`Last Updated: January 16, 2026
 
-Thank you for visiting ShareSkippy ("we," "us," or "our"). This Privacy Policy outlines how we collect, use, and protect your personal and non-personal information when you use our website located at https://shareskippy.com (the "Website").
+Thank you for visiting ShareSkippy ("we," "us," or "our"). This Privacy Policy explains how we collect, use, and protect your personal and non-personal information when you use our website at https://shareskippy.com (the "Website").
 
 ${LEGAL.getCurrentLongDisclosure()}
 
-By accessing or using the Website, you agree to the terms of this Privacy Policy. If you do not agree with the practices described in this policy, please do not use the Website.
+By accessing or using the Website, you agree to this Privacy Policy. If you do not agree, please do not use the Website.
 
-1. Information We Collect
+1. Eligibility
 
-1.1 Personal Data
+ShareSkippy is intended for individuals 18 years of age or older. By using the service, you represent and warrant that you are at least 18 years old.
 
-We collect the following personal information from you:
+2. Information We Collect
 
-Name: We collect your name to personalize your experience and facilitate community connections.
-Email: We collect your email address to send you important updates, notifications about meetups, and community communications.
-Location: We collect your general location to help you connect with nearby dog owners and find local meetup opportunities.
-Phone Number: We may collect your phone number for emergency contact purposes during meetups.
-Profile Photos: We collect photos of you and your dogs to help community members recognize each other and build trust.
+2.1 Personal Information
 
-1.2 Dog Information
+We may collect the following personal information:
+- Name
+- Email address
+- General location
+- Phone number (optional)
+- Profile photos of you and your dogs
 
-We collect information about your dogs including:
+This information is used to facilitate community connections, communication, and safety.
+
+2.2 Dog Information
+
+We may collect information about your dogs, including:
 - Breed, age, and size
 - Temperament and behavior characteristics
-- Vaccination status and health information
+- Vaccination status and health-related information
 - Photos and descriptions
 
-1.3 Non-Personal Data
+2.3 Non-Personal Information
 
-We may use web cookies, analytics, and similar technologies to collect non-personal information such as your IP address, browser type, device information, browsing patterns, and app usage statistics. This information helps us to enhance your experience, analyze trends, and improve our services.
+We collect non-personal information such as IP address, browser type, device information, and usage data through cookies and analytics tools to improve our services and user experience.
 
-2. Purpose of Data Collection
+3. How We Use Your Information
 
-We collect and use your personal data for the following purposes:
-- Facilitating connections between dog owners and dog lovers
-- Organizing and managing community meetups and events
-- Providing a safe and trusted community platform
-- Sending important updates and notifications
-- Improving our services and user experience
-- Ensuring community safety and compliance with our terms
+We use your information to:
+- Connect dog owners and dog lovers
+- Facilitate meetups and community interactions
+- Communicate important updates and notifications
+- Improve platform functionality and safety
+- Enforce our Terms of Service
+- Promote and market ShareSkippy (including uploaded photos)
 
-3. Data Sharing
+4. Use of Photos for Marketing
 
-3.1 Community Sharing: Your profile information (name, dog photos, general location) is shared with other community members to facilitate connections and meetups.
+Photos uploaded to ShareSkippy, including profile photos and dog photos, may be used for marketing and promotional purposes related to ShareSkippy, such as on our website, social media channels, and promotional materials.
 
-3.2 Limited Third-Party Sharing: We do not sell, trade, or rent your personal information to third parties. We may share information only as required for:
-- Legal compliance and law enforcement
-- Service providers who assist in operating our platform (with strict confidentiality agreements)
-- Emergency situations where safety is at risk
+Users retain ownership of their photos. Any marketing use of photos is limited to promoting ShareSkippy and is subject to the license granted in our Terms of Service.
 
-4. Data Security
+If you would like a specific photo removed from marketing materials, you may contact us at support@shareskippy.com, and we will make reasonable efforts to comply.
 
-We implement appropriate security measures to protect your personal information, including:
-- Encryption of sensitive data
-- Secure authentication systems
-- Regular security audits and updates
-- Limited access to personal information by our team
+5. Data Sharing
 
-5. Children's Privacy
+5.1 Community Visibility  
+Certain profile information (such as name, photos, and general location) is visible to other community members to facilitate connections.
 
-ShareSkippy is not intended for children under the age of 18. We do not knowingly collect personal information from children. If you are a parent or guardian and believe that your child has provided us with personal information, please contact us immediately.
+5.2 Third-Party Sharing  
+We do not sell or rent your personal data. We may share data only:
+- To comply with legal obligations
+- With trusted service providers under confidentiality agreements
+- In emergency situations involving safety
 
-6. Data Retention
+6. Data Security
 
-We retain your personal information for as long as your account is active or as needed to provide services. You may request deletion of your account and associated data at any time.
+We take reasonable measures to protect your information, including encryption, access controls, and regular security reviews. However, no system is 100% secure.
 
-7. Your Rights
+7. Children’s Privacy
+
+ShareSkippy is not intended for individuals under 18 years of age. We do not knowingly collect personal information from individuals under 18.
+
+If we become aware that a user under 18 has provided personal information, we will take reasonable steps to delete such information and terminate the account.
+
+8. Data Retention
+
+We retain personal data as long as your account is active or as needed to provide services. You may request deletion of your account and associated data at any time.
+
+9. Your Rights
 
 You have the right to:
-- Access and review your personal information
-- Update or correct your information
-- Request deletion of your account and data
+- Access your personal data
+- Correct or update your information
+- Request deletion of your data
 - Opt out of certain communications
-- Export your data
+- Request a copy of your data
 
-8. Updates to the Privacy Policy
+10. Updates to This Privacy Policy
 
-We may update this Privacy Policy from time to time to reflect changes in our practices or for other operational, legal, or regulatory reasons. Any updates will be posted on this page, and we may notify you via email about significant changes.
+We may update this Privacy Policy from time to time. Significant changes will be communicated via email or posted on this page.
 
-9. Data Controller
+11. Data Controller
 
 ${LEGAL.dataController}
 Contact: ${LEGAL.contact.legal}
 
-10. Contact Information
+12. Contact Information
 
-If you have any questions, concerns, or requests related to this Privacy Policy, you can contact us at:
+If you have any questions or requests regarding this Privacy Policy, please contact us at:
 
-Legal: ${LEGAL.contact.legal}
+Legal: ${LEGAL.contact.legal}  
 Support: ${LEGAL.contact.support}
 
-For all other inquiries, please visit our Contact Us page on the Website.
-
-By using ShareSkippy, you consent to the terms of this Privacy Policy.`}
+By using ShareSkippy, you consent to this Privacy Policy.`}
         </pre>
       </div>
     </main>
