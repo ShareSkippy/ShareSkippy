@@ -1,0 +1,50 @@
+Hey {{userName}}!
+
+WE DID IT TOGETHER! 🎉
+======================
+🐕 1,000 Members Strong!
+
+We hit 1,000 members and we're just getting started—but we need YOUR help to keep growing!
+
+SPREAD THE WORD!
+----------------
+Think about all the dog lovers (and dog-curious people!) in your life. Where could you share ShareSkippy?
+
+🏠 Neighborhood group chats or Nextdoor
+⛪ Church, temple, or faith community
+🏫 School or PTA groups
+💼 Work Slack or break room bulletin board
+🏋️ Clubs, gyms, sports leagues
+👨‍👩‍👧 Family group texts
+📱 Your socials!
+
+HERE'S A QUICK BLURB TO COPY/PASTE:
+-----------------------------------
+"Check out ShareSkippy—a free platform that connects dog owners with petpals who'd love some pup time without the full-time commitment. Playdates for dogs, joy for humans! www.shareskippy.com"
+
+WANT TO DO MORE?
+----------------
+We'd love volunteer help with marketing! A few ideas:
+
+🖼️ Put up posters in your neighborhood, vet clinic, or dog park
+💡 Got marketing skills or ideas? We're all ears
+🗣️ Just tell people about us IRL!
+
+Interested? Reply to this email or reach out to {{supportEmail}}
+
+ONE MORE THING—HOW ARE WE DOING?
+--------------------------------
+We want your feedback! What's working? What's frustrating? Any feature ideas? Let us know by replying to this email!
+
+Thanks for being part of this 💛
+
+---
+
+Happy tails and wagging adventures,
+— The ShareSkippy Team 🐕
+
+Browse Community: {{appUrl}}/community
+FAQ: {{appUrl}}/faq
+Unsubscribe: {{unsubscribeUrl}}
+
+ShareSkippy is a community program of ShareVita, a California nonprofit public benefit corporation (501(c)(3) determination pending).

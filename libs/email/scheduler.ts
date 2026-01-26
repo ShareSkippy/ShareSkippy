@@ -2,6 +2,11 @@ import { createClient } from "@/libs/supabase/server";
 import { sendEmail } from "./sendEmail";
 import { EmailPayload } from "./templates";
 
+function sanitizeForLog(value: unknown): string {
+  const str = String(value);
+  return str.replace(/[\r\n]/g, "");
+}
+
 export interface ScheduledEmail {
   id: number;
   user_id: string;
@@ -183,8 +188,40 @@ export async function scheduleNurtureEmail(userId: string): Promise<void> {
     throw new Error(`Failed to schedule nurture email: ${error.message}`);
   }
 
+  const safeUserId = sanitizeForLog(userId);
+
   console.log(
-    `Nurture email scheduled for user ${userId} at ${nurtureTime.toISOString()}`,
+    `Nurture email scheduled for user ${safeUserId} at ${nurtureTime.toISOString()}`,
+  );
+}
+
+/**
+ * Schedule community growth email for 135 days after signup
+ */
+export async function scheduleCommunityGrowthEmail(
+  userId: string,
+): Promise<void> {
+  const growthEmailTime = new Date();
+  growthEmailTime.setDate(growthEmailTime.getDate() + 135);
+
+  const supabase = await createClient();
+  const { error } = await supabase.from("scheduled_emails").insert({
+    user_id: userId,
+    email_type: "community_growth_day135",
+    run_after: growthEmailTime.toISOString(),
+    payload: {},
+  });
+
+  if (error) {
+    throw new Error(
+      `Failed to schedule community growth email: ${error.message}`,
+    );
+  }
+
+  const safeUserId = sanitizeForLog(userId);
+
+  console.log(
+    `Community growth email scheduled for user ${safeUserId} at ${growthEmailTime.toISOString()}`,
   );
 }
 
@@ -229,9 +266,12 @@ export async function cancelUserScheduledEmails(
     throw new Error(`Failed to cancel scheduled emails: ${error.message}`);
   }
 
+  const safeUserId = sanitizeForLog(userId);
+  const safeEmailType = emailType !== undefined ? sanitizeForLog(emailType) : "";
+
   console.log(
-    `Cancelled scheduled emails for user ${userId}${
-      emailType ? ` (${emailType})` : ""
+    `Cancelled scheduled emails for user ${safeUserId}${
+      emailType ? ` (${safeEmailType})` : ""
     }`,
   );
 }
