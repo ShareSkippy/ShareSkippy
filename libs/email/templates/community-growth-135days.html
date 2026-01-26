@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Help ShareSkippy Grow!</title>
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+          sans-serif;
+        line-height: 1.6;
+        color: #374151;
+        background-color: #f9fafb;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+        color: #fff;
+        padding: 40px 30px;
+        text-align: center;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 700;
+      }
+      .header p {
+        margin: 10px 0 0;
+        font-size: 16px;
+        opacity: 0.9;
+      }
+      .milestone-badge {
+        background-color: #fbbf24;
+        color: #1f2937;
+        display: inline-block;
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 18px;
+        margin-top: 15px;
+      }
+      .content {
+        padding: 40px 30px;
+      }
+      .greeting {
+        font-size: 18px;
+        margin-bottom: 20px;
+        color: #1f2937;
+      }
+      .highlight {
+        background-color: #eff6ff;
+        border: 1px solid #3b82f6;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 25px 0;
+      }
+      .highlight h4 {
+        margin-top: 0;
+        color: #1e40af;
+        font-size: 16px;
+        font-weight: 600;
+      }
+      .highlight p {
+        margin-bottom: 0;
+        color: #1e40af;
+      }
+      .share-ideas {
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 25px 0;
+      }
+      .share-ideas h3 {
+        margin: 0 0 15px;
+        color: #2563eb;
+        font-size: 16px;
+      }
+      .share-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+        font-size: 15px;
+      }
+      .share-icon {
+        margin-right: 12px;
+        font-size: 18px;
+        width: 24px;
+        text-align: center;
+      }
+      .copy-blurb {
+        background-color: #fef3c7;
+        border: 2px dashed #f59e0b;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 25px 0;
+      }
+      .copy-blurb h4 {
+        margin: 0 0 10px;
+        color: #92400e;
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .copy-blurb p {
+        margin: 0;
+        color: #78350f;
+        font-style: italic;
+        font-size: 15px;
+      }
+      .volunteer-section {
+        background-color: #ecfdf5;
+        border: 1px solid #10b981;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 25px 0;
+      }
+      .volunteer-section h3 {
+        margin: 0 0 15px;
+        color: #065f46;
+        font-size: 16px;
+      }
+      .volunteer-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        font-size: 15px;
+        color: #047857;
+      }
+      .volunteer-icon {
+        margin-right: 12px;
+        font-size: 18px;
+        width: 24px;
+        text-align: center;
+      }
+      .feedback-section {
+        background-color: #fdf4ff;
+        border: 1px solid #d946ef;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 25px 0;
+        text-align: center;
+      }
+      .feedback-section h3 {
+        margin: 0 0 10px;
+        color: #86198f;
+        font-size: 16px;
+      }
+      .feedback-section p {
+        margin: 0;
+        color: #a21caf;
+        font-size: 15px;
+      }
+      .cta-button {
+        display: inline-block;
+        background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+        color: #fff !important;
+        text-decoration: none;
+        padding: 14px 28px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 16px;
+        margin: 10px 5px;
+        transition: all 0.2s ease;
+      }
+      .cta-button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      }
+      .cta-button.secondary {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      }
+      .footer {
+        background-color: #f8fafc;
+        padding: 30px;
+        text-align: center;
+        border-top: 1px solid #e5e7eb;
+      }
+      .footer p {
+        margin: 0;
+        color: #6b7280;
+        font-size: 14px;
+      }
+      .footer a {
+        color: #2563eb;
+        text-decoration: none;
+      }
+      .footer a:hover {
+        text-decoration: underline;
+      }
+      .heart {
+        color: #fbbf24;
+      }
+      @media (max-width: 600px) {
+        .container {
+          margin: 0;
+          border-radius: 0;
+        }
+        .header,
+        .content,
+        .footer {
+          padding: 20px;
+        }
+        .cta-button {
+          display: block;
+          text-align: center;
+          margin: 10px 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>We Did It Together! 🎉</h1>
+        <p>And we need your help to keep the momentum going</p>
+        <div class="milestone-badge">🐕 1,000 Members Strong!</div>
+      </div>
+
+      <div class="content">
+        <div class="greeting">
+          <p>Hey {{userName}}!</p>
+          <p>
+            We hit <strong>1,000 members</strong> and we're just getting started—but we need
+            <strong>YOUR</strong> help to keep growing!
+          </p>
+        </div>
+
+        <div class="share-ideas">
+          <h3>🌟 Spread the word! Where could you share ShareSkippy?</h3>
+          <p style="margin-bottom: 15px; color: #64748b">
+            Think about all the dog lovers (and dog-curious people!) in your life:
+          </p>
+
+          <div class="share-item">
+            <span class="share-icon">🏠</span>
+            <span>Neighborhood group chats or Nextdoor</span>
+          </div>
+          <div class="share-item">
+            <span class="share-icon">⛪</span>
+            <span>Church, temple, or faith community</span>
+          </div>
+          <div class="share-item">
+            <span class="share-icon">🏫</span>
+            <span>School or PTA groups</span>
+          </div>
+          <div class="share-item">
+            <span class="share-icon">💼</span>
+            <span>Work Slack or break room bulletin board</span>
+          </div>
+          <div class="share-item">
+            <span class="share-icon">🏋️</span>
+            <span>Clubs, gyms, sports leagues</span>
+          </div>
+          <div class="share-item">
+            <span class="share-icon">👨‍👩‍👧</span>
+            <span>Family group texts</span>
+          </div>
+          <div class="share-item">
+            <span class="share-icon">📱</span>
+            <span>Your socials!</span>
+          </div>
+        </div>
+
+        <div class="copy-blurb">
+          <h4>📋 Here's a quick blurb to copy/paste:</h4>
+          <p>
+            "Check out ShareSkippy—a free platform that connects dog owners with petpals who'd love
+            some pup time without the full-time commitment. Playdates for dogs, joy for humans!
+            www.shareskippy.com"
+          </p>
+        </div>
+
+        <div class="volunteer-section">
+          <h3>🙌 Want to do more? We'd love volunteer help with marketing!</h3>
+
+          <div class="volunteer-item">
+            <span class="volunteer-icon">🖼️</span>
+            <span>Put up posters in your neighborhood, vet clinic, or dog park</span>
+          </div>
+          <div class="volunteer-item">
+            <span class="volunteer-icon">💡</span>
+            <span>Got marketing skills or ideas? We're all ears</span>
+          </div>
+          <div class="volunteer-item">
+            <span class="volunteer-icon">🗣️</span>
+            <span>Just tell people about us IRL!</span>
+          </div>
+
+          <p style="margin-top: 15px; margin-bottom: 0">
+            <strong>Interested?</strong> Reply to this email or reach out to
+            <a href="mailto:{{supportEmail}}" style="color: #059669">{{supportEmail}}</a>
+          </p>
+        </div>
+
+        <div class="feedback-section">
+          <h3>💬 One more thing—how are we doing?</h3>
+          <p>
+            We want your feedback! What's working? What's frustrating? Any feature ideas?
+            <br /><br />
+            <a href="mailto:{{supportEmail}}" class="cta-button secondary">Share Your Thoughts</a>
+          </p>
+        </div>
+
+        <p style="text-align: center; font-size: 18px">
+          Thanks for being part of this <span class="heart">💛</span>
+        </p>
+      </div>
+
+      <div class="footer">
+        <p>Happy tails and wagging adventures,<br />— The ShareSkippy Team 🐕</p>
+        <p style="margin-top: 20px; font-size: 12px">
+          <a href="{{appUrl}}/community">Browse Community</a> | <a href="{{appUrl}}/faq">FAQ</a> |
+          <a href="{{unsubscribeUrl}}">Unsubscribe</a>
+        </p>
+        <p style="margin-top: 15px; font-size: 11px; color: #9ca3af">
+          ShareSkippy is a community program of <strong>ShareVita</strong>, a California nonprofit
+          public benefit corporation (501(c)(3) determination pending).
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
