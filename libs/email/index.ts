@@ -10,6 +10,7 @@ export {
   cancelUserScheduledEmails,
   getUserScheduledEmails,
   processScheduledEmails,
+  scheduleCommunityGrowthEmail,
   scheduleMeetingReminder,
   scheduleNurtureEmail,
 } from './scheduler';

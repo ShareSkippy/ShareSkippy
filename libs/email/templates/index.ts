@@ -56,6 +56,11 @@ const TEMPLATE_REGISTRY = {
     subject: (vars: TemplateVariables) =>
       `Meeting confirmed: ${vars.meetingTitle || 'Dog Activity'} on ShareSkippy 🐕`,
   },
+  community_growth_day135: {
+    html: 'community-growth-135days.html',
+    text: 'community-growth-135days.txt',
+    subject: () => `We hit 1,000 members! Help us keep growing 🎉`,
+  },
 };
 
 /**
