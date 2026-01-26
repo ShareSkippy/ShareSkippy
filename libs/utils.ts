@@ -156,4 +156,98 @@ export function formatLocation(
   };
 }
 
+/**
+ * Maps profile roles
+ * @param {string | null | undefined} role - The role key
+ * @returns {string} - The readable label
+ */
+export function getRoleLabel(role?: string | null): string {
+  switch (role) {
+    case 'dog_owner':
+      return 'Dog Owner';
+    case 'petpal':
+      return 'PetPal';
+    case 'both':
+      return 'Dog Owner & PetPal';
+    default:
+      return 'Community Member';
+  }
+}
+
+/**
+ * Get different CSS patterns for roles based on the role type
+ * @param {string | null | undefined} role - contains role type
+ * @returns {string} - The CSS pattern of badge
+ */
+
+export function getRoleBadgePattern(role?: string | null | undefined): string {
+  switch (role) {
+    case 'dog_owner':
+      return 'bg-blue-100 text-blue-800';
+    case 'petpal':
+      return 'bg-green-100 text-green-800';
+    case 'both':
+      return 'bg-purple-100 text-purple-800';
+    default:
+      return 'bg-gray-100 text-gray-800';
+  }
+}
+
+/**
+ * Formats a participant's location into comma-separated string
+ * @param {LocationFields | null | undefined} participant - contains location fields
+ * @returns {string | null} - The readable location
+ */
+export function formatParticipantLocation(
+  participant: LocationFields | null | undefined
+): string | null {
+  if (!participant) return null;
+
+  const { neighborhood, city, state } = participant;
+  if (!neighborhood && !city && !state) return null;
+
+  const location = formatLocation({ neighborhood, city, state });
+  if (!location) return null;
+
+  return [location.neighborhood, location.city].filter(Boolean).join(', ');
+}
+
+/**
+ * Formats a date string into a simple time (e.g., "10:30 AM").
+ * @param {string} dateString - contains date fields
+ * @returns {string | null} - The readable time
+ */
+export function formatTime(dateString: string): string {
+  const date = new Date(dateString);
+  return date.toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  });
+}
+
+/**
+ * Formats a date string into a relative date (e.g., "Today", "Yesterday", "Tuesday").
+ * @param {string} dateString - contains date fields
+ * @returns {string} - The readable date
+ */
+export function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  const now = new Date();
+
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const messageDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  if (messageDate.getTime() === today.getTime()) {
+    return 'Today';
+  } else if (messageDate.getTime() === yesterday.getTime()) {
+    return 'Yesterday';
+  } else if (now.getTime() - messageDate.getTime() < 7 * 24 * 60 * 60 * 1000) {
+    return date.toLocaleDateString('en-US', { weekday: 'long' });
+  } else {
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  }
+}
 // #endregion
