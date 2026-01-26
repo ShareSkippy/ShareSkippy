@@ -18,7 +18,6 @@
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - `SUPABASE_SERVICE_ROLE_KEY`
    - `RESEND_API_KEY`
-   - `STRIPE_SECRET_KEY` (if using payments)
    - `OPENAI_API_KEY` (if using AI features)
 6. Click "Deploy"
 
@@ -65,10 +64,6 @@ SUPABASE_SERVICE_ROLE_KEY=your-remote-service-role-key
 
 # Email
 RESEND_API_KEY=your-resend-api-key
-
-# Payments (if using)
-STRIPE_SECRET_KEY=your-stripe-secret-key
-STRIPE_WEBHOOK_SECRET=your-stripe-webhook-secret
 
 # AI (if using)
 OPENAI_API_KEY=your-openai-api-key

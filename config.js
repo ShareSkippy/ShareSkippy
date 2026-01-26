@@ -12,23 +12,6 @@ const config = {
     // Hide Crisp by default, except on route "/". Crisp is toggled with <ButtonSupport/>. If you want to show Crisp on every routes, just remove this below
     onlyShowOnRoutes: ['/'],
   },
-  stripe: {
-    // Free platform - no payment plans needed
-    plans: [
-      {
-        // Free plan
-        name: 'Free',
-        description: 'Perfect for getting started',
-        price: 0,
-        features: [
-          { name: 'All features included' },
-          { name: 'User authentication' },
-          { name: 'Database access' },
-          { name: 'Email notifications' },
-        ],
-      },
-    ],
-  },
   aws: {
     // If you use AWS S3/Cloudfront, put values in here
     bucket: 'bucket-name',

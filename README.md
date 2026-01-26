@@ -66,7 +66,7 @@ ShareSkippy makes it easy for dog owners to find trusted community members who c
 
 - The template lives in `.env.example`; it documents the required Supabase/Resend keys and sets `NODE_ENV=development` by default.
 - `scripts/populate-env-keys.ps1` / `scripts/populate-env-keys.sh` are invoked by the Taskfile to refresh Supabase anon and service keys when the local stack starts.
-- Optional placeholders for Stripe/OpenAI remain commented for historical reference, but we rely solely on Supabase and Resend for now.
+- Optional placeholders for OpenAI remain commented for historical reference, but we rely solely on Supabase and Resend for now.
 
 ## Helpful commands
 

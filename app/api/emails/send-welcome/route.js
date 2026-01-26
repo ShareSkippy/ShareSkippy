@@ -1,4 +1,9 @@
-import { sendEmail, scheduleNurtureEmail, recordUserActivity } from '@/libs/email';
+import {
+  sendEmail,
+  scheduleNurtureEmail,
+  scheduleCommunityGrowthEmail,
+  recordUserActivity,
+} from '@/libs/email';
 import { createClient } from '@/libs/supabase/server';
 
 export async function POST(request) {
@@ -43,9 +48,12 @@ export async function POST(request) {
     // Schedule nurture email for 3 days later
     await scheduleNurtureEmail(userId);
 
+    // Schedule community growth email for 135 days later
+    await scheduleCommunityGrowthEmail(userId);
+
     return Response.json({
       success: true,
-      message: 'Welcome email sent and nurture email scheduled',
+      message: 'Welcome email sent and follow-up emails scheduled',
     });
   } catch (error) {
     console.error('Error sending welcome email:', error);
